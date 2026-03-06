@@ -1,0 +1,395 @@
+{% extends "layout.html" %} {% block content %}
+<style>
+  :root {
+    --primary-color: #d32f2f;
+    --primary-light: #ff5252;
+    --primary-dark: #b71c1c;
+    --accent-color: #ffd700;
+    --success-color: #00b14f;
+    --text-dark: #1a1a1a;
+    --text-muted: #6c757d;
+    --text-light: #f8f9fa;
+    --bg-light: #f5f7fa;
+    --bg-white: #ffffff;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.15);
+    --gradient-primary: linear-gradient(135deg, #d32f2f 0%, #ff5252 100%);
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 24px;
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+  }
+
+  .ai-fade-in {
+    animation: aiFadeIn 0.5s ease forwards;
+  }
+  .ai-slide-up {
+    animation: aiSlideUp 0.5s ease forwards;
+  }
+
+  @keyframes aiFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes aiSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Header */
+  .page-header {
+    background: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .page-title {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .back-btn:hover {
+    background: var(--primary-color);
+    color: white;
+  }
+
+  /* Add Button */
+  .btn-add {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
+  }
+
+  .btn-add:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(211, 47, 47, 0.4);
+    color: white;
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-sm);
+    margin-top: 20px;
+  }
+
+  .empty-state img {
+    width: 120px;
+    opacity: 0.6;
+    margin-bottom: 20px;
+  }
+
+  .empty-state h5 {
+    color: var(--text-dark);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .empty-state p {
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  /* Address Card */
+  .address-card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: var(--border-radius-lg);
+    border: 2px solid transparent;
+    position: relative;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .address-card:hover {
+    border-color: var(--primary-light);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+  }
+
+  .address-card.default {
+    border-color: var(--success-color);
+    background: linear-gradient(135deg, #fff 0%, #f0fff4 100%);
+  }
+
+  /* Default Tag */
+  .default-tag {
+    background: var(--success-color);
+    color: white;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Address Content */
+  .address-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .address-name {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text-dark);
+  }
+
+  .address-phone {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-left: 10px;
+  }
+
+  .address-detail {
+    color: var(--text-dark);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 5px;
+  }
+
+  .address-location {
+    color: var(--text-muted);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .address-note {
+    background: #fff3e0;
+    color: #e65100;
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: var(--border-radius-sm);
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Actions */
+  .address-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .action-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all var(--transition-fast);
+  }
+
+  .action-link:hover {
+    color: var(--primary-color);
+  }
+
+  .action-link.set-default:hover {
+    color: var(--success-color);
+  }
+
+  .action-link.delete:hover {
+    color: #dc3545;
+  }
+
+  /* Fixed Bottom Button (Mobile) */
+  .btn-fixed-bottom {
+    position: fixed;
+    bottom: 70px;
+    left: 0;
+    width: 100%;
+    background: white;
+    padding: 15px 20px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+  }
+
+  .btn-fixed-bottom .btn-add {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px;
+  }
+
+  .content-spacer {
+    height: 100px;
+  }
+
+  /* Responsive */
+  @media (min-width: 768px) {
+    .address-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+</style>
+
+<!-- Header -->
+<div class="page-header ai-slide-up">
+  <a href="/account" class="back-btn">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+  <h5 class="page-title">
+    <i class="fas fa-map-marker-alt" style="color: var(--primary-color)"></i>
+    Sổ địa chỉ
+  </h5>
+  <a href="/address/add" class="btn-add d-none d-md-flex">
+    <i class="fas fa-plus"></i> Thêm mới
+  </a>
+</div>
+
+<div class="container py-3">
+  {% if not addresses %}
+  <!-- Empty State -->
+  <div class="empty-state ai-slide-up">
+    <img
+      src="https://cdn-icons-png.flaticon.com/512/854/854878.png"
+      alt="No address"
+    />
+    <h5>Chưa có địa chỉ nào</h5>
+    <p>Thêm địa chỉ để giao hàng nhanh chóng hơn</p>
+    <a href="/address/add" class="btn-add">
+      <i class="fas fa-plus-circle me-2"></i> Thêm ngay
+    </a>
+  </div>
+  {% else %}
+  <!-- Address List -->
+  <div class="address-grid ai-fade-in">
+    {% for addr in addresses %}
+    <div
+      class="address-card {{ 'default' if addr.is_default else '' }} ai-slide-up"
+      style="animation-delay: {{ loop.index * 0.1 }}s;"
+    >
+      <div class="address-header">
+        <div>
+          <span class="address-name">{{ addr.fullname }}</span>
+          <span class="address-phone">{{ addr.phone }}</span>
+        </div>
+        {% if addr.is_default %}
+        <span class="default-tag"> <i class="fas fa-check"></i> Mặc định </span>
+        {% endif %}
+      </div>
+
+      <div class="address-detail">
+        <i class="fas fa-home me-2" style="color: var(--text-muted)"></i>
+        {{ addr.detail }}
+      </div>
+      <div class="address-location">
+        <i class="fas fa-map-pin me-1"></i>
+        {{ addr.ward }}, {{ addr.district }}, {{ addr.city }}
+      </div>
+
+      {% if addr.desc %}
+      <div class="address-note">
+        <i class="fas fa-sticky-note"></i>
+        {{ addr.desc }}
+      </div>
+      {% endif %}
+
+      <div class="address-actions">
+        {% if not addr.is_default %}
+        <a
+          href="/set_default_address/{{ addr.id }}"
+          class="action-link set-default"
+        >
+          <i class="far fa-check-circle"></i> Đặt mặc định
+        </a>
+        {% endif %}
+        <a
+          href="/delete_address/{{ addr.id }}"
+          class="action-link delete ms-auto"
+          onclick="return confirm('Bạn có chắc muốn xóa địa chỉ này?');"
+        >
+          <i class="far fa-trash-alt"></i> Xóa
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="content-spacer d-md-none"></div>
+</div>
+
+<!-- Fixed Bottom Button (Mobile) -->
+<div class="btn-fixed-bottom d-md-none">
+  <a href="/address/add" class="btn-add">
+    <i class="fas fa-plus"></i> THÊM ĐỊA CHỈ MỚI
+  </a>
+</div>
+
+<script>
+  // Add animation on card hover
+  document.querySelectorAll(".address-card").forEach((card) => {
+    card.addEventListener("mouseenter", function () {
+      this.style.transform = "translateY(-5px)";
+    });
+    card.addEventListener("mouseleave", function () {
+      this.style.transform = "";
+    });
+  });
+</script>
+{% endblock %}

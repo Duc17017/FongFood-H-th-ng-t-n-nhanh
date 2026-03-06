@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - Fong Food</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: #f5f7fa; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .card-register { width: 100%; max-width: 500px; border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 30px; background: white; }
+        .form-control { border-radius: 10px; padding: 12px; font-size: 14px; }
+        .btn-custom { border-radius: 10px; padding: 12px; font-weight: bold; width: 100%; }
+        .btn-otp { font-size: 12px; font-weight: bold; white-space: nowrap; }
+        .otp-group { display: none; margin-top: 10px; animation: fadeIn 0.3s; }
+        
+        /* CSS Social Dọc */
+        .divider { display: flex; align-items: center; text-align: center; margin: 20px 0; color: #999; font-size: 13px; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #eee; }
+        .divider:not(:empty)::before { margin-right: .5em; }
+        .divider:not(:empty)::after { margin-left: .5em; }
+
+        .btn-social { 
+            width: 100%; padding: 10px; border-radius: 10px; font-size: 14px; font-weight: 600; 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            transition: 0.2s; margin-bottom: 10px; text-decoration: none;
+        }
+        .btn-google { border: 1px solid #ddd; background: white; color: #333; }
+        .btn-facebook { background: #1877F2; color: white; border: none; }
+        .btn-apple { background: black; color: white; border: none; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="card-register">
+    <h3 class="text-center text-danger fw-bold mb-2">TẠO TÀI KHOẢN</h3>
+    <p class="text-center text-muted mb-4">Tham gia cộng đồng Fong Food ngay</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} py-2 text-center" style="font-size: 14px;">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form action="/register" method="POST" id="registerForm">
+        <div class="mb-3">
+            <label class="fw-bold small mb-1">Họ và tên</label>
+            <input type="text" name="name" class="form-control bg-light" placeholder="Ví dụ: Nguyễn Văn A" required>
+        </div>
+        <div class="mb-3">
+            <label class="fw-bold small mb-1">Số điện thoại (ID)</label>
+            <div class="input-group">
+                <input type="tel" id="phoneInput" name="phone" class="form-control bg-light" placeholder="Nhập 10 số điện thoại" maxlength="10">
+                <button type="button" class="btn btn-outline-danger btn-otp" id="btnPhoneOtp" onclick="handleSendOtp('phone')">Lấy mã</button>
+            </div>
+            <div class="otp-group" id="groupPhoneOtp">
+                <div class="d-flex justify-content-between align-items-center mt-1">
+                    <input type="text" name="otp_phone" class="form-control form-control-sm border-danger" placeholder="Nhập mã OTP 6 số">
+                    <span class="text-muted ms-2 small" id="timerPhone">60s</span>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="fw-bold small mb-1">Email liên hệ</label>
+            <div class="input-group">
+                <input type="email" id="emailInput" name="email" class="form-control bg-light" placeholder="example@gmail.com">
+                <button type="button" class="btn btn-outline-danger btn-otp" id="btnEmailOtp" onclick="handleSendOtp('email')">Lấy mã</button>
+            </div>
+            <div class="otp-group" id="groupEmailOtp">
+                <div class="d-flex justify-content-between align-items-center mt-1">
+                    <input type="text" name="otp_email" class="form-control form-control-sm border-danger" placeholder="Nhập mã OTP Email">
+                    <span class="text-muted ms-2 small" id="timerEmail">60s</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <label class="fw-bold small mb-1">Mật khẩu</label>
+            <div class="input-group">
+                <input type="password" name="password" id="regPass" class="form-control bg-light" placeholder="Tối thiểu 8 ký tự" required minlength="8">
+                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('regPass', this)">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-danger btn-custom text-white shadow-sm">ĐĂNG KÝ</button>
+        
+        <div class="divider">Hoặc đăng ký bằng</div>
+        <div>
+            <button type="button" class="btn-social btn-google" onclick="alert('Tính năng đang phát triển!')"><i class="fab fa-google"></i> Tiếp tục với Google</button>
+            <button type="button" class="btn-social btn-facebook" onclick="alert('Tính năng đang phát triển!')"><i class="fab fa-facebook-f"></i> Tiếp tục với Facebook</button>
+            <button type="button" class="btn-social btn-apple" onclick="alert('Tính năng đang phát triển!')"><i class="fab fa-apple"></i> Tiếp tục với Apple</button>
+        </div>
+
+        <div class="text-center mt-3">
+            <a href="/login" class="text-decoration-none text-muted small">← Quay lại Đăng nhập</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function validateInput(type, value) {
+        if (!value) { alert("Vui lòng nhập thông tin!"); return false; }
+        if (type === 'phone' && !/^\d{10}$/.test(value)) { alert("SĐT phải 10 số!"); return false; }
+        if (type === 'email' && !value.endsWith('@gmail.com')) { alert("Email phải đuôi @gmail.com!"); return false; }
+        return true;
+    }
+    function startTimer(btnId, displayId) {
+        let timer = 60; const btn = document.getElementById(btnId); const display = document.getElementById(displayId);
+        btn.disabled = true;
+        const interval = setInterval(() => {
+            display.textContent = `(${timer}s)`; timer--;
+            if (timer < 0) { clearInterval(interval); btn.disabled = false; btn.textContent = "Gửi lại"; display.textContent = ""; }
+        }, 1000);
+    }
+    function handleSendOtp(type) {
+        let inputVal = (type === 'phone') ? document.getElementById('phoneInput').value : document.getElementById('emailInput').value;
+        let btnId = (type === 'phone') ? 'btnPhoneOtp' : 'btnEmailOtp';
+        let groupId = (type === 'phone') ? 'groupPhoneOtp' : 'groupEmailOtp';
+        let timerId = (type === 'phone') ? 'timerPhone' : 'timerEmail';
+        if (!validateInput(type, inputVal)) return;
+        fetch('/api/send-otp', {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ target: inputVal, purpose: 'register' }) 
+        }).then(res => res.json()).then(data => {
+            if (data.success) { document.getElementById(groupId).style.display = 'block'; startTimer(btnId, timerId); alert("Đã gửi mã OTP!"); } 
+            else { alert(data.message); }
+        }).catch(err => { console.error(err); alert("Lỗi kết nối Server!"); });
+    }
+
+    // Script xem mật khẩu
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = "password";
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
+</body>
+</html>

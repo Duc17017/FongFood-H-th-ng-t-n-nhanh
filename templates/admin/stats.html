@@ -1,0 +1,213 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    /* 1. Filter Buttons (Pill shape) */
+    .filter-btn {
+        border: 1px solid #e2e8f0;
+        background: white;
+        color: #64748b;
+        padding: 6px 20px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    .filter-btn:hover { background: #f1f5f9; }
+    .filter-btn.active {
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
+        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+    }
+
+    /* 2. Cards */
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        padding: 20px;
+        height: 100%;
+    }
+
+    /* 3. Funnel (Phễu chuyển đổi) */
+    .funnel-label { font-size: 13px; color: #64748b; margin-bottom: 5px; display: flex; justify-content: space-between; }
+    .funnel-bar-bg { height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+    .funnel-bar-fill { height: 100%; border-radius: 4px; }
+    
+    /* 4. AI Suggestion Box (Màu vàng giống ảnh) */
+    .ai-suggestion {
+        background: #fffbeb; /* Màu vàng nhạt */
+        border: 1px solid #fcd34d;
+        border-radius: 8px;
+        padding: 15px;
+        font-size: 13px;
+        color: #92400e;
+        display: flex;
+        align-items: start;
+        margin-top: 10px;
+    }
+
+    /* 5. Table Top Products */
+    .table-custom th { font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700; border-bottom: 1px solid #f1f5f9; }
+    .table-custom td { padding: 15px 10px; vertical-align: middle; font-size: 14px; }
+    .trend-up { color: #10b981; font-weight: 600; font-size: 12px; }
+    .trend-down { color: #ef4444; font-weight: 600; font-size: 12px; }
+</style>
+
+<div class="container-fluid">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Báo Cáo Chuyên Sâu</h4>
+            <p class="text-muted small mb-0">Phân tích hiệu suất kinh doanh & Tỷ lệ chuyển đổi</p>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm shadow-sm">
+            <i class="fas fa-download me-1"></i> Xuất Excel
+        </button>
+    </div>
+
+    <div class="d-flex gap-2 mb-4">
+        <a href="?time=week" class="filter-btn {% if time_filter == 'week' %}active{% endif %}">Tuần này</a>
+        <a href="?time=month" class="filter-btn {% if time_filter == 'month' %}active{% endif %}">Tháng này</a>
+        <a href="?time=year" class="filter-btn {% if time_filter == 'year' %}active{% endif %}">Năm nay</a>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 class="fw-bold m-0">Biểu đồ Tăng trưởng</h6>
+                    <span class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded small">
+                        Doanh thu: {{ "{:,.1f}".format(data.revenue or 0) }} đ
+                    </span>
+                </div>
+                <div style="height: 300px;">
+                    <canvas id="growthChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="stat-card">
+                <h6 class="fw-bold mb-4">Phễu chuyển đổi</h6>
+                
+                {% set sc = data.status_counts if data and data.status_counts else {'pending':0,'shipping':0,'completed':0,'cancelled':0} %}
+                {% set total_orders = data.total_orders if data else 0 %}
+
+                <div class="funnel-item">
+                    <div class="funnel-label">
+                        <span>Đơn tạo</span>
+                        <span class="fw-bold text-dark">{{ total_orders }}</span>
+                    </div>
+                    <div class="funnel-bar-bg"><div class="funnel-bar-fill bg-primary" style="width: 100%;"></div></div>
+                </div>
+
+                <div class="funnel-item">
+                    <div class="funnel-label">
+                        <span>Đang xử lý / giao</span>
+                        <span class="fw-bold text-dark">{{ sc.pending + sc.shipping }}</span>
+                    </div>
+                    {% set in_process = sc.pending + sc.shipping %}
+                    {% set in_process_pct = (in_process / total_orders * 100) if total_orders else 0 %}
+                    <div class="funnel-bar-bg"><div class="funnel-bar-fill" style="width: {{ in_process_pct }}%; background-color: #3b82f6;"></div></div>
+                    <div class="text-end small text-muted mb-3" style="margin-top: -15px;">{{ '%.1f' % in_process_pct }}% đang xử lý</div>
+                </div>
+
+                <div class="funnel-item">
+                    <div class="funnel-label">
+                        <span>Hoàn tất</span>
+                        <span class="fw-bold text-dark">{{ sc.completed }}</span>
+                    </div>
+                    {% set success_pct = (sc.completed / total_orders * 100) if total_orders else 0 %}
+                    <div class="funnel-bar-bg"><div class="funnel-bar-fill" style="width: {{ success_pct }}%; background-color: #22c55e;"></div></div>
+                    <div class="text-end small text-success fw-bold mb-3" style="margin-top: -15px;">{{ '%.1f' % success_pct }}% thành công</div>
+                </div>
+
+                <div class="ai-suggestion">
+                    <i class="far fa-lightbulb me-2 mt-1 fs-6"></i>
+                    <div>
+                        <strong>AI Gợi ý</strong><br>
+                        {{ data.ai_insight if data and data.ai_insight else 'Mọi chỉ số kinh doanh đang ổn định.' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card p-0 overflow-hidden">
+        <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+            <h6 class="fw-bold m-0">Top Sản Phẩm Bán Chạy</h6>
+            <a href="#" class="text-primary text-decoration-none small fw-bold">Xem tất cả</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-custom mb-0 table-hover">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">TÊN SẢN PHẨM</th>
+                        <th class="text-center">ĐÃ BÁN</th>
+                        <th class="text-end">DOANH THU</th>
+                        <th class="text-end pe-4">XU HƯỚNG</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="ps-4 fw-bold text-dark">Áo Sơ Mi Oxford Slimfit</td>
+                        <td class="text-center text-secondary">450</td>
+                        <td class="text-end fw-bold">135.000.000 ₫</td>
+                        <td class="text-end pe-4"><span class="trend-up">▲ 12%</span></td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4 fw-bold text-dark">Quần Tây Nam Cao Cấp</td>
+                        <td class="text-center text-secondary">320</td>
+                        <td class="text-end fw-bold">98.500.000 ₫</td>
+                        <td class="text-end pe-4"><span class="trend-up">▲ 5%</span></td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4 fw-bold text-dark">Áo Polo Basic</td>
+                        <td class="text-center text-secondary">210</td>
+                        <td class="text-end fw-bold">52.000.000 ₫</td>
+                        <td class="text-end pe-4"><span class="trend-down">▼ 2%</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Du lieu tu server
+    const revenueDataRaw = {{ data.revenue_daily|tojson if data and data.revenue_daily else [0,0,0,0,0,0,0] }};
+    const revenueData = Array.isArray(revenueDataRaw) ? revenueDataRaw.map(x => x.value || x) : [];
+    const chartLabels = Array.isArray(revenueDataRaw) ? revenueDataRaw.map(x => x.label || '') : [];
+
+    const ctx = document.getElementById('growthChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar', // Dạng cột
+        data: {
+            labels: chartLabels.length > 0 ? chartLabels : ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+            datasets: [{
+                label: 'Doanh thu (triệu đồng)',
+                data: revenueData.length > 0 ? revenueData : [12, 19, 15, 25, 22, 30, 35],
+                backgroundColor: '#1d4ed8', // Màu xanh đậm
+                borderRadius: 4, // Bo tròn đầu cột
+                barThickness: 30 // Độ rộng cột
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top', align: 'end', labels: { boxWidth: 20, usePointStyle: true } }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+</script>
+{% endblock %}

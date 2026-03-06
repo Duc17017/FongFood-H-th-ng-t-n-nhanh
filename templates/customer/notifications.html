@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="bg-white border-bottom p-3 sticky-top d-flex justify-content-between align-items-center">
+    <h5 class="m-0 fw-bold">THÔNG BÁO</h5>
+    <a href="/mark_all_read" class="text-danger small text-decoration-none">Đọc tất cả</a>
+</div>
+
+<div class="container py-2 pb-5">
+    {% if notifications %}
+        {% for notif in notifications %}
+        <a href="{{ notif.link }}" class="text-decoration-none text-dark">
+            <div class="bg-white p-3 mb-2 rounded shadow-sm position-relative {{ 'border-start border-5 border-danger' if not notif.is_read else '' }}">
+                <div class="d-flex align-items-center mb-1">
+                    <i class="fas fa-bell text-danger me-2"></i>
+                    <span class="fw-bold {{ 'text-danger' if not notif.is_read else '' }}">{{ notif.title }}</span>
+                    <small class="ms-auto text-muted" style="font-size: 11px;">{{ notif.time }}</small>
+                </div>
+                <div class="small text-secondary ps-4">
+                    {{ notif.message }}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    {% else %}
+        <div class="text-center py-5 text-muted">
+            <p>Không có thông báo mới</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

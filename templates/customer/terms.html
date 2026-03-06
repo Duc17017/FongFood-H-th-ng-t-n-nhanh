@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="bg-white border-bottom p-3 mb-3 sticky-top">
+    <div class="position-relative text-center">
+        <a href="/settings" class="position-absolute start-0 text-dark"><i class="fas fa-arrow-left"></i></a>
+        <h6 class="m-0 fw-bold">ĐIỀU KHOẢN & CHÍNH SÁCH</h6>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="bg-white p-4 rounded shadow-sm">
+        <h6 class="fw-bold">1. Giới thiệu</h6>
+        <p class="small text-secondary text-justify">
+            Chào mừng bạn đến với Fong Food. Bằng việc sử dụng ứng dụng, bạn đồng ý tuân thủ các điều khoản sau đây...
+        </p>
+        
+        <h6 class="fw-bold mt-3">2. Chính sách bảo mật</h6>
+        <p class="small text-secondary text-justify">
+            Chúng tôi cam kết bảo mật thông tin cá nhân của bạn. Dữ liệu chỉ được sử dụng để cải thiện trải nghiệm giao hàng...
+        </p>
+
+        <h6 class="fw-bold mt-3">3. Quy định đặt hàng</h6>
+        <p class="small text-secondary text-justify">
+            - Đơn hàng đã xác nhận không thể hủy sau 5 phút.<br>
+            - Vui lòng kiểm tra kỹ số điện thoại và địa chỉ nhận hàng.
+        </p>
+        
+        <div class="alert alert-light border mt-4 small text-center">
+            Phiên bản ứng dụng: 1.0.0<br>
+            © 2024 Fong Food Tech
+        </div>
+    </div>
+</div>
+{% endblock %}

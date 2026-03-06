@@ -1,0 +1,435 @@
+{% extends "layout.html" %} {% block content %}
+<style>
+  :root {
+    --primary-color: #d32f2f;
+    --primary-light: #ff5252;
+    --primary-dark: #b71c1c;
+    --accent-color: #ffd700;
+    --success-color: #00b14f;
+    --text-dark: #1a1a1a;
+    --text-muted: #6c757d;
+    --text-light: #f8f9fa;
+    --bg-light: #f5f7fa;
+    --bg-white: #ffffff;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.15);
+    --gradient-primary: linear-gradient(135deg, #d32f2f 0%, #ff5252 100%);
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 24px;
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+  }
+
+  body {
+    background-color: var(--bg-light);
+  }
+
+  .ai-fade-in {
+    animation: aiFadeIn 0.5s ease forwards;
+  }
+  .ai-slide-up {
+    animation: aiSlideUp 0.5s ease forwards;
+  }
+
+  @keyframes aiFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes aiSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .delay-1 {
+    animation-delay: 0.1s;
+  }
+  .delay-2 {
+    animation-delay: 0.2s;
+  }
+  .delay-3 {
+    animation-delay: 0.3s;
+  }
+
+  /* Header */
+  .settings-header {
+    background: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .settings-title {
+    flex-grow: 1;
+    text-align: center;
+    font-weight: 700;
+    font-size: 17px;
+    margin-right: 24px;
+    color: var(--text-dark);
+  }
+
+  .back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .back-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.05);
+  }
+
+  /* Sections */
+  .section-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 20px 15px 10px;
+    letter-spacing: 0.5px;
+  }
+
+  .settings-group {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    margin: 0 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .settings-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 18px;
+    text-decoration: none;
+    color: var(--text-dark);
+    background: white;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    position: relative;
+  }
+
+  .settings-item:not(:last-child) {
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .settings-item:hover {
+    background-color: #fafafa;
+    padding-left: 22px;
+  }
+
+  .settings-item:hover .s-icon {
+    transform: scale(1.1);
+    color: var(--primary-color);
+  }
+
+  .s-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-right: 15px;
+    transition: all var(--transition-normal);
+    background: var(--bg-light);
+    color: var(--text-muted);
+  }
+
+  .s-icon.language {
+    background: #e3f2fd;
+    color: #1976d2;
+  }
+  .s-icon.security {
+    background: #e8f5e9;
+    color: var(--success-color);
+  }
+  .s-icon.social {
+    background: #f3e5f5;
+    color: #9c27b0;
+  }
+  .s-icon.terms {
+    background: #fff3e0;
+    color: #ff9800;
+  }
+  .s-icon.help {
+    background: #ffebee;
+    color: var(--primary-color);
+  }
+  .s-icon.logout {
+    background: #ffebee;
+    color: var(--primary-color);
+  }
+
+  .s-text {
+    flex-grow: 1;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .s-arrow {
+    color: #ccc;
+    font-size: 12px;
+    transition: all var(--transition-fast);
+  }
+
+  .settings-item:hover .s-arrow {
+    color: var(--primary-color);
+    transform: translateX(3px);
+  }
+
+  .s-value {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-right: 10px;
+  }
+
+  /* Version Info */
+  .version-info {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  .version-info strong {
+    color: var(--primary-color);
+  }
+
+  /* Toggle Switch */
+  .toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 28px;
+    background: #ddd;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+  }
+
+  .toggle-switch.active {
+    background: var(--success-color);
+  }
+
+  .toggle-switch::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    background: white;
+    border-radius: 50%;
+    transition: all var(--transition-normal);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .toggle-switch.active::after {
+    left: 25px;
+  }
+
+  /* Responsive */
+  @media (min-width: 768px) {
+    .settings-group {
+      margin: 0 auto;
+      max-width: 600px;
+    }
+    .section-label {
+      text-align: center;
+      margin: 25px 15px 15px;
+    }
+  }
+</style>
+
+<div class="container-fluid px-0 pb-4">
+  <div class="settings-header ai-slide-up">
+    <a href="/account" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+    <div class="settings-title">
+      <i class="fas fa-cog me-2" style="color: var(--primary-color)"></i>
+      {{ t.title }}
+    </div>
+    <div style="width: 40px"></div>
+  </div>
+
+  <!-- App Settings -->
+  <div class="section-label ai-fade-in delay-1">{{ t.app }}</div>
+  <div class="settings-group ai-slide-up delay-1">
+    <a href="/toggle_language" class="settings-item">
+      <div class="s-icon language">
+        <i class="fas fa-globe"></i>
+      </div>
+      <div class="s-text">{{ t.lang_label }}</div>
+      <div class="s-value">{{ t.lang_val }}</div>
+      <i class="fas fa-exchange-alt s-arrow"></i>
+    </a>
+    <div class="settings-item" onclick="toggleDarkMode()">
+      <div class="s-icon" style="background: #1a1a1a; color: #ffd700">
+        <i class="fas fa-moon"></i>
+      </div>
+      <div class="s-text">Chế độ tối</div>
+      <div class="toggle-switch" id="darkModeToggle"></div>
+    </div>
+    <div class="settings-item" onclick="toggleNotification()">
+      <div class="s-icon" style="background: #ffebee; color: #d32f2f">
+        <i class="fas fa-bell"></i>
+      </div>
+      <div class="s-text">Thông báo đẩy</div>
+      <div class="toggle-switch active" id="notifToggle"></div>
+    </div>
+  </div>
+
+  <!-- Security -->
+  <div class="section-label ai-fade-in delay-2">{{ t.sec }}</div>
+  <div class="settings-group ai-slide-up delay-2">
+    <a href="/change-password" class="settings-item">
+      <div class="s-icon security">
+        <i class="fas fa-lock"></i>
+      </div>
+      <div class="s-text">{{ t.pass }}</div>
+      <i class="fas fa-chevron-right s-arrow"></i>
+    </a>
+    <a href="/social-links" class="settings-item">
+      <div class="s-icon social">
+        <i class="fas fa-link"></i>
+      </div>
+      <div class="s-text">{{ t.social }}</div>
+      <i class="fas fa-chevron-right s-arrow"></i>
+    </a>
+    <div class="settings-item">
+      <div class="s-icon" style="background: #e3f2fd; color: #1976d2">
+        <i class="fas fa-fingerprint"></i>
+      </div>
+      <div class="s-text">Xác thực sinh trắc học</div>
+      <div class="toggle-switch" id="biometricToggle"></div>
+    </div>
+  </div>
+
+  <!-- Information -->
+  <div class="section-label ai-fade-in delay-3">{{ t.info }}</div>
+  <div class="settings-group ai-slide-up delay-3">
+    <a href="/terms" class="settings-item">
+      <div class="s-icon terms">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <div class="s-text">{{ t.terms }}</div>
+      <i class="fas fa-chevron-right s-arrow"></i>
+    </a>
+    <a href="/privacy" class="settings-item">
+      <div class="s-icon terms">
+        <i class="fas fa-user-secret"></i>
+      </div>
+      <div class="s-text">Chính sách bảo mật</div>
+      <i class="fas fa-chevron-right s-arrow"></i>
+    </a>
+    <a href="/support" class="settings-item">
+      <div class="s-icon help">
+        <i class="fas fa-headset"></i>
+      </div>
+      <div class="s-text">Trung tâm hỗ trợ</div>
+      <i class="fas fa-chevron-right s-arrow"></i>
+    </a>
+  </div>
+
+  <!-- Logout -->
+  <div class="settings-group ai-slide-up delay-3" style="margin-top: 20px">
+    <a href="/logout" class="settings-item" style="color: var(--primary-color)">
+      <div class="s-icon logout">
+        <i class="fas fa-sign-out-alt"></i>
+      </div>
+      <div class="s-text">Đăng xuất</div>
+      <i class="fas fa-chevron-right s-arrow"></i>
+    </a>
+  </div>
+
+  <!-- Version -->
+  <div class="version-info ai-fade-in">
+    <p>FongFood <strong>v2.0.2024</strong></p>
+    <p style="font-size: 11px">
+      Made with
+      <i class="fas fa-heart" style="color: var(--primary-color)"></i> by AI
+    </p>
+  </div>
+</div>
+
+<script>
+  function toggleDarkMode() {
+    const toggle = document.getElementById("darkModeToggle");
+    toggle.classList.toggle("active");
+    // In production, this would save to localStorage and apply dark mode
+  }
+
+  function toggleNotification() {
+    const toggle = document.getElementById("notifToggle");
+    toggle.classList.toggle("active");
+  }
+
+  function toggleBiometric() {
+    const toggle = document.getElementById("biometricToggle");
+    toggle.classList.toggle("active");
+  }
+
+  // Add ripple effect on click
+  document.querySelectorAll(".settings-item").forEach((item) => {
+    item.addEventListener("click", function (e) {
+      if (this.tagName === "A" && this.href) {
+        return;
+      }
+      const ripple = document.createElement("span");
+      ripple.style.cssText = `
+                position: absolute;
+                background: rgba(0,0,0,0.1);
+                border-radius: 50%;
+                transform: scale(0);
+                animation: ripple 0.6s linear;
+                pointer-events: none;
+                left: ${e.clientX - this.getBoundingClientRect().left}px;
+                top: ${e.clientY - this.getBoundingClientRect().top}px;
+                width: 20px;
+                height: 20px;
+            `;
+      this.style.position = "relative";
+      this.style.overflow = "hidden";
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    });
+  });
+
+  // Add keyframes dynamically
+  const style = document.createElement("style");
+  style.textContent = `
+        @keyframes ripple {
+            to { transform: scale(4); opacity: 0; }
+        }
+    `;
+  document.head.appendChild(style);
+</script>
+{% endblock %}

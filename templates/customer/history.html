@@ -1,0 +1,193 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<style>
+    /* Thanh Tab Menu */
+    .nav-tabs-custom {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        background: white;
+        padding: 0 10px;
+        border-bottom: 1px solid #eee;
+        position: sticky;
+        top: 60px; /* Dưới header */
+        z-index: 99;
+    }
+    .nav-item-custom {
+        padding: 15px 20px;
+        color: #666;
+        font-weight: 500;
+        font-size: 14px;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        flex-shrink: 0; /* Không co lại trên mobile */
+    }
+    .nav-item-custom.active {
+        color: #D32F2F;
+        border-bottom-color: #D32F2F;
+    }
+    
+    /* Card Đơn hàng */
+    .order-card {
+        background: white;
+        margin-top: 10px;
+        padding: 15px;
+        border-radius: 0; /* Vuông vức kiểu mobile list */
+    }
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        border-bottom: 1px solid #f5f5f5;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+    .status-text { text-transform: uppercase; font-weight: bold; font-size: 12px; }
+    
+    /* Màu trạng thái */
+    .st-pending { color: #ff9800; }   /* Cam */
+    .st-shipping { color: #2196f3; }  /* Xanh dương */
+    .st-completed { color: #4caf50; } /* Xanh lá */
+    .st-cancelled { color: #9e9e9e; } /* Xám */
+
+    .order-item {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    .item-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 1px solid #eee;
+    }
+    
+    .order-footer {
+        border-top: 1px solid #f5f5f5;
+        padding-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .total-price {
+        color: #D32F2F;
+        font-weight: bold;
+        font-size: 16px;
+    }
+    
+    .btn-cancel {
+        background: white;
+        border: 1px solid #999;
+        color: #555;
+        padding: 5px 15px;
+        font-size: 13px;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+    .btn-cancel:hover { background: #f5f5f5; color: #333; }
+    
+    /* Responsive cho PC đẹp hơn chút */
+    @media (min-width: 992px) {
+        .order-card { border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .nav-tabs-custom { border-radius: 8px; margin-bottom: 20px; top: 80px; }
+    }
+</style>
+
+<div class="nav-tabs-custom no-scrollbar">
+    <div class="nav-item-custom active" onclick="filterOrders('all', this)">Tất cả</div>
+    <div class="nav-item-custom" onclick="filterOrders('pending', this)">Đang duyệt</div>
+    <div class="nav-item-custom" onclick="filterOrders('shipping', this)">Đang giao</div>
+    <div class="nav-item-custom" onclick="filterOrders('completed', this)">Hoàn thành</div>
+    <div class="nav-item-custom" onclick="filterOrders('cancelled', this)">Đã hủy</div>
+</div>
+
+<div class="container-fluid px-0 px-lg-3 pb-5">
+    
+    {% if orders|length == 0 %}
+        <div class="text-center mt-5">
+            <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png" width="100" style="opacity: 0.5;">
+            <p class="text-muted mt-3">Bạn chưa có đơn hàng nào</p>
+            <a href="/menu" class="btn btn-danger">Đặt món ngay</a>
+        </div>
+    {% endif %}
+
+    {% for order in orders %}
+    <div class="order-card filter-item" data-status="{{ order.status }}">
+        <div class="order-header">
+            <span class="fw-bold text-dark">#{{ order.id }}</span>
+            
+            {% if order.status == 'pending' %}
+                <span class="status-text st-pending"><i class="far fa-clock"></i> Đang duyệt</span>
+            {% elif order.status == 'shipping' %}
+                <span class="status-text st-shipping"><i class="fas fa-truck"></i> Đang giao</span>
+            {% elif order.status == 'completed' %}
+                <span class="status-text st-completed"><i class="fas fa-check-circle"></i> Hoàn thành</span>
+            {% elif order.status == 'cancelled' %}
+                <span class="status-text st-cancelled"><i class="fas fa-times-circle"></i> Đã hủy</span>
+            {% endif %}
+        </div>
+
+        {% for item in order.details %}
+        <div class="order-item">
+            <img src="{{ item.image }}" class="item-img" onerror="this.src='https://via.placeholder.com/60'">
+            <div class="flex-grow-1">
+                <div class="fw-bold" style="font-size: 14px;">{{ item.name }}</div>
+                <div class="text-muted small">x{{ item.qty }}</div>
+            </div>
+            <div class="small">{{ "{:,.0f}".format(item.price) }}đ</div>
+        </div>
+        {% endfor %}
+
+        <div class="order-footer">
+            <div>
+                <span class="text-muted small">{{ order.date }}</span><br>
+                <span class="text-muted small">{{ order.items_count }} món</span>
+            </div>
+            <div class="text-end">
+                <div class="text-muted small">Tổng tiền</div>
+                <div class="total-price">{{ "{:,.0f}".format(order.total) }}đ</div>
+            </div>
+        </div>
+
+        <div class="mt-3 text-end pt-2 border-top border-light">
+            {% if order.status == 'pending' %}
+                <a href="/cancel_order/{{ order.id }}" class="btn-cancel" onclick="return confirm('Bạn chắc chắn muốn hủy đơn này?')">Hủy đơn hàng</a>
+            {% elif order.status == 'shipping' %}
+    <span class="badge bg-primary d-block mb-2">Shipper đang giao...</span>
+    <a href="/confirm_receipt/{{ order.id }}" class="btn btn-sm btn-success fw-bold text-white w-100">
+        <i class="fas fa-check-circle"></i> Đã nhận hàng
+    </a>
+            {% elif order.status == 'completed' %}
+                <a href="/menu" class="btn btn-sm btn-danger">Mua lại</a>
+            {% elif order.status == 'cancelled' %}
+                <a href="/menu" class="btn btn-sm btn-outline-danger">Mua lại</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+function filterOrders(status, element) {
+    // 1. Đổi style active cho Tab
+    document.querySelectorAll('.nav-item-custom').forEach(el => el.classList.remove('active'));
+    element.classList.add('active');
+
+    // 2. Ẩn/Hiện đơn hàng
+    let orders = document.querySelectorAll('.filter-item');
+    let hasOrder = false;
+
+    orders.forEach(card => {
+        if (status === 'all' || card.getAttribute('data-status') === status) {
+            card.style.display = 'block';
+            hasOrder = true;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
+
+{% endblock %}

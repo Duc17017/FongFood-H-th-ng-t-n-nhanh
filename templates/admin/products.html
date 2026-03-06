@@ -1,0 +1,225 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-0 text-dark">Quản lý Thực đơn</h4>
+        <small class="text-muted">Tổng: {{ products|length }} món</small>
+    </div>
+    <button type="button" class="btn btn-primary fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#productModal" onclick="clearForm()">
+        <i class="fas fa-plus me-2"></i>Thêm món mới
+    </button>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-2 d-flex gap-2 overflow-auto">
+        <a href="/admin/products" class="btn rounded-pill {{ 'btn-dark' if cat == 'all' else 'btn-light border' }}">Tất cả</a>
+        <a href="/admin/products?category=fastfood" class="btn rounded-pill {{ 'btn-dark' if cat == 'fastfood' else 'btn-light border' }}">Đồ ăn nhanh</a>
+        <a href="/admin/products?category=noodle" class="btn rounded-pill {{ 'btn-dark' if cat == 'noodle' else 'btn-light border' }}">Bún/Phở</a>
+        <a href="/admin/products?category=drink" class="btn rounded-pill {{ 'btn-dark' if cat == 'drink' else 'btn-light border' }}">Đồ uống</a>
+        <a href="/admin/products?category=pizza" class="btn rounded-pill {{ 'btn-dark' if cat == 'pizza' else 'btn-light border' }}">Pizza</a>
+    </div>
+</div>
+
+<div class="row g-3">
+    {% for pid, p in products.items() %}
+    {% if cat == 'all' or p.get('category') == cat %}
+    <div class="col-12 col-md-6 col-xl-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="d-flex p-3 align-items-center">
+                <div class="rounded-3 overflow-hidden bg-light border flex-shrink-0" style="width: 100px; height: 100px;">
+                    {% if p.get('image') %}
+                    <img src="{{ p.image }}" class="w-100 h-100" style="object-fit: cover;">
+                    {% else %}
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted"><i class="fas fa-image fa-2x"></i></div>
+                    {% endif %}
+                </div>
+                <div class="ms-3 flex-grow-1">
+                    <h6 class="fw-bold text-dark mb-1">{{ p.get('name', 'Chưa có tên') }}</h6>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-light text-dark border">{{ p.get('category', 'Khác') }}</span>
+                        <span class="text-danger fw-bold">{{ "{:,.0f}".format(p.get('price', 0)|float) }}đ</span>
+                    </div>
+                    <p class="small text-muted mb-2 text-truncate" style="max-width: 200px;">{{ p.get('description', '') }}</p>
+
+                    <div>
+                        <button class="btn btn-sm btn-outline-primary me-1 btn-edit" 
+                                data-id="{{ pid }}" 
+                                data-name="{{ p.get('name', '') }}"
+                                data-price="{{ p.get('price', 0) }}"
+                                data-category="{{ p.get('category', 'fastfood') }}"
+                                data-promoted="{{ 'true' if p.get('isPromoted') else 'false' }}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        
+                        <textarea id="desc-{{ pid }}" class="d-none">{{ p.get('description', '') }}</textarea>
+                        <textarea id="img-{{ pid }}" class="d-none">{{ p.get('image', '') }}</textarea>
+
+                        <a href="/admin/product/delete/{{ pid }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa món này?')"><i class="fas fa-trash"></i></a>
+                    </div>
+                </div>
+            </div>
+            {% if p.get('isPromoted') %}
+            <div class="position-absolute top-0 end-0 m-2"><span class="badge bg-danger">HOT</span></div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="col-12 text-center py-5 text-muted">Chưa có món ăn nào.</div>
+    {% endfor %}
+</div>
+
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <form class="modal-content" action="/admin/products" method="POST" enctype="multipart/form-data">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="modalTitle">Thêm món ăn mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="pid" id="pid">
+                <input type="hidden" name="image_base64" id="image_base64">
+
+                <div class="row g-3">
+                    <div class="col-md-4 text-center">
+                        <div class="border rounded-3 d-flex align-items-center justify-content-center bg-light mb-3 position-relative overflow-hidden" style="height: 200px;">
+                            <img id="previewImage" src="" class="w-100 h-100" style="object-fit: cover; display: none;">
+                            <div id="placeholderImage" class="text-muted"><i class="fas fa-cloud-upload-alt fa-3x mb-2"></i><br>Chọn ảnh</div>
+                            <input type="file" name="image_file" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor: pointer;" onchange="previewFile(this)">
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên món ăn</label>
+                            <input type="text" name="name" id="name" class="form-control" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label fw-bold">Giá bán</label>
+                                <input type="number" name="price" id="price" class="form-control" required>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label fw-bold">Danh mục</label>
+                                <select name="category" id="category" class="form-select">
+                                    <option value="fastfood">Đồ ăn nhanh</option>
+                                    <option value="noodle">Bún / Phở</option>
+                                    <option value="drink">Đồ uống</option>
+                                    <option value="bread">Bánh mì</option>
+                                    <option value="pizza">Pizza</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold d-flex justify-content-between align-items-center">
+                                <span>Mô tả / Đánh giá</span>
+                                <button type="button" class="btn btn-sm btn-warning text-dark fw-bold" onclick="generateAIDesc()">
+                                    <i class="fas fa-magic me-1"></i> AI Viết mô tả
+                                </button>
+                            </label>
+                            <textarea name="description" id="description" class="form-control" rows="3" placeholder="Nhập mô tả..."></textarea>
+                            <div id="aiLoading" class="text-primary small mt-1 d-none"><i class="fas fa-spinner fa-spin me-1"></i> AI đang suy nghĩ...</div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="isPromoted" id="isPromoted">
+                            <label class="form-check-label" for="isPromoted">Đẩy lên mục HOT</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-primary fw-bold px-4">Lưu</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function previewFile(input) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('previewImage').src = e.target.result;
+                document.getElementById('previewImage').style.display = 'block';
+                document.getElementById('placeholderImage').style.display = 'none';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function clearForm() {
+        document.getElementById('modalTitle').innerText = 'Thêm món ăn mới';
+        document.getElementById('pid').value = '';
+        document.getElementById('name').value = '';
+        document.getElementById('price').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('image_base64').value = '';
+        document.getElementById('previewImage').style.display = 'none';
+        document.getElementById('placeholderImage').style.display = 'block';
+        document.getElementById('isPromoted').checked = false;
+    }
+
+    // Logic xử lý nút Sửa đã được viết lại an toàn tuyệt đối
+    document.addEventListener('DOMContentLoaded', function() {
+        const editBtns = document.querySelectorAll('.btn-edit');
+        editBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const pid = this.getAttribute('data-id');
+                
+                var myModal = new bootstrap.Modal(document.getElementById('productModal'));
+                document.getElementById('modalTitle').innerText = 'Chỉnh sửa món ăn';
+                
+                // Lấy các dữ liệu cơ bản từ data attributes
+                document.getElementById('pid').value = pid;
+                document.getElementById('name').value = this.getAttribute('data-name');
+                document.getElementById('price').value = this.getAttribute('data-price');
+                document.getElementById('category').value = this.getAttribute('data-category');
+                document.getElementById('isPromoted').checked = this.getAttribute('data-promoted') === 'true';
+
+                // Lấy ảnh và mô tả từ textarea ẩn (Chống lỗi ngắt dòng, lỗi dấu ngoặc)
+                const descText = document.getElementById('desc-' + pid).value;
+                const imgBase64 = document.getElementById('img-' + pid).value;
+                
+                document.getElementById('description').value = descText;
+
+                if (imgBase64 && imgBase64.trim() !== '') {
+                    document.getElementById('previewImage').src = imgBase64;
+                    document.getElementById('previewImage').style.display = 'block';
+                    document.getElementById('placeholderImage').style.display = 'none';
+                    document.getElementById('image_base64').value = imgBase64;
+                } else {
+                    document.getElementById('previewImage').style.display = 'none';
+                    document.getElementById('placeholderImage').style.display = 'block';
+                    document.getElementById('image_base64').value = '';
+                }
+                myModal.show();
+            });
+        });
+    });
+
+    function generateAIDesc() {
+        const name = document.getElementById('name').value;
+        if (!name) { alert('Vui lòng nhập tên món ăn trước!'); return; }
+        const loading = document.getElementById('aiLoading');
+        const descArea = document.getElementById('description');
+        
+        loading.classList.remove('d-none'); descArea.value = "";
+        fetch('/admin/api/generate_description', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name })
+        })
+        .then(res => res.json())
+        .then(data => {
+            loading.classList.add('d-none');
+            let i = 0; const txt = data.description;
+            function type() { if(i < txt.length) { descArea.value += txt.charAt(i); i++; setTimeout(type, 20); } }
+            type();
+        })
+        .catch(err => { loading.classList.add('d-none'); alert('Lỗi AI: ' + err); });
+    }
+</script>
+{% endblock %}

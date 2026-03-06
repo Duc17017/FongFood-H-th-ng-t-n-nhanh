@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <a href="/history" class="text-decoration-none mb-3 d-inline-block"><i class="fas fa-arrow-left"></i> Quay lại</a>
+        <div class="card shadow p-4">
+            <div class="text-center mb-4">
+                <i class="fas fa-receipt fa-3x text-primary mb-2"></i>
+                <h4>Chi Tiết Đơn Hàng</h4>
+                <p class="text-muted">Mã đơn: #{{ order.id }}</p>
+            </div>
+
+            <div class="row mb-3 border-bottom pb-3">
+                <div class="col-6">
+                    <p class="mb-1"><strong>Người nhận:</strong> {{ order.customerName }}</p>
+                    <p class="mb-1"><strong>Địa chỉ:</strong> {{ order.address }}</p>
+                </div>
+                <div class="col-6 text-end">
+                    <p class="mb-1"><strong>Trạng thái:</strong> <span class="badge bg-primary">{{ order.status }}</span></p>
+                    <p class="mb-1"><strong>Ngày đặt:</strong> {{ order.date }}</p>
+                </div>
+            </div>
+
+            <table class="table table-borderless">
+                <thead>
+                    <tr class="text-secondary">
+                        <th>Món ăn</th>
+                        <th class="text-center">SL</th>
+                        <th class="text-end">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td class="text-center">x{{ item.quantity }}</td>
+                        <td class="text-end fw-bold">{{ "{:,.0f}".format(item.price * item.quantity) }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="border-top">
+                        <td colspan="2" class="fw-bold fs-5">TỔNG CỘNG</td>
+                        <td class="text-end fw-bold fs-5 text-danger">{{ "{:,.0f}".format(order.total) }} đ</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

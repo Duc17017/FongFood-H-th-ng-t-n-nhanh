@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-03-06T00:00:00.000Z" agent="Claude" version="21.0.0">
+  <diagram name="Fong Food App - Database Schema" id="database">
+    <mxGraphModel dx="2000" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title1" value="FONG FOOD APP - DATABASE SCHEMA (Firebase)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="300" y="20" width="600" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- USERS Collection -->
+        <mxCell id="users_title" value="users (Collection)" style="text;html=1;strokeColor=#b85450;fillColor=#f8cecc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="users_box" value="&#xa;username (key)&#xa;─────────────────&#xa;password: string&#xa;name: string&#xa;email: string&#xa;phone: string&#xa;role: string&#xa;avatar: string&#xa;dob: string&#xa;gender: string&#xa;login_token: string&#xa;addresses: [Address]&#xa;created_at: datetime&#xa;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontColor=#333333;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="120" width="180" height="180" as="geometry" />
+        </mxCell>
+
+        <!-- PRODUCTS Collection -->
+        <mxCell id="products_title" value="products (Collection)" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="260" y="80" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="products_box" value="&#xa;product_id (key)&#xa;─────────────────&#xa;name: string&#xa;price: number&#xa;category: string&#xa;description: string&#xa;image: string&#xa;isPromoted: boolean&#xa;isAvailable: boolean&#xa;created_at: datetime&#xa;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontColor=#333333;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="260" y="120" width="180" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- ORDERS Collection -->
+        <mxCell id="orders_title" value="orders (Collection)" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="480" y="80" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="orders_box" value="&#xa;order_id (key)&#xa;─────────────────&#xa;id: string&#xa;user: string&#xa;customerName: string&#xa;phone: string&#xa;address: string&#xa;total: number&#xa;subtotal: number&#xa;voucher_discount: number&#xa;voucher_code: string&#xa;status: string&#xa;paymentMethod: string&#xa;paymentStatus: string&#xa;proofImage: string&#xa;date: string&#xa;items: [Item]&#xa;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontColor=#333333;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="480" y="120" width="180" height="220" as="geometry" />
+        </mxCell>
+
+        <!-- CARTS Collection -->
+        <mxCell id="carts_title" value="carts (Collection)" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="700" y="80" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="carts_box" value="&#xa;user_id/carts (path)&#xa;─────────────────&#xa;{product_id}: {&#xa;  id: string&#xa;  name: string&#xa;  price: number&#xa;  qty: number&#xa;}&#xa;&#xa;Multiple cart items&#xa;stored as key-value&#xa;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;fontColor=#333333;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="700" y="120" width="180" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- VOUCHERS Collection -->
+        <mxCell id="vouchers_title" value="vouchers (Collection)" style="text;html=1;strokeColor=#9673a6;fillColor=#e1d5e7;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="920" y="80" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="vouchers_box" value="&#xa;voucher_code (key)&#xa;─────────────────&#xa;code: string&#xa;discount: number&#xa;type: string&#xa;min_order: number&#xa;valid_until: datetime&#xa;user: string&#xa;reason: string&#xa;created_at: datetime&#xa;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;fontColor=#333333;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="920" y="120" width="180" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- NOTIFICATIONS Collection -->
+        <mxCell id="notifs_title" value="notifications (Collection)" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="350" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="notifs_box" value="&#xa;user_id/notifications&#xa;─────────────────&#xa;{notification_id}: {&#xa;  id: string&#xa;  title: string&#xa;  message: string&#xa;  time: string&#xa;  link: string&#xa;  type: string&#xa;  is_new: boolean&#xa;  is_read: boolean&#xa;}&#xa;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;fontColor=#333333;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="390" width="180" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- REVIEWS Collection -->
+        <mxCell id="reviews_title" value="reviews (Collection)" style="text;html=1;strokeColor=#d79b00;fillColor=#ffe6cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="260" y="350" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="reviews_box" value="&#xa;review_id (key)&#xa;─────────────────&#xa;user: string&#xa;product_id: string&#xa;order_id: string&#xa;rating: number&#xa;comment: string&#xa;created_at: datetime&#xa;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;fontColor=#333333;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="260" y="390" width="180" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- ADDRESSES Collection -->
+        <mxCell id="addr_title" value="addresses (Collection)" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="480" y="350" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="addr_box" value="&#xa;user_id/addresses&#xa;─────────────────&#xa;{address_id}: {&#xa;  id: string&#xa;  fullname: string&#xa;  phone: string&#xa;  city: string&#xa;  district: string&#xa;  ward: string&#xa;  detail: string&#xa;  full_address: string&#xa;  is_default: boolean&#xa;}&#xa;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontColor=#333333;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="480" y="390" width="180" height="170" as="geometry" />
+        </mxCell>
+
+        <!-- Data Type Legend -->
+        <mxCell id="legend_title" value="Data Types Reference" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="700" y="350" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend_box" value="string: Text data&#xa;number: Integer/Float&#xa;boolean: true/false&#xa;datetime: ISO format&#xa;[Array]: List of items&#xa;{Object}: Nested object&#xa;&#xa;Firebase Realtime DB&#xa;stores as JSON tree" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;fontColor=#333333;align=left;spacingLeft=10;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="700" y="390" width="180" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- Relationships -->
+        <mxCell id="rel_title" value="Relationships" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="920" y="350" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="rel_box" value="users → orders&#xa;  (one-to-many)&#xa;&#xa;users → carts&#xa;  (one-to-one)&#xa;&#xa;users → addresses&#xa;  (one-to-many)&#xa;&#xa;users → notifications&#xa;  (one-to-many)&#xa;&#xa;orders → products&#xa;  (many-to-many via items)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;fontColor=#333333;align=left;spacingLeft=10;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="920" y="390" width="180" height="150" as="geometry" />
+        </mxCell>
+
+        <!-- Order Status Flow -->
+        <mxCell id="status_title" value="Order Status Flow" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="580" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="status1" value="pending" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="60" y="620" width="80" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="status2" value="shipping" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="180" y="620" width="80" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="status3" value="completed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="300" y="620" width="80" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="status4" value="cancelled" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="180" y="660" width="80" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- Status Arrows -->
+        <mxCell id="arr_s1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=1;fillColor=#ffffff;" edge="1" parent="1" source="status1" target="status2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_s1_label" value="Admin approves" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" vertex="1" connectable="0" parent="arr_s1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_s2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=1;fillColor=#ffffff;" edge="1" parent="1" source="status2" target="status3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_s2_label" value="Customer confirms" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#666666;" vertex="1" connectable="0" parent="arr_s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_s3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=1;fillColor=#ffffff;" edge="1" parent="1" source="status1" target="status4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_s3_label" value="Cancel" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#b85450;" vertex="1" connectable="0" parent="arr_s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Payment Methods -->
+        <mxCell id="pay_title" value="Payment Methods" style="text;html=1;strokeColor=#d79b00;fillColor=#ffe6cc;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="440" y="580" width="150" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pay1" value="cod" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="450" y="620" width="60" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pay2" value="qr" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="520" y="620" width="60" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pay3" value="vnpay" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="450" y="655" width="60" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pay4" value="momo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="520" y="655" width="60" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- User Roles -->
+        <mxCell id="role_title" value="User Roles" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="640" y="580" width="120" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="role1" value="admin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="650" y="620" width="80" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="role2" value="customer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="650" y="655" width="80" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- Note -->
+        <mxCell id="note" value="Note: Firebase Realtime Database stores data as a JSON tree. Collections are logical groupings, not physical tables." style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="720" width="500" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Created Info -->
+        <mxCell id="created" value="Generated by Claude AI - 2026" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="870" width="180" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

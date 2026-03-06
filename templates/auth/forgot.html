@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khôi phục mật khẩu - Fong Food</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f5f7fa; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .card-forgot { width: 100%; max-width: 450px; border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 30px; background: white; }
+        .form-control { border-radius: 10px; padding: 12px; font-size: 14px; }
+        .btn-custom { border-radius: 10px; padding: 12px; font-weight: bold; width: 100%; }
+        /* Ẩn các phần nhập liệu lúc đầu */
+        .otp-group, .password-group, .btn-submit-group { display: none; margin-top: 15px; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="card-forgot">
+    <h4 class="text-center text-danger fw-bold mb-3">KHÔI PHỤC MẬT KHẨU</h4>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} py-2 text-center small">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('auth.forgot_password') }}" method="POST">
+        <div class="mb-3">
+            <label class="fw-bold small mb-1">Số điện thoại hoặc Email</label>
+            <div class="input-group">
+                <input type="text" id="targetInput" name="target" class="form-control bg-light" placeholder="Nhập thông tin đã đăng ký" required>
+                <button type="button" class="btn btn-outline-danger" id="btnOtp" onclick="handleSendOtp()">Lấy mã</button>
+            </div>
+        </div>
+
+        <div class="otp-group" id="groupOtp">
+            <label class="fw-bold small mb-1">Mã xác thực (OTP)</label>
+            <div class="d-flex justify-content-between align-items-center">
+                <input type="text" name="otp" class="form-control border-danger text-center fw-bold letter-spacing-2" placeholder="######" maxlength="6">
+                <span class="text-muted ms-2 small text-nowrap" id="timer"></span>
+            </div>
+        </div>
+
+        <div class="password-group" id="groupPass">
+            <div class="mb-3 mt-3">
+                <label class="fw-bold small mb-1">Mật khẩu mới</label>
+                <input type="password" name="password" class="form-control bg-light" placeholder="Tối thiểu 8 ký tự" minlength="8">
+            </div>
+            <div class="mb-3">
+                <label class="fw-bold small mb-1">Xác nhận mật khẩu</label>
+                <input type="password" name="confirm_password" class="form-control bg-light" placeholder="Nhập lại mật khẩu mới" minlength="8">
+            </div>
+        </div>
+
+        <div class="btn-submit-group" id="groupBtn">
+            <button type="submit" class="btn btn-danger btn-custom text-white shadow-sm">ĐỔI MẬT KHẨU NGAY</button>
+        </div>
+
+        <div class="text-center mt-3">
+            <a href="/" class="text-decoration-none text-muted small">← Quay lại Đăng nhập</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function startTimer() {
+        let timer = 60;
+        const btn = document.getElementById('btnOtp');
+        const display = document.getElementById('timer');
+        btn.disabled = true;
+        const interval = setInterval(() => {
+            display.textContent = `(${timer}s)`;
+            timer--;
+            if (timer < 0) {
+                clearInterval(interval);
+                btn.disabled = false; btn.textContent = "Gửi lại"; display.textContent = "";
+            }
+        }, 1000);
+    }
+
+    function handleSendOtp() {
+        const targetVal = document.getElementById('targetInput').value;
+        if (!targetVal) { alert("Vui lòng nhập SĐT hoặc Email!"); return; }
+
+        // Gọi API gửi OTP
+        fetch('/api/send-otp', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ target: targetVal, purpose: 'forgot' })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Hiển thị thông báo - nếu có debug OTP thì hiển thị luôn
+                let msg = "Mã OTP đã được gửi! Vui lòng kiểm tra.";
+                if (data.otp_code) {
+                    msg = "🔑 Mã OTP của bạn là: " + data.otp_code + "\n(Lưu ý: Đây là chế độ test)";
+                    alert(msg);
+                } else {
+                    alert(msg);
+                }
+                
+                // HIỆN CÁC Ô NHẬP LIỆU
+                document.getElementById('groupOtp').style.display = 'block';
+                document.getElementById('groupPass').style.display = 'block';
+                document.getElementById('groupBtn').style.display = 'block';
+                
+                // Khóa ô nhập SĐT để tránh sửa đổi
+                document.getElementById('targetInput').readOnly = true;
+                
+                startTimer();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Lỗi kết nối Server! Hãy kiểm tra lại.");
+        });
+    }
+</script>
+</body>
+</html>

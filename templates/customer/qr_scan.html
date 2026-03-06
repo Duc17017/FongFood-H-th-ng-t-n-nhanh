@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quét QR - FONG FOOD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        body { background: #000; min-height: 100vh; display: flex; flex-direction: column; }
+        .scanner-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #reader {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .scan-overlay {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            border: 3px solid #00ff00;
+            border-radius: 16px;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+        }
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #00ff00;
+            animation: scan 2s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0; }
+            50% { top: 100%; }
+            100% { top: 0; }
+        }
+        .result-box {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-box.success { border: 2px solid #00ff00; }
+        .result-box.error { border: 2px solid #ff0000; }
+        .btn-scan {
+            background: #00ff00;
+            color: #000;
+            font-weight: bold;
+            padding: 15px 40px;
+            border-radius: 50px;
+            border: none;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .btn-close-scanner {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 20px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="btn-close-scanner"><i class="fas fa-arrow-left"></i></a>
+    
+    <div class="scanner-container">
+        <h4 style="color: white; margin-bottom: 20px;">Quét mã QR đơn hàng</h4>
+        
+        <div id="reader"></div>
+        
+        <div class="scan-overlay" id="scanOverlay">
+            <div class="scan-line"></div>
+        </div>
+        
+        <div class="result-box" id="resultBox">
+            <i class="fas fa-check-circle text-success" style="font-size: 48px;" id="resultIcon"></i>
+            <h5 class="mt-3" id="resultTitle" style="color: white;">Đơn hàng hợp lệ!</h5>
+            <p class="text-muted" id="resultMessage" style="color: #aaa;"></p>
+            <a href="/admin/orders" class="btn btn-primary mt-2">Xem đơn hàng</a>
+        </div>
+        
+        <button class="btn-scan" id="startScan" onclick="startScanner()">
+            <i class="fas fa-qrcode me-2"></i> Bắt đầu quét
+        </button>
+    </div>
+
+    <script>
+        let html5QrcodeScanner = null;
+        
+        function startScanner() {
+            document.getElementById('startScan').style.display = 'none';
+            document.getElementById('scanOverlay').style.display = 'block';
+            document.getElementById('reader').style.display = 'block';
+            
+            html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader",
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                /* verbose= */ false
+            );
+            
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        }
+        
+        function onScanSuccess(decodedText, decodedResult) {
+            // Dừng scanner
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear();
+            }
+            
+            console.log("QR Code scanned: ", decodedText);
+            
+            // Gọi API kiểm tra đơn hàng
+            fetch('/api/v1/qr/check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ qr_data: decodedText })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const resultBox = document.getElementById('resultBox');
+                const resultIcon = document.getElementById('resultIcon');
+                const resultTitle = document.getElementById('resultTitle');
+                const resultMessage = document.getElementById('resultMessage');
+                
+                resultBox.classList.add('show');
+                document.getElementById('reader').style.display = 'none';
+                document.getElementById('scanOverlay').style.display = 'none';
+                
+                if (data.success) {
+                    resultBox.className = 'result-box show success';
+                    resultIcon.className = 'fas fa-check-circle text-success';
+                    resultIcon.style.fontSize = '48px';
+                    resultTitle.innerText = 'Đơn hàng hợp lệ!';
+                    resultMessage.innerHTML = `
+                        <strong>Mã đơn:</strong> ${data.order_id}<br>
+                        <strong>Khách hàng:</strong> ${data.customer_name || 'N/A'}<br>
+                        <strong>Tổng tiền:</strong> ${data.total ? data.total.toLocaleString() + ' đ' : 'N/A'}<br>
+                        <strong>Trạng thái:</strong> ${data.status || 'N/A'}
+                    `;
+                } else {
+                    resultBox.className = 'result-box show error';
+                    resultIcon.className = 'fas fa-times-circle text-danger';
+                    resultIcon.style.fontSize = '48px';
+                    resultTitle.innerText = 'Mã QR không hợp lệ!';
+                    resultMessage.innerText = data.message || 'Đơn hàng không tồn tại hoặc đã hết hạn.';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                const resultBox = document.getElementById('resultBox');
+                resultBox.className = 'result-box show error';
+                resultBox.classList.add('show');
+                document.getElementById('resultTitle').innerText = 'Lỗi kết nối!';
+                document.getElementById('resultMessage').innerText = 'Không thể kết nối server.';
+            });
+        }
+        
+        function onScanFailure(error) {
+            // console.warn(`Code scan error = ${error}`);
+        }
+    </script>
+</body>
+</html>

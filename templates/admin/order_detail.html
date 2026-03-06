@@ -1,0 +1,71 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                <h5 class="mb-0">Đơn hàng #{{ order.id }}</h5>
+                <span class="badge bg-primary fs-6">{{ order.status }}</span>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-muted">THÔNG TIN KHÁCH HÀNG</h6>
+                        <p class="mb-1"><strong>Tên:</strong> {{ order.customerName }}</p>
+                        <p class="mb-1"><strong>Địa chỉ:</strong> {{ order.address }}</p>
+                        <p class="mb-1"><strong>Ngày đặt:</strong> {{ order.date }}</p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <h6 class="text-muted">TỔNG THANH TOÁN</h6>
+                        <h2 class="text-danger fw-bold">{{ "{:,.0f}".format(order.total) }} đ</h2>
+                        <small class="text-muted">Phương thức: {{ order.paymentMethod }}</small>
+                    </div>
+                </div>
+
+                <h6 class="text-muted">DANH SÁCH MÓN ĂN</h6>
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Tên món</th>
+                            <th class="text-center">Số lượng</th>
+                            <th class="text-end">Đơn giá</th>
+                            <th class="text-end">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    {% for item in order.details %} 
+<tr>
+    <td>{{ item.name }}</td>
+    <td class="text-center">x{{ item.qty }}</td>
+    <td class="text-end fw-bold">{{ "{:,.0f}".format(item.price * item.qty) }}</td>
+</tr>
+{% endfor %}
+    <tr class="border-top">
+        <td colspan="2" class="fw-bold fs-5">TỔNG CỘNG</td>
+        <td class="text-end fw-bold fs-5 text-danger">{{ "{:,.0f}".format(order.total) }} đ</td>
+    </tr>
+</tbody>
+                </table>
+            </div>
+            
+            <div class="card-footer bg-light p-3">
+                <h6 class="mb-2">Cập nhật trạng thái:</h6>
+                <div class="d-flex gap-2">
+                    <a href="/admin/update_status/{{ order.id }}/shipping" class="btn btn-primary flex-fill">
+                        <i class="fas fa-truck"></i> Giao hàng
+                    </a>
+                    <a href="/admin/update_status/{{ order.id }}/completed" class="btn btn-success flex-fill">
+                        <i class="fas fa-check"></i> Hoàn thành
+                    </a>
+                    <a href="/admin/update_status/{{ order.id }}/cancelled" class="btn btn-danger flex-fill">
+                        <i class="fas fa-times"></i> Hủy đơn
+                    </a>
+                </div>
+                <div class="mt-3 text-center">
+                    <a href="/admin/orders" class="text-decoration-none">Quay lại danh sách</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

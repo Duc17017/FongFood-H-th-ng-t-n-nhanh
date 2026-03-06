@@ -1,0 +1,188 @@
+# Fong Food - Smart Food Delivery Application
+
+## Giới thiệu
+
+Fong Food là ứng dụng đặt đồ ăn thông minh với tích hợp AI (Trí tuệ nhân tạo) cho trải nghiệm khách hàng đỉnh cao và vận hành tự động.
+
+## Tính năng
+
+### PHẦN 1: Backend API (RESTful)
+
+Flask đã được chuyển đổi thành RESTful API chuẩn, trả về dữ liệu JSON.
+
+#### Authentication API (`/api/v1/auth`)
+- `POST /api/v1/auth/register` - Đăng ký tài khoản
+- `POST /api/v1/auth/login` - Đăng nhập
+- `POST /api/v1/auth/logout` - Đăng xuất
+- `GET /api/v1/auth/profile` - Lấy thông tin profile
+- `PUT /api/v1/auth/profile` - Cập nhật profile
+
+#### Products API (`/api/v1/products`)
+- `GET /api/v1/products` - Lấy danh sách sản phẩm (hỗ trợ filter category, search)
+- `GET /api/v1/products/<id>` - Lấy chi tiết sản phẩm
+
+#### Cart API (`/api/v1/cart`)
+- `GET /api/v1/cart` - Lấy giỏ hàng
+- `POST /api/v1/cart/add` - Thêm vào giỏ hàng
+- `PUT /api/v1/cart/update` - Cập nhật số lượng
+- `DELETE /api/v1/cart/remove/<id>` - Xóa sản phẩm khỏi giỏ
+- `DELETE /api/v1/cart/clear` - Xóa toàn bộ giỏ hàng
+
+#### Orders API (`/api/v1/orders`)
+- `GET /api/v1/orders` - Lấy danh sách đơn hàng
+- `GET /api/v1/orders/<id>` - Lấy chi tiết đơn hàng
+- `POST /api/v1/orders` - Tạo đơn hàng mới
+- `POST /api/v1/orders/<id>/cancel` - Hủy đơn hàng
+
+#### Address API (`/api/v1/addresses`)
+- `GET /api/v1/addresses` - Lấy danh sách địa chỉ
+- `POST /api/v1/addresses` - Thêm địa chỉ mới
+- `PUT /api/v1/addresses/<id>` - Cập nhật địa chỉ
+- `PUT /api/v1/addresses/<id>/default` - Đặt làm mặc định
+- `DELETE /api/v1/addresses/<id>` - Xóa địa chỉ
+
+#### Categories API (`/api/v1/categories`)
+- `GET /api/v1/categories` - Lấy danh mục sản phẩm
+
+#### Payment API (`/api/v1/payment`)
+- `POST /api/v1/payment/create-qr` - Tạo mã QR thanh toán (Momo, VNPay, ZaloPay)
+- `POST /api/v1/payment/callback` - Callback từ cổng thanh toán
+
+### PHẦN 2: AI Cho Khách Hàng
+
+#### AI Voice Ordering (`/api/v1/ai/voice-order`)
+- Khách nói: "Cho anh 2 bún bò nhiều thịt không hành và 1 trà đá đến 335 Cầu Giấy"
+- AI tự động nhận diện: món, số lượng, ghi chú, địa chỉ
+- Tự động thêm vào giỏ hàng
+
+#### AI Smart Upselling (`/api/v1/ai/smart-upselling`)
+- Khi khách thêm "Gà rán" vào giỏ:
+- AI phân tích thời tiết, giờ trong ngày, lịch sử mua
+- Gợi ý: "Trời đang mưa, thêm Trà đào ấm và Khoai tây chiên nhé! Combo giảm 15%"
+
+#### AI Visual Food Search (`/api/v1/ai/visual-search`)
+- Khách chụp ảnh món ăn trên Tiktok
+- AI nhận diện món và tìm trong menu
+- Trả về: "Đây là Sườn xào chua ngọt, giá 55k, bạn muốn đặt không?"
+
+#### AI Chatbot CSKH 24/7 (`/api/v1/ai/chatbot`)
+- Trả lời tự động như nhân viên thật
+- Kiểm tra trạng thái đơn hàng real-time
+- Xử lý khiếu nại, đền bù tự động
+
+### PHẦN 3: AI Cho Admin (Vận hành)
+
+#### AI Inventory Forecast (`/api/v1/ai/inventory-forecast`)
+- Cuối ngày, AI báo cáo:
+- "Cuối tuần mưa lạnh + có trận bóng đá: Nhập thêm 50kg Gà, 20 thùng Bia"
+
+#### AI Dynamic Pricing (`/api/v1/ai/dynamic-pricing`)
+- Giống Grab/Uber:
+- Cao điểm (11h-13h, 18h-20h): Tăng giá 5-15%
+- Thấp điểm (14h-17h): Tự động tạo Flash Sale giảm 15-20%
+
+#### AI Review Sentiment (`/api/v1/ai/review-sentiment`)
+- Khách đánh giá 1 sao: "Đồ ăn bị chua"
+- AI tự động:
+  - Gửi lời xin lỗi
+  - Tạo voucher 20% đền bù
+  - Alert cho admin nếu nghiêm trọng: "Cảnh báo: Lô thịt hôm nay có vấn đề"
+
+#### AI Auto-Marketing (`/api/v1/ai/auto-marketing`)
+- Admin up 1 tấm ảnh món ăn
+- AI tự động:
+  - Tạo caption hấp dẫn
+  - Sinh kịch bản Tiktok
+  - Đề xuất giờ đăng tối ưu
+
+### PHẦN 4: Tính năng Bổ sung
+
+#### Google Maps & Tracking
+- `/api/v1/ai/calculate-shipping`: Tính phí ship theo khoảng cách
+- `/api/v1/ai/track-order/<id>`: Theo dõi shipper real-time (icon xe trên bản đồ)
+
+#### Thanh toán Online
+- Tích hợp: Momo, VNPay, ZaloPay (QR Code tự động)
+- Tự động cập nhật trạng thái sau thanh toán
+
+#### Gamification (Tích điểm - Xếp hạng)
+- `/api/v1/ai/gamification/profile`: Xem hạng thành viên
+- Hạng: Đồng → Bạc → Vàng → Kim Cương
+- Đặc quyền theo hạng (tích điểm, freeship, giảm giá)
+- Vòng quay may mắn: 100 điểm/quay
+
+#### Push Notification
+- `/api/v1/ai/notifications/send`: Gửi notification cho user
+- `/api/v1/ai/notifications/campaign`: Gửi marketing campaign
+- Tích hợp FCM (Firebase Cloud Messaging)
+
+### PHẦN 5: PWA (Progressive Web App)
+
+- Manifest: `/static/manifest.json`
+- Service Worker: `/static/service-worker.js`
+- Giao diện: `/templates/pwa_layout.html`
+- Tính năng:
+  - Cài đặt trên màn hình chính
+  - Offline support
+  - Push notifications
+  - Pull to refresh
+
+## Cài đặt
+
+```bash
+# Clone project
+cd "C:\CNPM - python"
+
+# Tạo virtual environment
+python -m venv venv
+source venv/Scripts/activate  # Windows
+
+# Cài đặt dependencies
+pip install -r requirements.txt
+
+# Chạy server
+python app.py
+```
+
+## Environment Variables (.env)
+
+```env
+SECRET_KEY=your_secret_key
+FIREBASE_URL=https://your-firebase-url.firebaseio.com/
+FLASK_DEBUG=1
+
+# AI APIs (optional - for production)
+GEMINI_API_KEY=your_gemini_key
+OPENAI_API_KEY=your_openai_key
+
+# Payment Gateways
+VNPAY_TMN_CODE=your_vnpay_code
+VNPAY_HASH_SECRET=your_vnpay_secret
+
+MOMO_PARTNER_CODE=your_momo_code
+MOMO_SECRET_KEY=your_momo_key
+
+ZALOPAY_APP_ID=your_zalopay_id
+ZALOPAY_KEY1=your_zalopay_key
+
+# External APIs
+GOOGLE_MAPS_API_KEY=your_google_maps_key
+OPENWEATHER_API_KEY=your_weather_key
+FCM_SERVER_KEY=your_fcm_key
+```
+
+## Demo
+
+Sau khi chạy, truy cập:
+- Web App: http://localhost:5000
+- API Documentation: http://localhost:5000/api/v1/
+
+## Ghi chú
+
+- Các API AI trong code hiện tại là simulation (mock data)
+- Để sử dụng thực tế, cần tích hợp:
+  - Google Cloud Vision API (Visual Search)
+  - Gemini/ChatGPT API (Voice Ordering, Chatbot)
+  - OpenWeatherMap API (Weather data)
+  - Google Distance Matrix API (Shipping calculation)
+  - FCM (Push notifications)

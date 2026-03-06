@@ -1,0 +1,22 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card text-center p-5 shadow">
+            <div class="mb-3">
+                <img src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png" width="100" class="rounded-circle border border-3 border-danger p-1">
+            </div>
+            <h3>{{ user.name }}</h3>
+            <p class="text-muted mb-4">Vai trò: Super Admin</p>
+            
+            <ul class="list-group text-start mb-4">
+                <li class="list-group-item"><i class="fas fa-user me-2 text-primary"></i> Username: <strong>{{ user.username }}</strong></li>
+                <li class="list-group-item"><i class="fas fa-envelope me-2 text-danger"></i> Email: admin@fongfood.com</li>
+                <li class="list-group-item"><i class="fas fa-clock me-2 text-success"></i> Last login: Vừa xong</li>
+            </ul>
+
+            <a href="/logout" class="btn btn-outline-danger w-100">Đăng xuất</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,326 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<style>
+    :root {
+        --primary-color: #D32F2F;
+        --primary-light: #FF5252;
+        --primary-dark: #B71C1C;
+        --accent-color: #FFD700;
+        --success-color: #00B14F;
+        --text-dark: #1a1a1a;
+        --text-muted: #6c757d;
+        --text-light: #f8f9fa;
+        --bg-light: #f5f7fa;
+        --bg-white: #ffffff;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+        --shadow-md: 0 4px 20px rgba(0,0,0,0.12);
+        --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
+        --gradient-primary: linear-gradient(135deg, #D32F2F 0%, #FF5252 100%);
+        --gradient-account: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --border-radius-sm: 8px;
+        --border-radius-md: 12px;
+        --border-radius-lg: 16px;
+        --border-radius-xl: 24px;
+        --transition-fast: 0.2s ease;
+        --transition-normal: 0.3s ease;
+    }
+
+    .ai-fade-in { animation: aiFadeIn 0.5s ease forwards; }
+    .ai-slide-up { animation: aiSlideUp 0.5s ease forwards; }
+
+    @keyframes aiFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes aiSlideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Account Card */
+    .account-card {
+        background: var(--bg-white);
+        border-radius: var(--border-radius-xl);
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    /* User Info Header */
+    .user-info-header {
+        padding: 25px;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .user-avatar {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: 3px solid rgba(255,255,255,0.5);
+        object-fit: cover;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .user-avatar-placeholder {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        border: 3px solid rgba(255,255,255,0.5);
+    }
+
+    .user-details h5 {
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+
+    .user-details p {
+        font-size: 13px;
+        opacity: 0.9;
+        margin: 0;
+    }
+
+    .edit-profile-btn {
+        margin-left: auto;
+        padding: 8px 16px;
+        background: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all var(--transition-fast);
+    }
+
+    .edit-profile-btn:hover {
+        background: white;
+        color: var(--primary-color);
+    }
+
+    /* Menu Items */
+    .account-menu {
+        padding: 0;
+    }
+
+    .account-menu-item {
+        display: flex;
+        align-items: center;
+        padding: 16px 20px;
+        background: white;
+        border-bottom: 1px solid #f0f0f0;
+        text-decoration: none;
+        color: var(--text-dark);
+        transition: all var(--transition-fast);
+        position: relative;
+    }
+
+    .account-menu-item:last-child {
+        border-bottom: none;
+    }
+
+    .account-menu-item:hover {
+        background: #fafafa;
+        padding-left: 25px;
+    }
+
+    .account-menu-item:hover .menu-icon {
+        transform: scale(1.1);
+    }
+
+    .menu-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: var(--border-radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 16px;
+        transition: all var(--transition-normal);
+    }
+
+    .menu-icon.profile { background: #E3F2FD; color: #1976D2; }
+    .menu-icon.orders { background: #FFF3E0; color: #FF9800; }
+    .menu-icon.address { background: #E8F5E9; color: var(--success-color); }
+    .menu-icon.settings { background: #F3E5F5; color: #9C27B0; }
+    .menu-icon.support { background: #FFEBEE; color: var(--primary-color); }
+    .menu-icon.payment { background: #E0F7FA; color: #00ACC1; }
+    .menu-icon.favorite { background: #FCE4EC; color: #E91E63; }
+
+    .menu-text {
+        flex-grow: 1;
+        font-weight: 500;
+        font-size: 15px;
+    }
+
+    .menu-badge {
+        background: var(--primary-color);
+        color: white;
+        padding: 2px 10px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-right: 10px;
+    }
+
+    .menu-arrow {
+        color: #ccc;
+        font-size: 14px;
+        transition: all var(--transition-fast);
+    }
+
+    .account-menu-item:hover .menu-arrow {
+        color: var(--primary-color);
+        transform: translateX(5px);
+    }
+
+    /* Logout */
+    .logout-box {
+        margin-top: 10px;
+    }
+
+    .logout-btn {
+        display: flex;
+        align-items: center;
+        padding: 16px 20px;
+        background: white;
+        border-radius: var(--border-radius-lg);
+        text-decoration: none;
+        color: var(--primary-color);
+        font-weight: 600;
+        font-size: 15px;
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-fast);
+    }
+
+    .logout-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .logout-btn:hover .menu-icon {
+        background: rgba(255,255,255,0.2);
+        color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 576px) {
+        .user-info-header {
+            padding: 20px;
+        }
+        .user-avatar, .user-avatar-placeholder {
+            width: 55px;
+            height: 55px;
+        }
+        .edit-profile-btn {
+            display: none;
+        }
+    }
+</style>
+
+<div class="container py-3">
+    <!-- Account Card -->
+    <div class="account-card ai-slide-up">
+        <!-- User Info -->
+        <div class="user-info-header">
+            {% if user.avatar %}
+                <img src="{{ user.avatar }}" class="user-avatar" alt="Avatar">
+            {% else %}
+                <div class="user-avatar-placeholder">
+                    <i class="fas fa-user"></i>
+                </div>
+            {% endif %}
+            <div class="user-details">
+                <h5>{{ user.name }}</h5>
+                <p><i class="fas fa-phone me-1"></i>{{ user.username }}</p>
+            </div>
+            <a href="/profile" class="edit-profile-btn">
+                <i class="fas fa-edit me-1"></i> Sửa
+            </a>
+        </div>
+
+        <!-- Menu -->
+        <div class="account-menu">
+            <a href="/profile" class="account-menu-item">
+                <div class="menu-icon profile">
+                    <i class="far fa-user"></i>
+                </div>
+                <div class="menu-text">Thông tin tài khoản</div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+
+            <a href="/history" class="account-menu-item">
+                <div class="menu-icon orders">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="menu-text">
+                    Đơn hàng của tôi
+                    <span class="menu-badge">3</span>
+                </div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+
+            <a href="/address" class="account-menu-item">
+                <div class="menu-icon address">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="menu-text">Sổ địa chỉ</div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+
+            <a href="/settings" class="account-menu-item">
+                <div class="menu-icon settings">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="menu-text">Cài đặt & Bảo mật</div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+
+            <a href="/support" class="account-menu-item">
+                <div class="menu-icon support">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <div class="menu-text">Trung tâm hỗ trợ</div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Logout -->
+    <div class="logout-box ai-fade-in">
+        <a href="/logout" class="logout-btn">
+            <div class="menu-icon" style="background: #FFEBEE; color: #D32F2F; margin-right: 15px;">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <div class="menu-text">Đăng xuất</div>
+            <i class="fas fa-chevron-right menu-arrow" style="margin-left: auto;"></i>
+        </a>
+    </div>
+</div>
+
+<script>
+    // Add click animation
+    document.querySelectorAll('.account-menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 100);
+        });
+    });
+</script>
+{% endblock %}

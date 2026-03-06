@@ -1,0 +1,180 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0" version="29.5.5">
+  <diagram name="Kien Truc He Thong" id="architecture">
+    <mxGraphModel dx="1800" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="FONG FOOD APP - KIẾN TRÚC HỆ THỐNG" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=20;fontStyle=1;fontColor=#1a1a2e;" vertex="1" parent="1">
+          <mxGeometry x="200" y="15" width="1000" height="35" as="geometry" />
+        </mxCell>
+
+        <mxCell id="layer_client" value="TẦNG CLIENT" style="swimlane;fontStyle=1;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontColor=#333;" vertex="1" parent="1">
+          <mxGeometry x="30" y="65" width="180" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_browser" value="🌐 Web Browser&#xa;(HTML/CSS/JS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f8ff;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="layer_client">
+          <mxGeometry x="10" y="40" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pwa" value="📱 PWA Mobile&#xa;(manifest + sw.js)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f8ff;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="layer_client">
+          <mxGeometry x="10" y="90" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_api" value="📡 REST API Client&#xa;(Mobile / 3rd Party)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f8ff;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="layer_client">
+          <mxGeometry x="10" y="140" width="160" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="layer_server" value="TẦNG SERVER (Flask)" style="swimlane;fontStyle=1;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontColor=#333;" vertex="1" parent="1">
+          <mxGeometry x="250" y="65" width="630" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="srv_app" value="app.py - Main Entry Point&#xa;(Flask + CORS + Blueprints)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffde7;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="layer_server">
+          <mxGeometry x="200" y="40" width="230" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="srv_middleware" value="Middleware: security_check() + context_processor()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffde7;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="layer_server">
+          <mxGeometry x="130" y="100" width="370" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="bp_group" value="Blueprints (Routes)" style="swimlane;fontStyle=1;startSize=25;fillColor=#f5f5f5;strokeColor=#999;fontSize=11;" vertex="1" parent="layer_server">
+          <mxGeometry x="10" y="145" width="610" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="bp_auth" value="auth_bp&#xa;/ + /login&#xa;/register /logout&#xa;/forgot-password" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" vertex="1" parent="bp_group">
+          <mxGeometry x="10" y="30" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="bp_user" value="customer_bp&#xa;/home /menu&#xa;/cart /checkout&#xa;/history /profile" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=9;" vertex="1" parent="bp_group">
+          <mxGeometry x="130" y="30" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="bp_admin" value="admin_bp&#xa;/admin/dashboard&#xa;/orders /products&#xa;/customers /stats" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=9;" vertex="1" parent="bp_group">
+          <mxGeometry x="250" y="30" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="bp_api" value="api_bp&#xa;/api/v1/*&#xa;(REST JSON API&#xa;cho mobile)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=9;" vertex="1" parent="bp_group">
+          <mxGeometry x="370" y="30" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="bp_ai" value="ai_bp&#xa;/api/v1/ai/*&#xa;(AI Recommend&#xa;+ Chat)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;fontSize=9;" vertex="1" parent="bp_group">
+          <mxGeometry x="490" y="30" width="110" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="svc_group" value="Services Layer" style="swimlane;fontStyle=1;startSize=25;fillColor=#f5f5f5;strokeColor=#999;fontSize=11;" vertex="1" parent="layer_server">
+          <mxGeometry x="10" y="290" width="610" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="svc_auth" value="auth_service.py&#xa;find_user()&#xa;hash/verify_password()&#xa;validate_register()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" vertex="1" parent="svc_group">
+          <mxGeometry x="10" y="30" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="svc_analytics" value="analytics_service.py&#xa;analyze_business_data()&#xa;top_products()&#xa;revenue_by_period()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=9;" vertex="1" parent="svc_group">
+          <mxGeometry x="170" y="30" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="svc_decorators" value="decorators.py&#xa;@login_required&#xa;@admin_required" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=9;" vertex="1" parent="svc_group">
+          <mxGeometry x="330" y="30" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="svc_utils" value="utils.py&#xa;db_get()&#xa;db_put()&#xa;db_patch()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=9;" vertex="1" parent="svc_group">
+          <mxGeometry x="470" y="30" width="130" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="config" value="config.py (SECRET_KEY, FIREBASE_URL, API keys...)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffde7;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="layer_server">
+          <mxGeometry x="130" y="410" width="370" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="logging" value="app.log (Logging: INFO + WARNING + ERROR)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999;fontSize=10;" vertex="1" parent="layer_server">
+          <mxGeometry x="130" y="455" width="370" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="layer_db" value="TẦNG DATABASE" style="swimlane;fontStyle=1;startSize=30;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;fontColor=#333;" vertex="1" parent="1">
+          <mxGeometry x="920" y="65" width="200" height="310" as="geometry" />
+        </mxCell>
+        <mxCell id="db_firebase" value="🔥 Firebase&#xa;Realtime Database" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f0ff;strokeColor=#9673a6;fontSize=11;fontStyle=1;" vertex="1" parent="layer_db">
+          <mxGeometry x="10" y="40" width="180" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="db_users" value="users" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="layer_db">
+          <mxGeometry x="10" y="95" width="85" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="db_products" value="products" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="layer_db">
+          <mxGeometry x="105" y="95" width="85" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="db_orders" value="orders" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="layer_db">
+          <mxGeometry x="10" y="130" width="85" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="db_carts" value="carts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="layer_db">
+          <mxGeometry x="105" y="130" width="85" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="db_vouchers" value="vouchers" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="layer_db">
+          <mxGeometry x="10" y="165" width="85" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="db_notifs" value="notifications" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="layer_db">
+          <mxGeometry x="105" y="165" width="85" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="db_cache" value="RAM Cache (60s TTL)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;fontSize=10;" vertex="1" parent="layer_db">
+          <mxGeometry x="10" y="205" width="180" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="db_protocol" value="REST API (HTTPS/JSON)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;fontSize=10;" vertex="1" parent="layer_db">
+          <mxGeometry x="10" y="240" width="180" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="db_session" value="requests.Session (Connection Pool)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;fontSize=9;" vertex="1" parent="layer_db">
+          <mxGeometry x="10" y="270" width="180" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="layer_ext" value="DỊCH VỤ NGOÀI" style="swimlane;fontStyle=1;startSize=30;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;fontColor=#333;" vertex="1" parent="1">
+          <mxGeometry x="920" y="400" width="200" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_vnpay" value="💳 VNPay" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8f0;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="layer_ext">
+          <mxGeometry x="10" y="40" width="85" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_momo" value="💜 MoMo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8f0;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="layer_ext">
+          <mxGeometry x="105" y="40" width="85" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_zalo" value="🔵 ZaloPay" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8f0;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="layer_ext">
+          <mxGeometry x="10" y="80" width="85" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_maps" value="🗺 Google Maps" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8f0;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="layer_ext">
+          <mxGeometry x="105" y="80" width="85" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_gemini" value="🤖 Gemini AI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8f0;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="layer_ext">
+          <mxGeometry x="10" y="120" width="85" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_openai" value="🤖 OpenAI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8f0;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="layer_ext">
+          <mxGeometry x="105" y="120" width="85" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_fcm" value="🔔 FCM Push&#xa;Notifications" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8f0;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="layer_ext">
+          <mxGeometry x="10" y="160" width="85" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_weather" value="🌤 OpenWeather&#xa;API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8f0;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="layer_ext">
+          <mxGeometry x="105" y="160" width="85" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_note" value="(Cấu hình qua .env)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=9;fontStyle=2;" vertex="1" parent="layer_ext">
+          <mxGeometry x="10" y="215" width="180" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arr_client_server" value="HTTP/HTTPS" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=block;startArrow=block;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="layer_client" target="layer_server">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_cs_label" value="HTTP/HTTPS" style="edgeLabel;html=1;fontSize=10;fontColor=#6c8ebf;fontStyle=1;" vertex="1" connectable="0" parent="arr_client_server">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arr_server_db" value="REST API" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#9673a6;strokeWidth=2;endArrow=block;startArrow=block;" edge="1" parent="1" source="layer_server" target="layer_db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_sd_label" value="REST API (JSON)" style="edgeLabel;html=1;fontSize=10;fontColor=#9673a6;fontStyle=1;" vertex="1" connectable="0" parent="arr_server_db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arr_server_ext" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#d79b00;strokeWidth=2;endArrow=block;dashed=1;" edge="1" parent="1" source="layer_server" target="layer_ext">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1020" y="590" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_se_label" value="HTTPS (Future)" style="edgeLabel;html=1;fontSize=10;fontColor=#d79b00;fontStyle=2;" vertex="1" connectable="0" parent="arr_server_ext">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="templates_box" value="Templates (Jinja2)&#xa;─────────────────────&#xa;templates/auth/    (login, register, forgot)&#xa;templates/customer/ (home, menu, cart...)&#xa;templates/admin/   (dashboard, orders...)&#xa;templates/layout.html (base layout)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;fontSize=10;align=left;spacingLeft=10;spacingTop=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="30" y="310" width="180" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="static_box" value="Static Files&#xa;─────────────────────&#xa;static/manifest.json&#xa;static/service-worker.js&#xa;(PWA Support)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;fontSize=10;align=left;spacingLeft=10;spacingTop=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="30" y="445" width="180" height="95" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arr_temp" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#999;dashed=1;endArrow=open;" edge="1" parent="1" source="templates_box" target="layer_server">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

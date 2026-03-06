@@ -1,0 +1,223 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<style>
+    #map-container {
+        height: 250px; width: 100%; background: #eee; z-index: 1;
+    }
+    .form-group-custom {
+        background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px;
+    }
+    .input-line {
+        border: none; border-bottom: 1px solid #eee; width: 100%; padding: 10px 0;
+        outline: none; font-size: 14px;
+    }
+    .input-line:focus { border-bottom-color: #D32F2F; }
+    
+    /* Select2 Custom */
+    .select2-container { width: 100% !important; margin-bottom: 10px; }
+    .select2-container .select2-selection--single {
+        height: 40px; border: none; border-bottom: 1px solid #eee; border-radius: 0; padding: 5px 0;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow { top: 8px; }
+    
+    /* Switch */
+    .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: #D32F2F; }
+    input:checked + .slider:before { transform: translateX(20px); }
+</style>
+
+<form action="/save_address" method="POST">
+    
+    <div id="map-container"></div>
+    <div class="bg-white p-2 text-center text-muted small shadow-sm mb-2 border-bottom">
+        <i class="fas fa-search-location text-danger"></i> Tìm kiếm hoặc kéo ghim đỏ để lấy địa chỉ
+    </div>
+
+    <div class="form-group-custom">
+        <div class="text-muted small fw-bold mb-2 text-uppercase">Liên hệ</div>
+        <input type="text" class="input-line" name="fullname" placeholder="Họ và tên" value="{{ session.get('name', '') }}" required>
+        <input type="tel" class="input-line" name="phone" placeholder="Số điện thoại" required>
+    </div>
+
+    <div class="form-group-custom">
+        <div class="text-muted small fw-bold mb-3 text-uppercase">Địa chỉ</div>
+        
+        <label class="small text-muted mb-1">Tỉnh / Thành phố</label>
+        <select class="form-control select2-box" id="city" name="city" required>
+            <option value="">Chọn Tỉnh/Thành phố</option>
+        </select>
+        
+        <label class="small text-muted mb-1 mt-2">Quận / Huyện</label>
+        <select class="form-control select2-box" id="district" name="district" required disabled>
+            <option value="">Chọn Quận/Huyện</option>
+        </select>
+        
+        <label class="small text-muted mb-1 mt-2">Phường / Xã</label>
+        <select class="form-control select2-box" id="ward" name="ward" required disabled>
+            <option value="">Chọn Phường/Xã</option>
+        </select>
+        
+        <input type="text" class="input-line mt-3" id="detail" name="detail" placeholder="Số nhà, tên đường cụ thể" required>
+    </div>
+
+    <div class="form-group-custom">
+        <div class="text-muted small fw-bold mb-2 text-uppercase">Cài đặt</div>
+        <input type="text" class="input-line" name="desc" placeholder="Ghi chú (Ví dụ: Cổng màu xanh...)">
+        
+        <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+            <span class="small fw-bold">Đặt làm mặc định</span>
+            <label class="switch">
+                <input type="checkbox" name="is_default">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="p-3 pb-5">
+        <button type="submit" class="btn btn-danger w-100 py-3 fw-bold text-uppercase shadow-sm">
+            Lưu địa chỉ
+        </button>
+    </div>
+
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // 1. KHỞI TẠO BẢN ĐỒ
+    var map = L.map('map-container').setView([21.0285, 105.8542], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'OpenStreetMap'
+    }).addTo(map);
+
+    var marker = L.marker([21.0285, 105.8542], {draggable: true}).addTo(map);
+
+    // 2. LOAD DATA TỈNH THÀNH
+    var citis = document.getElementById("city");
+    var districts = document.getElementById("district");
+    var wards = document.getElementById("ward");
+    var fullData = []; // Biến lưu dữ liệu để tìm kiếm
+
+    $('.select2-box').select2({ width: '100%' });
+
+    axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json")
+    .then(function (result) {
+        fullData = result.data;
+        renderCity(fullData);
+    });
+
+    function renderCity(data) {
+        for (const x of data) {
+            $(citis).append(new Option(x.Name, x.Name, false, false));
+        }
+        
+        $(citis).on('change', function () {
+            $(districts).empty().append('<option value="">Chọn Quận/Huyện</option>').prop('disabled', false);
+            $(wards).empty().append('<option value="">Chọn Phường/Xã</option>').prop('disabled', true);
+            
+            var selectedCity = $(this).val();
+            if(selectedCity){
+                const result = data.find(n => n.Name === selectedCity);
+                if(result){
+                    for (const k of result.Districts) {
+                        $(districts).append(new Option(k.Name, k.Name));
+                    }
+                }
+            }
+        });
+
+        $(districts).on('change', function () {
+            $(wards).empty().append('<option value="">Chọn Phường/Xã</option>').prop('disabled', false);
+            var selectedCity = $(citis).val();
+            var selectedDist = $(this).val();
+            
+            if(selectedCity && selectedDist){
+                const cityData = data.find(n => n.Name === selectedCity);
+                const distData = cityData.Districts.find(n => n.Name === selectedDist);
+                if(distData){
+                    for (const w of distData.Wards) {
+                        $(wards).append(new Option(w.Name, w.Name));
+                    }
+                }
+            }
+        });
+    }
+
+    // 3. XỬ LÝ ĐỒNG BỘ TỪ BẢN ĐỒ -> FORM
+    
+    // Hàm tìm và chọn Tỉnh/Thành phố khớp nhất
+    function autoSelectCity(cityName) {
+        // Chuẩn hóa tên để so sánh (bỏ dấu, viết thường nếu cần thiết - ở đây so sánh tương đối)
+        if (!cityName) return;
+        
+        // Duyệt qua các option của Select Tỉnh
+        $("#city option").each(function() {
+            var optText = $(this).text(); 
+            // Logic so sánh: Nếu tên từ bản đồ chứa tên trong option hoặc ngược lại
+            // Ví dụ: Bản đồ trả về "Hà Nội", Option là "Thành phố Hà Nội" -> Khớp
+            if (optText.includes(cityName) || cityName.includes(optText)) {
+                $(citis).val($(this).val()).trigger('change');
+                return false; // Break loop
+            }
+        });
+    }
+
+    // Hàm gọi API Geocoding ngược (Lat,Lon -> Địa chỉ)
+    function fillAddressFromCoords(lat, lng) {
+        // Dùng API Nominatim của OpenStreetMap
+        var url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
+        
+        $.getJSON(url, function(data) {
+            if(data && data.address) {
+                console.log("Tìm thấy:", data);
+                
+                // 1. Điền ô chi tiết
+                var street = data.address.road || "";
+                var number = data.address.house_number || "";
+                var full_detail = data.display_name;
+                
+                // Ưu tiên hiện số nhà + tên đường cho ngắn gọn, nếu không có thì lấy cả chuỗi
+                var short_addr = (number ? number + " " : "") + (street ? street : full_detail);
+                $("#detail").val(short_addr);
+                
+                // 2. Tự động chọn Tỉnh/Thành
+                var city = data.address.city || data.address.state || ""; 
+                // Ở VN, OpenStreetMap đôi khi trả về 'state' là Tỉnh/Thành phố
+                autoSelectCity(city);
+            }
+        });
+    }
+
+    // --- SỰ KIỆN 1: KHI TÌM KIẾM XONG ---
+    L.Control.geocoder({ defaultMarkGeocode: false })
+    .on('markgeocode', function(e) {
+        var center = e.geocode.center;
+        marker.setLatLng(center);
+        map.setView(center, 16);
+        
+        // Gọi hàm điền form
+        fillAddressFromCoords(center.lat, center.lng);
+    })
+    .addTo(map);
+
+    // --- SỰ KIỆN 2: KHI KÉO GHIM XONG ---
+    marker.on('dragend', function(e) {
+        var coord = e.target.getLatLng();
+        fillAddressFromCoords(coord.lat, coord.lng);
+    });
+});
+</script>
+{% endblock %}

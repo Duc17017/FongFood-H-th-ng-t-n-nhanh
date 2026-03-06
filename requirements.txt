@@ -1,0 +1,6 @@
+Flask==3.0.0
+requests
+python-dotenv
+Werkzeug
+flask-cors
+gunicorn

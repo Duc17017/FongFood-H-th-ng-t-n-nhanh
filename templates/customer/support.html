@@ -1,0 +1,213 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<style>
+    /* Ẩn bớt header/footer mặc định của layout để giống App Chat full màn hình */
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 140px); /* Trừ đi header/nav của layout */
+        background: #f0f2f5;
+        position: relative;
+    }
+    
+    /* Header của khung Chat */
+    .chat-header {
+        background: white;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #ddd;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .admin-avatar {
+        width: 40px; height: 40px; border-radius: 50%;
+        object-fit: cover; margin-right: 10px;
+        border: 2px solid #2ecc71; /* Viền xanh Online */
+        padding: 1px;
+    }
+    .online-dot {
+        width: 10px; height: 10px; background: #2ecc71;
+        border-radius: 50%; display: inline-block; margin-right: 5px;
+    }
+
+    /* Vùng nội dung chat */
+    .chat-box {
+        flex-grow: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Bong bóng tin nhắn */
+    .message {
+        max-width: 75%;
+        padding: 10px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        line-height: 1.5;
+        position: relative;
+        word-wrap: break-word;
+    }
+    
+    /* Tin nhắn của Khách (Bên phải, màu đỏ) */
+    .msg-user {
+        align-self: flex-end;
+        background: #D32F2F;
+        color: white;
+        border-bottom-right-radius: 5px;
+    }
+    
+    /* Tin nhắn của Admin (Bên trái, màu trắng) */
+    .msg-admin {
+        align-self: flex-start;
+        background: white;
+        color: #333;
+        border-bottom-left-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .admin-name-tag {
+        font-size: 10px; color: #999; margin-bottom: 3px; margin-left: 5px;
+    }
+
+    /* Thanh nhập liệu (Dính dưới đáy) */
+    .chat-input-area {
+        background: white;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        border-top: 1px solid #eee;
+    }
+    .chat-input {
+        flex-grow: 1;
+        border: none;
+        background: #f0f2f5;
+        padding: 10px 15px;
+        border-radius: 20px;
+        outline: none;
+    }
+    .btn-send {
+        background: none; border: none; color: #D32F2F;
+        font-size: 20px; margin-left: 10px; cursor: pointer;
+    }
+
+    /* Hiệu ứng "Đang nhập..." */
+    .typing-indicator {
+        display: none;
+        align-self: flex-start;
+        background: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        border-bottom-left-radius: 5px;
+        margin-bottom: 10px;
+    }
+    .typing-dot {
+        height: 7px; width: 7px;
+        background: #bbb; border-radius: 50%;
+        display: inline-block;
+        animation: typing 1s infinite ease-in-out;
+    }
+    .typing-dot:nth-child(1) { animation-delay: 0s; }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
+
+</style>
+
+<div class="chat-container">
+    <div class="chat-header">
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" class="admin-avatar">
+        <div>
+            <div class="fw-bold" style="font-size: 14px;">CSKH Fong Food <i class="fas fa-check-circle text-primary small"></i></div>
+            <div class="text-success small" style="font-size: 11px;"><span class="online-dot"></span>Đang hoạt động</div>
+        </div>
+    </div>
+
+    <div class="chat-box" id="chatBox">
+        <div class="admin-name-tag">CSKH Fong Food</div>
+        <div class="message msg-admin">
+            Xin chào {{ session.get('name') }}! 👋<br>
+            Mình là trợ lý ảo của Fong Food. Bạn cần hỗ trợ gì về đơn hàng hay thực đơn không ạ?
+        </div>
+        
+        <div class="typing-indicator" id="typing">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+        </div>
+    </div>
+
+    <div class="chat-input-area">
+        <input type="text" id="msgInput" class="chat-input" placeholder="Nhập tin nhắn..." onkeypress="handleEnter(event)">
+        <button class="btn-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<script>
+    const chatBox = document.getElementById('chatBox');
+    const typing = document.getElementById('typing');
+    const input = document.getElementById('msgInput');
+
+    // Tự động cuộn xuống cuối
+    function scrollToBottom() {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function handleEnter(e) {
+        if (e.key === 'Enter') sendMessage();
+    }
+
+    function appendMessage(text, isUser) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = isUser ? 'message msg-user' : 'message msg-admin';
+        msgDiv.innerHTML = text;
+        
+        // Chèn trước cái typing indicator
+        chatBox.insertBefore(msgDiv, typing);
+        
+        if (!isUser) {
+            // Thêm tag tên nếu là Admin
+            const nameTag = document.createElement('div');
+            nameTag.className = 'admin-name-tag';
+            nameTag.innerText = 'CSKH Fong Food';
+            chatBox.insertBefore(nameTag, msgDiv);
+        }
+        scrollToBottom();
+    }
+
+    function sendMessage() {
+        const text = input.value.trim();
+        if (!text) return;
+
+        // 1. Hiện tin nhắn người dùng
+        appendMessage(text, true);
+        input.value = '';
+
+        // 2. Hiện hiệu ứng "Đang nhập..."
+        typing.style.display = 'block';
+        scrollToBottom();
+
+        // 3. Gọi API xử lý
+        fetch('/api/chat-process', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ message: text })
+        })
+        .then(res => res.json())
+        .then(data => {
+            // Ẩn hiệu ứng gõ
+            typing.style.display = 'none';
+            // Hiện tin nhắn Admin
+            appendMessage(data.reply, false);
+        })
+        .catch(err => {
+            console.error(err);
+            typing.style.display = 'none';
+            appendMessage("Lỗi kết nối! Vui lòng thử lại.", false);
+        });
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,923 @@
+{% extends "layout.html" %} {% block content %}
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"
+/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+<style>
+  :root {
+    --primary-color: #d32f2f;
+    --primary-light: #ff5252;
+    --primary-dark: #b71c1c;
+    --accent-color: #ffd700;
+    --success-color: #00b14f;
+    --text-dark: #1a1a1a;
+    --text-muted: #6c757d;
+    --text-light: #f8f9fa;
+    --bg-light: #f5f7fa;
+    --bg-white: #ffffff;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.15);
+    --gradient-primary: linear-gradient(135deg, #d32f2f 0%, #ff5252 100%);
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 24px;
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+  }
+
+  .ai-fade-in {
+    animation: aiFadeIn 0.5s ease forwards;
+  }
+  .ai-slide-up {
+    animation: aiSlideUp 0.5s ease forwards;
+  }
+
+  @keyframes aiFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes aiSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Page Header */
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--primary-color);
+  }
+
+  .page-title {
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--text-dark);
+  }
+
+  .page-title i {
+    color: var(--primary-color);
+  }
+
+  .cart-count {
+    background: var(--primary-color);
+    color: white;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* Cart Card */
+  .cart-card {
+    background: var(--bg-white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .cart-table {
+    width: 100%;
+  }
+
+  .cart-table th {
+    background: var(--bg-light);
+    padding: 15px;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .cart-item {
+    border-bottom: 1px solid #f0f0f0;
+    transition: all var(--transition-fast);
+  }
+
+  .cart-item:hover {
+    background: #fafafa;
+  }
+
+  .cart-item td {
+    padding: 15px;
+    vertical-align: middle;
+  }
+
+  .product-image {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--border-radius-md);
+    object-fit: cover;
+    background: var(--bg-light);
+  }
+
+  .product-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-dark);
+  }
+
+  .product-price {
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  /* Quantity Buttons */
+  .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .qty-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #e9ecef;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-dark);
+    transition: all var(--transition-fast);
+  }
+
+  .qty-btn:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
+  }
+
+  .qty-value {
+    font-weight: 700;
+    font-size: 16px;
+    min-width: 30px;
+    text-align: center;
+  }
+
+  .item-total {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--primary-color);
+    text-align: right;
+  }
+
+  /* Payment Section */
+  .payment-card {
+    background: var(--bg-white);
+    border-radius: var(--border-radius-lg);
+    padding: 25px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .payment-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .payment-option {
+    border: 2px solid #e9ecef;
+    border-radius: var(--border-radius-md);
+    padding: 20px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-align: center;
+  }
+
+  .payment-option:hover {
+    border-color: var(--primary-light);
+    transform: translateY(-3px);
+  }
+
+  .payment-option.active {
+    border-color: var(--primary-color);
+    background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%);
+  }
+
+  .payment-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+
+  .payment-option.active .payment-icon {
+    animation: aiPulse 1s infinite;
+  }
+
+  @keyframes aiPulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  .payment-name {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  /* QR Section */
+  .qr-section {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f7ff 0%, #e8f4ff 100%);
+    border-radius: var(--border-radius-md);
+    border: 2px solid #2196f3;
+    animation: aiSlideUp 0.3s ease;
+  }
+
+  .qr-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .qr-image {
+    width: 100px;
+    border-radius: var(--border-radius-sm);
+    border: 2px solid white;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .qr-info h6 {
+    color: #1976d2;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  .payment-proof-input {
+    margin-top: 15px;
+  }
+
+  .ai-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* Order Summary Card */
+  .summary-card {
+    background: var(--bg-white);
+    border-radius: var(--border-radius-lg);
+    padding: 25px;
+    box-shadow: var(--shadow-md);
+    position: sticky;
+    top: 80px;
+  }
+
+  .summary-title {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+
+  .summary-label {
+    color: var(--text-muted);
+  }
+
+  .summary-value {
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  .summary-total {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 2px dashed #e9ecef;
+  }
+
+  .total-label {
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  .total-value {
+    font-weight: 800;
+    font-size: 24px;
+    color: var(--primary-color);
+  }
+
+  .checkout-btn {
+    background: var(--gradient-primary);
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: var(--border-radius-md);
+    margin-top: 20px;
+    font-size: 15px;
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+  }
+
+  .checkout-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(211, 47, 47, 0.5);
+  }
+
+  /* Map */
+  #map {
+    height: 350px;
+    width: 100%;
+    border-radius: var(--border-radius-md);
+    margin-top: 15px;
+    border: 1px solid #e9ecef;
+    z-index: 0;
+  }
+
+  /* Address Options */
+  .address-option {
+    padding: 15px;
+    border: 2px solid #e9ecef;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    margin-bottom: 10px;
+  }
+
+  .address-option:hover {
+    border-color: var(--primary-light);
+  }
+
+  .address-option.active {
+    border-color: var(--primary-color);
+    background: #fff5f5;
+  }
+
+  /* Empty Cart */
+  .empty-cart {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .empty-cart img {
+    width: 150px;
+    opacity: 0.5;
+    margin-bottom: 20px;
+  }
+
+  .empty-cart h5 {
+    color: var(--text-dark);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .empty-cart p {
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  .shop-btn {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 12px 40px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all var(--transition-normal);
+  }
+
+  .shop-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(211, 47, 47, 0.4);
+    color: white;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .page-title {
+      font-size: 18px;
+    }
+    .cart-table th:nth-child(2),
+    .cart-table td:nth-child(2) {
+      display: none;
+    }
+    .qr-content {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>
+
+<div class="container py-4">
+  <div class="page-header ai-slide-up">
+    <h4 class="page-title"><i class="fas fa-shopping-cart"></i> Giỏ hàng</h4>
+    {% if cart and cart|length > 0 %}
+    <span class="cart-count">{{ cart|length }} món</span>
+    {% endif %}
+  </div>
+
+  {% if cart and cart|length > 0 %}
+  <form
+    action="/checkout"
+    method="POST"
+    enctype="multipart/form-data"
+    id="checkoutForm"
+  >
+    <div class="row">
+      <div class="col-lg-7 mb-4">
+        <!-- Cart Items -->
+        <div class="cart-card ai-fade-in">
+          <table class="cart-table">
+            <thead>
+              <tr>
+                <th class="ps-4">Sản phẩm</th>
+                <th class="text-center">Số lượng</th>
+                <th class="text-end pe-4">Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% set ns = namespace(total=0) %} {% for pid, item in cart.items()
+              %} {% set price = item.price or 0 %} {% set qty = item.qty or 1 %}
+              {% set ns.total = ns.total + (price * qty) %}
+              <tr class="cart-item">
+                <td class="ps-4">
+                  <div class="d-flex align-items-center">
+                    {% if item.image %}
+                    <img
+                      src="{{ item.image }}"
+                      class="product-image"
+                      alt="{{ item.name }}"
+                    />
+                    {% else %}
+                    <div
+                      class="product-image d-flex align-items-center justify-content-center"
+                    >
+                      <i class="fas fa-utensils text-muted"></i>
+                    </div>
+                    {% endif %}
+                    <div class="ms-3">
+                      <div class="product-name">{{ item.name }}</div>
+                      <div class="product-price">
+                        {{ "{:,.0f}".format(price) }}đ
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="qty-control">
+                    <a
+                      href="{{ url_for('customer.update_cart', pid=pid, action='decrease') }}"
+                      class="qty-btn"
+                    >
+                      <i class="fas fa-minus"></i>
+                    </a>
+                    <span class="qty-value">{{ qty }}</span>
+                    <a
+                      href="{{ url_for('customer.update_cart', pid=pid, action='increase') }}"
+                      class="qty-btn"
+                    >
+                      <i class="fas fa-plus"></i>
+                    </a>
+                  </div>
+                </td>
+                <td class="pe-4">
+                  <div class="item-total">
+                    {{ "{:,.0f}".format(price * qty) }}đ
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Payment Options -->
+        <div class="payment-card ai-slide-up delay-1">
+          <h6 class="payment-title">
+            <i
+              class="fas fa-credit-card"
+              style="color: var(--primary-color)"
+            ></i>
+            Phương thức thanh toán
+          </h6>
+          <input
+            type="hidden"
+            name="payment_method"
+            id="paymentInput"
+            value="cash"
+          />
+
+          <div class="row g-3">
+            <div class="col-6">
+              <div
+                class="payment-option active"
+                onclick="selectPayment('cash', this)"
+              >
+                <div class="payment-icon" style="color: var(--success-color)">
+                  <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="payment-name">Tiền mặt</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="payment-option" onclick="selectPayment('qr', this)">
+                <div class="payment-icon" style="color: #1976d2">
+                  <i class="fas fa-qrcode"></i>
+                </div>
+                <div class="payment-name">QR Code</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- QR Section -->
+          <div id="qrSection" class="qr-section d-none">
+            <div class="qr-content">
+              <img
+                src="https://img.freepik.com/free-vector/scan-me-qr-code_78370-2915.jpg"
+                class="qr-image"
+                alt="QR Code"
+              />
+              <div class="qr-info">
+                <h6><i class="fas fa-qrcode me-2"></i>Quét mã thanh toán</h6>
+                <p class="mb-1 text-muted small">
+                  Nội dung: <strong>FONGFOOD {{ session['user'] }}</strong>
+                </p>
+                <span class="ai-badge"
+                  ><i class="fas fa-robot"></i> AI tự động duyệt đơn</span
+                >
+              </div>
+            </div>
+            <div class="payment-proof-input">
+              <label class="form-label small fw-bold">Tải ảnh thanh toán</label>
+              <input
+                type="file"
+                name="payment_proof"
+                class="form-control"
+                accept="image/*"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="col-lg-5">
+        <div class="summary-card ai-slide-up delay-2">
+          <h5 class="summary-title">
+            <i
+              class="fas fa-receipt me-2"
+              style="color: var(--primary-color)"
+            ></i>
+            Tóm tắt đơn hàng
+          </h5>
+
+          <!-- Delivery Address -->
+          <div class="mb-4">
+            <label class="form-label small fw-bold text-muted"
+              >Địa chỉ giao hàng</label
+            >
+
+            <div class="address-option active" onclick="toggleMap(false)">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="address_option"
+                id="addrDefault"
+                value="default"
+                checked
+                style="display: none"
+              />
+              <div class="d-flex align-items-center">
+                <i
+                  class="fas fa-home me-3"
+                  style="color: var(--primary-color)"
+                ></i>
+                <div>
+                  <strong>Mặc định:</strong>
+                  <p class="mb-0 text-muted small">
+                    {{ user.get('address', 'Chưa có địa chỉ') }}
+                  </p>
+                </div>
+              </div>
+              <input
+                type="hidden"
+                name="default_address_val"
+                value="{{ user.get('address', '') }}"
+              />
+            </div>
+
+            <div class="address-option" onclick="toggleMap(true)">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="address_option"
+                id="addrNew"
+                value="new"
+                style="display: none"
+              />
+              <div class="d-flex align-items-center">
+                <i
+                  class="fas fa-map-marker-alt me-3"
+                  style="color: #1976d2"
+                ></i>
+                <strong class="text-primary">Chọn trên bản đồ</strong>
+              </div>
+            </div>
+
+            <div id="newAddressBox" class="mt-3 d-none">
+              <div class="input-group mb-2">
+                <span
+                  class="input-group-text bg-white"
+                  style="color: var(--primary-color)"
+                >
+                  <i class="fas fa-map-marker-alt"></i>
+                </span>
+                <input
+                  type="text"
+                  name="new_address"
+                  id="addressInput"
+                  class="form-control fw-bold"
+                  placeholder="Click vào bản đồ để chọn..."
+                  readonly
+                />
+              </div>
+              <small class="text-muted fst-italic" style="font-size: 11px"
+                >* Click vào bản đồ để chọn vị trí giao hàng</small
+              >
+              <div id="map"></div>
+            </div>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="mb-3">
+            <div class="row g-2">
+              <div class="col-6">
+                <label class="form-label small fw-bold text-muted"
+                  >Người nhận</label
+                >
+                <input
+                  type="text"
+                  name="name"
+                  class="form-control"
+                  value="{{ user.get('name', '') }}"
+                  required
+                />
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-bold text-muted"
+                  >Số điện thoại</label
+                >
+                <input
+                  type="text"
+                  name="phone"
+                  class="form-control"
+                  value="{{ user.get('username', '') }}"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <hr />
+
+          <!-- Voucher input -->
+          <div class="mb-3">
+            <label class="summary-label mb-1">Mã giảm giá / Voucher</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white"
+                ><i class="fas fa-ticket-alt text-muted"></i
+              ></span>
+              <input
+                type="text"
+                name="voucher_code"
+                id="voucherInput"
+                class="form-control"
+                placeholder="Nhập mã voucher nếu có"
+                style="text-transform: uppercase"
+              />
+              <button type="button" class="btn btn-outline-danger" onclick="applyVoucher()">Áp dụng</button>
+            </div>
+            <small id="voucherMessage" class="text-muted"></small>
+          </div>
+
+          <!-- Summary -->
+          <div class="summary-row">
+            <span class="summary-label">Tạm tính</span>
+            <span class="summary-value">{{ "{:,.0f}".format(ns.total) }}đ</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Phí giao hàng</span>
+            <span class="summary-value" style="color: var(--success-color)"
+              >Miễn phí</span
+            >
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Giảm giá</span>
+            <span class="summary-value" style="color: var(--success-color)"
+              >-{{ "{:,.0f}".format(discount_amount if discount_amount is defined else 0) }}đ</span
+            >
+          </div>
+
+          <div class="summary-total">
+            <span class="total-label">Tổng cộng</span>
+            <span class="total-value">{{ "{:,.0f}".format(ns.total) }}đ</span>
+          </div>
+
+          <button type="submit" class="checkout-btn">
+            <i class="fas fa-check-circle me-2"></i> XÁC NHẬN ĐẶT HÀNG
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+  {% else %}
+  <!-- Empty Cart -->
+  <div class="cart-card empty-cart ai-slide-up">
+    <img
+      src="https://cdn-icons-png.flaticon.com/512/11329/11329060.png"
+      alt="Empty cart"
+    />
+    <h5>Giỏ hàng trống</h5>
+    <p>Hãy thêm món ngon vào giỏ hàng nào!</p>
+    <a href="/menu" class="shop-btn">
+      <i class="fas fa-utensils me-2"></i> Đi chợ ngay
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  function selectPayment(method, element) {
+    document.getElementById("paymentInput").value = method;
+    document
+      .querySelectorAll(".payment-option")
+      .forEach((el) => el.classList.remove("active"));
+    element.classList.add("active");
+
+    const qr = document.getElementById("qrSection");
+    if (method === "qr") {
+      qr.classList.remove("d-none");
+    } else {
+      qr.classList.add("d-none");
+    }
+  }
+
+  function applyVoucher() {
+    const code = document.getElementById('voucherInput').value.trim().toUpperCase();
+    const msgEl = document.getElementById('voucherMessage');
+    
+    if (!code) {
+      msgEl.innerHTML = '<span class="text-danger">Vui lòng nhập mã voucher</span>';
+      return;
+    }
+
+    msgEl.innerHTML = '<span class="text-info">Đang kiểm tra...</span>';
+
+    fetch('/api/v1/voucher/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        msgEl.innerHTML = '<span class="text-success"><i class="fas fa-check-circle"></i> ' + data.message + '</span>';
+        // Enable submit
+        document.querySelector('.checkout-btn').disabled = false;
+      } else {
+        msgEl.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle"></i> ' + data.message + '</span>';
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      msgEl.innerHTML = '<span class="text-danger">Lỗi kết nối server</span>';
+    });
+  }
+
+  let map, marker;
+
+  function toggleMap(show) {
+    const box = document.getElementById("newAddressBox");
+    const radioNew = document.getElementById("addrNew");
+    const radioDef = document.getElementById("addrDefault");
+    const optionNew = radioNew.closest(".address-option");
+    const optionDef = radioDef.closest(".address-option");
+
+    if (show) {
+      radioNew.checked = true;
+      optionNew.classList.add("active");
+      optionDef.classList.remove("active");
+      box.classList.remove("d-none");
+
+      setTimeout(() => {
+        if (!map) {
+          initMap();
+        } else {
+          map.invalidateSize();
+        }
+      }, 200);
+    } else {
+      radioDef.checked = true;
+      optionDef.classList.add("active");
+      optionNew.classList.remove("active");
+      box.classList.add("d-none");
+    }
+  }
+
+  function initMap() {
+    const defaultLat = 21.0285;
+    const defaultLng = 105.8542;
+
+    map = L.map("map").setView([defaultLat, defaultLng], 15);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "FongFood Map",
+    }).addTo(map);
+
+    const geocoder = L.Control.geocoder({
+      defaultMarkGeocode: false,
+      placeholder: "Tìm tên đường, phường...",
+    })
+      .on("markgeocode", function (e) {
+        const latlng = e.geocode.center;
+        const name = e.geocode.name;
+        map.setView(latlng, 16);
+        updateMarker(latlng, name);
+      })
+      .addTo(map);
+
+    map.on("click", function (e) {
+      document.getElementById("addressInput").value = "Đang lấy địa chỉ...";
+
+      fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${e.latlng.lat}&lon=${e.latlng.lng}`,
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          let addressName = data.display_name;
+          updateMarker(e.latlng, addressName);
+        })
+        .catch(() => {
+          document.getElementById("addressInput").value =
+            "Không tìm thấy tên đường.";
+        });
+    });
+  }
+
+  function updateMarker(latlng, addressText) {
+    if (marker) map.removeLayer(marker);
+    marker = L.marker(latlng)
+      .addTo(map)
+      .bindPopup(`<b style="color:#d32f2f">Giao tới:</b><br>${addressText}`)
+      .openPopup();
+
+    document.getElementById("addressInput").value = addressText;
+  }
+</script>
+{% endblock %}

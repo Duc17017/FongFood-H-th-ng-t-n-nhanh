@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Fong Food - Đặt đồ ăn ngon nhất Hà Nội">
+    <meta name="theme-color" content="#FF6B35">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Fong Food">
+    
+    <title>Fong Food - PWA</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap">
+    
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #2D3436;
+            --accent-color: #00B894;
+            --warning-color: #FDCB6E;
+            --danger-color: #E17055;
+            --light-bg: #F8F9FA;
+        }
+        
+        * {
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            min-height: 100vh;
+        }
+        
+        /* PWA Install Banner */
+        .pwa-install-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--primary-color), #FF8C61);
+            color: white;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .pwa-install-banner.hidden {
+            display: none;
+        }
+        
+        .pwa-install-btn {
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .pwa-install-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Offline indicator */
+        .offline-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--warning-color);
+            color: var(--secondary-color);
+            padding: 8px;
+            text-align: center;
+            font-weight: 500;
+            z-index: 1001;
+            display: none;
+        }
+        
+        .offline-banner.show {
+            display: block;
+        }
+        
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            padding: 8px 0;
+            z-index: 999;
+        }
+        
+        .nav-item {
+            text-align: center;
+            padding: 8px;
+            color: #636e72;
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.2s;
+        }
+        
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+        
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        /* Loading spinner */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Pull to refresh */
+        .pull-to-refresh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(to bottom, var(--primary-color), transparent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            transform: translateY(-100%);
+            transition: transform 0.3s;
+            z-index: 998;
+        }
+        
+        .pull-to-refresh.show {
+            transform: translateY(0);
+        }
+        
+        /* App content padding */
+        .app-content {
+            padding-bottom: 80px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Offline Banner -->
+    <div class="offline-banner" id="offlineBanner">
+        <i class="fas fa-wifi"></i> Bạn đang offline - một số tính năng có thể không hoạt động
+    </div>
+    
+    <!-- Pull to Refresh -->
+    <div class="pull-to-refresh" id="pullToRefresh">
+        <i class="fas fa-arrow-down"></i> Kéo xuống để làm mới
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+    
+    <!-- App Content -->
+    <div class="app-content" id="appContent">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav d-flex justify-content-around">
+        <a href="/home" class="nav-item {% if request.endpoint == 'customer.home' %}active{% endif %}">
+            <i class="fas fa-home"></i>
+            <div>Trang chủ</div>
+        </a>
+        <a href="/menu" class="nav-item {% if request.endpoint == 'customer.menu' %}active{% endif %}">
+            <i class="fas fa-utensils"></i>
+            <div>Menu</div>
+        </a>
+        <a href="/cart" class="nav-item {% if request.endpoint == 'customer.cart' %}active{% endif %}">
+            <i class="fas fa-shopping-cart"></i>
+            <div>Giỏ hàng</div>
+        </a>
+        <a href="/history" class="nav-item {% if request.endpoint == 'customer.history' %}active{% endif %}">
+            <i class="fas fa-receipt"></i>
+            <div>Đơn hàng</div>
+        </a>
+        <a href="/profile" class="nav-item {% if request.endpoint == 'customer.profile' %}active{% endif %}">
+            <i class="fas fa-user"></i>
+            <div>Tài khoản</div>
+        </a>
+    </nav>
+    
+    <!-- PWA Install Banner -->
+    <div class="pwa-install-banner hidden" id="pwaInstallBanner">
+        <div>
+            <strong>Cài đặt Fong Food</strong>
+            <div style="font-size: 12px; opacity: 0.9;">Trải nghiệm tốt hơn trên mobile</div>
+        </div>
+        <button class="pwa-install-btn" id="installBtn">Cài đặt</button>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', async () => {
+                try {
+                    const registration = await navigator.serviceWorker.register('/static/service-worker.js');
+                    console.log('ServiceWorker registered:', registration.scope);
+                } catch (error) {
+                    console.error('ServiceWorker registration failed:', error);
+                }
+            });
+        }
+        
+        // PWA Install Prompt
+        let deferredPrompt;
+        const pwaInstallBanner = document.getElementById('pwaInstallBanner');
+        const installBtn = document.getElementById('installBtn');
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            pwaInstallBanner.classList.remove('hidden');
+        });
+        
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            
+            if (outcome === 'accepted') {
+                pwaInstallBanner.classList.add('hidden');
+            }
+            deferredPrompt = null;
+        });
+        
+        // Offline Detection
+        const offlineBanner = document.getElementById('offlineBanner');
+        
+        function updateOnlineStatus() {
+            if (!navigator.onLine) {
+                offlineBanner.classList.add('show');
+            } else {
+                offlineBanner.classList.remove('show');
+            }
+        }
+        
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+        
+        // Pull to Refresh
+        const pullToRefresh = document.getElementById('pullToRefresh');
+        let startY = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+        });
+        
+        document.addEventListener('touchmove', (e) => {
+            const currentY = e.touches[0].clientY;
+            const diff = currentY - startY;
+            
+            if (diff > 50 && window.scrollY === 0) {
+                pullToRefresh.classList.add('show');
+            }
+        });
+        
+        document.addEventListener('touchend', async () => {
+            if (pullToRefresh.classList.contains('show')) {
+                pullToRefresh.classList.remove('show');
+                window.location.reload();
+            }
+        });
+        
+        // Loading Overlay
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        
+        function showLoading() {
+            loadingOverlay.style.display = 'flex';
+        }
+        
+        function hideLoading() {
+            loadingOverlay.style.display = 'none';
+        }
+        
+        // Hide loading on page load
+        window.addEventListener('load', () => {
+            hideLoading();
+        });
+        
+        // API Helper Functions
+        const API_BASE = '/api/v1';
+        
+        async function apiCall(endpoint, options = {}) {
+            const token = localStorage.getItem('token');
+            
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token && { 'Authorization': `Bearer ${token}` })
+                }
+            };
+            
+            const response = await fetch(`${API_BASE}${endpoint}`, {
+                ...defaultOptions,
+                ...options,
+                headers: {
+                    ...defaultOptions.headers,
+                    ...options.headers
+                }
+            });
+            
+            return response.json();
+        }
+        
+        // Push Notification Permission
+        async function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission === 'default') {
+                await Notification.requestPermission();
+            }
+        }
+        
+        // Handle Push Notifications
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then((registration) => {
+                registration.pushManager.getSubscription()
+                    .then((subscription) => {
+                        if (!subscription) {
+                            // Subscribe to push notifications
+                            // VAPID public key would go here
+                        }
+                    });
+            });
+        }
+        
+        // Share API
+        async function shareContent(title, text, url) {
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title, text, url });
+                } catch (err) {
+                    console.log('Share cancelled');
+                }
+            }
+        }
+        
+        // Add to Home Screen detection
+        window.addEventListener('appinstalled', () => {
+            pwaInstallBanner.classList.add('hidden');
+            console.log('PWA installed successfully');
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

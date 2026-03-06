@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#D32F2F">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Fong Food">
+    <title>FONG FOOD MOBILE</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f5f7fa; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
+        .bg-red-custom { background-color: #D32F2F; }
+
+        /* HEADER MOBILE */
+        .mobile-header { padding: 10px 15px; background: white; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; height: 60px; }
+        .mobile-search-area { padding: 10px 15px; background: white; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: block; }
+        .mobile-search-input { width: 100%; height: 40px; background: #f5f5f5; border: none; border-radius: 8px; padding-left: 40px; outline: none; }
+        .mobile-search-icon { position: absolute; left: 25px; top: 50%; transform: translateY(-50%); color: #999; }
+
+        /* FOOTER PC */
+        .footer-pc { background-color: #8B0000; color: white; padding: 50px 0 20px 0; margin-top: auto; }
+        .footer-title { color: #FFD700; font-weight: bold; font-size: 16px; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #FFD700; display: inline-block; padding-bottom: 5px; }
+        .footer-text { font-size: 14px; line-height: 1.8; color: #f0f0f0; margin-bottom: 10px; }
+        
+        /* RESPONSIVE */
+        @media (min-width: 992px) {
+            .mobile-header, .mobile-search-area, .mobile-bottom-nav { display: none !important; }
+            .desktop-navbar, .footer-pc { display: block !important; }
+        }
+        @media (max-width: 991px) {
+            .desktop-navbar, .footer-pc { display: none !important; }
+            body { padding-bottom: 70px; }
+        }
+
+        /* NAVIGATION */
+        .nav-link.active { font-weight: 700 !important; color: white !important; opacity: 1 !important; }
+        .mobile-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: white; box-shadow: 0 -2px 15px rgba(0,0,0,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+        
+        /* ĐÃ SỬA Ở ĐÂY: width 20% thay vì 25% */
+        .nav-item-mobile { text-align: center; color: #999; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 20%; transition: 0.2s; }
+        .nav-item-mobile.active { color: #D32F2F !important; font-weight: 700; }
+        .nav-item-mobile i { font-size: 20px; margin-bottom: 4px; }
+        
+        .cart-badge { font-size: 10px; padding: 3px 6px; background: #FFD700; color: #333; font-weight: bold; border-radius: 10px; }
+        .mobile-cart-badge { position: absolute; top: -5px; right: 5px; background: #D32F2F; color: white; font-size: 9px; padding: 2px 5px; border-radius: 10px; border: 1px solid white; }
+        .notif-dot { position: absolute; top: -2px; right: -5px; width: 10px; height: 10px; background: #dc3545; border-radius: 50%; border: 2px solid white; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-red-custom shadow-sm sticky-top desktop-navbar">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/home"><i class="fas fa-utensils me-2"></i>FONG FOOD</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    {% if session.get('role') == 'customer' %}
+                        <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/home' else '' }}" href="/home">Trang chủ</a></li>
+                        <li class="nav-item"><a class="nav-link {{ 'active' if request.path.startswith('/menu') else '' }}" href="/menu">Thực đơn</a></li>
+                        <li class="nav-item position-relative mx-2">
+                            <a class="nav-link {{ 'active' if request.path == '/cart' else '' }}" href="/cart">
+                                <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
+                                {% if total_cart_items > 0 %} <span class="position-absolute top-0 start-100 translate-middle cart-badge">{{ total_cart_items }}</span> {% endif %}
+                            </a>
+                        </li>
+                        <li class="nav-item position-relative">
+    <a class="nav-link {{ 'active' if request.path == '/notifications' else '' }}" href="/notifications">
+        <i class="fas fa-bell"></i> Thông báo
+        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+            <span class="visually-hidden">New alerts</span>
+        </span>
+    </a>
+</li>
+                        <li class="nav-item dropdown ms-3">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" data-bs-toggle="dropdown">
+                                {% if g.user_avatar %}
+                                    <img src="{{ g.user_avatar }}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
+                                {% else %}
+                                    <i class="fas fa-user-circle" style="font-size: 28px;"></i>
+                                {% endif %}
+                                <span>{{ session.get('name', 'Tôi') }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2" style="min-width: 260px; padding: 0;">
+    
+    <li>
+        <a class="dropdown-item py-3 border-bottom" href="/profile">
+            <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px;">
+                    <i class="far fa-user text-primary"></i>
+                </div>
+                <div>Thông tin tài khoản</div>
+                <i class="fas fa-chevron-right ms-auto text-muted" style="font-size: 12px;"></i>
+            </div>
+        </a>
+    </li>
+
+    <li>
+        <a class="dropdown-item py-3 border-bottom" href="/history">
+            <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px;">
+                    <i class="fas fa-shopping-bag text-warning"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div>Đơn hàng của tôi</div>
+                </div>
+                <div class="text-muted d-flex align-items-center" style="font-size: 12px;">
+                <i class="fas fa-chevron-right ms-2"></i>
+                </div>
+            </div>
+        </a>
+    </li>
+
+    <li>
+        <a class="dropdown-item py-3 border-bottom" href="/address"> <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px;">
+                    <i class="fas fa-map-marker-alt text-danger"></i>
+                </div>
+                <div>Sổ địa chỉ</div>
+                <i class="fas fa-chevron-right ms-auto text-muted" style="font-size: 12px;"></i>
+            </div>
+        </a>
+    </li>
+
+    <li>
+        <a class="dropdown-item py-3 border-bottom" href="/settings"> <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px;">
+                    <i class="fas fa-cog text-secondary"></i>
+                </div>
+                <div>Cài đặt & Bảo mật</div>
+                <i class="fas fa-chevron-right ms-auto text-muted" style="font-size: 12px;"></i>
+            </div>
+        </a>
+    </li>
+
+    <li>
+        <a class="dropdown-item py-3 border-bottom" href="/qr-scan"> <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px;">
+                    <i class="fas fa-qrcode text-primary"></i>
+                </div>
+                <div>Quét mã QR đơn hàng</div>
+                <i class="fas fa-chevron-right ms-auto text-muted" style="font-size: 12px;"></i>
+            </div>
+        </a>
+    </li>
+
+    <li>
+        <a class="dropdown-item py-3" href="/support"> <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px;">
+                    <i class="fas fa-headset text-info"></i>
+                </div>
+                <div>Trung tâm hỗ trợ</div>
+                <i class="fas fa-chevron-right ms-auto text-muted" style="font-size: 12px;"></i>
+            </div>
+        </a>
+    </li>
+
+    <li class="bg-light" style="height: 10px;"></li>
+
+    <li>
+        <a class="dropdown-item py-3 text-danger fw-bold" href="/logout">
+            <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px;">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <div>Đăng xuất</div>
+                <i class="fas fa-chevron-right ms-auto text-muted" style="font-size: 12px;"></i>
+            </div>
+        </a>
+    </li>
+</ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/">Đăng nhập</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% if session.get('role') == 'customer' %}
+    <div class="mobile-header d-lg-none">
+        <div style="font-weight: bold; color: #D32F2F; font-size: 18px;"><i class="fas fa-utensils"></i> FONG FOOD</div>
+        <a href="/profile" class="text-decoration-none">
+            {% if g.user_avatar %}
+                <img src="{{ g.user_avatar }}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #eee;">
+            {% else %}
+                <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #666;">
+                    <i class="fas fa-user"></i>
+                </div>
+            {% endif %}
+        </a>
+    </div>
+    <div class="mobile-search-area d-lg-none position-relative">
+        <form action="/menu" method="GET">
+            <i class="fas fa-search mobile-search-icon"></i>
+            <input type="text" name="q" class="mobile-search-input" placeholder="Bạn thèm món gì?" value="{{ request.args.get('q', '') }}">
+        </form>
+    </div>
+    {% endif %}
+
+    <div class="container mt-4 pb-5">{% block content %}{% endblock %}</div>
+
+    <footer class="footer-pc">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="footer-title">FONG FOOD</div>
+                    <div class="footer-text">Giao hàng mọi nơi trong thời gian nhanh nhất</div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="footer-title">THÔNG TIN LIÊN HỆ</div>
+                    <div class="footer-text"><i class="fas fa-map-marker-alt"></i> 335 Cầu Giấy - Hà Nội</div>
+                    <div class="footer-text"><i class="fas fa-phone-alt"></i> 0986.989.626</div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="footer-title">FANPAGE FACEBOOK</div>
+                    <div class="bg-white p-3 rounded text-dark d-flex align-items-center gap-3">
+                        <img src="https://img.freepik.com/free-vector/superhero-mascot-logo-design_105692-26.jpg" style="width: 50px; height: 50px;">
+                        <div><div class="fw-bold small">FONG FOOD </div><div class="small text-muted">25.507 người theo dõi</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    {% if session.get('role') == 'customer' %}
+<div class="mobile-bottom-nav d-lg-none">
+    <a href="/home" class="nav-item-mobile {{ 'active' if request.path == '/home' else '' }}"><i class="fas fa-home"></i> <span>Trang chủ</span></a>
+    <a href="/menu" class="nav-item-mobile {{ 'active' if request.path.startswith('/menu') else '' }}"><i class="fas fa-utensils"></i> <span>Thực đơn</span></a>
+    <a href="/cart" class="nav-item-mobile {{ 'active' if request.path == '/cart' else '' }}">
+        <div class="position-relative"><i class="fas fa-shopping-cart"></i>{% if total_cart_items > 0 %}<span class="mobile-cart-badge">{{ total_cart_items }}</span>{% endif %}</div><span>Giỏ hàng</span>
+    </a>
+    
+    <a href="/qr-scan" class="nav-item-mobile {{ 'active' if request.path == '/qr-scan' else '' }}">
+        <i class="fas fa-qrcode"></i> <span>Quét QR</span>
+    </a>
+
+   <a href="/account" class="nav-item-mobile {{ 'active' if request.path == '/account' or request.path == '/profile' else '' }}">
+    <i class="fas fa-user"></i> <span>Cá nhân</span>
+</a>
+</div>
+    <script>
+        setInterval(function() {
+            fetch('/check-session-status')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'kick') {
+                        alert('Tài khoản của bạn đã được đăng nhập ở thiết bị khác!\nHệ thống sẽ tự động đăng xuất.');
+                        window.location.href = '/login'; // Chuyển ngay về trang đăng nhập
+                    }
+                })
+                .catch(err => console.log('Checking session...', err));
+        }, 3000); // Cứ 3 giây kiểm tra 1 lần
+    </script>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/service-worker.js')
+                    .then(reg => console.log('SW registered:', reg.scope))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>

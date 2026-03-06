@@ -1,0 +1,309 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<style>
+    /* Card thống kê nhỏ */
+    .mini-stat-card {
+        background: white; border: 1px solid #f1f5f9; border-radius: 12px; padding: 15px;
+        display: flex; align-items: center; justify-content: space-between;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02); height: 100%;
+    }
+    .mini-stat-icon {
+        width: 45px; height: 45px; border-radius: 10px;
+        display: flex; align-items: center; justify-content: center; font-size: 20px;
+    }
+    
+    /* Avatar trong bảng */
+    .table-avatar {
+        width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
+        border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    /* Rank Badges */
+    .badge-vip-gold { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
+    .badge-vip-silver { background: #f8fafc; color: #475569; border: 1px solid #cbd5e1; }
+    .badge-member { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+
+    /* Search Input đẹp */
+    .search-box {
+        position: relative; max-width: 400px;
+    }
+    .search-box input {
+        padding-left: 40px; border-radius: 50px; border: 1px solid #e2e8f0;
+    }
+    .search-box i {
+        position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8;
+    }
+</style>
+
+<div class="container-fluid py-3">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <h4 class="fw-bold mb-1 text-dark">Quản lý Khách hàng</h4>
+            <p class="text-muted small mb-0">Danh sách khách hàng và lịch sử mua sắm</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-warning fw-bold text-dark shadow-sm" data-bs-toggle="modal" data-bs-target="#voucherModal">
+                <i class="fas fa-ticket-alt me-2"></i> Gửi Voucher
+            </button>
+            <button class="btn btn-success fw-bold shadow-sm">
+                <i class="fas fa-file-excel me-2"></i> Xuất Excel
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="mini-stat-card">
+                <div>
+                    <h6 class="text-muted small text-uppercase mb-1">Tổng khách hàng</h6>
+                    <h3 class="fw-bold mb-0 text-dark">{{ customers|length }}</h3>
+                </div>
+                <div class="mini-stat-icon bg-primary bg-opacity-10 text-primary">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="mini-stat-card">
+                <div>
+                    <h6 class="text-muted small text-uppercase mb-1">Khách hàng VIP</h6>
+                    <h3 class="fw-bold mb-0 text-warning">
+                        {% set ns = namespace(count=0) %}
+                        {% for c in customers %}{% if 'VIP' in c.rank %}{% set ns.count = ns.count + 1 %}{% endif %}{% endfor %}
+                        {{ ns.count }}
+                    </h3>
+                </div>
+                <div class="mini-stat-icon bg-warning bg-opacity-10 text-warning">
+                    <i class="fas fa-crown"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="mini-stat-card">
+                <div>
+                    <h6 class="text-muted small text-uppercase mb-1">Khách mới hôm nay</h6>
+                    <h3 class="fw-bold mb-0 text-success">0</h3> </div>
+                <div class="mini-stat-icon bg-success bg-opacity-10 text-success">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+        <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="search-box flex-grow-1">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" class="form-control" placeholder="Tìm tên, số điện thoại, email..." onkeyup="filterTable()">
+            </div>
+            <div class="d-flex gap-2">
+                <select class="form-select border-0 bg-light rounded-pill" style="width: auto;" onchange="filterRank(this.value)">
+                    <option value="all">Tất cả hạng</option>
+                    <option value="VIP">Khách VIP</option>
+                    <option value="Thành viên">Thành viên</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="customerTable">
+                <thead class="bg-light text-secondary small">
+                    <tr>
+                        <th class="ps-4 py-3">Khách hàng</th>
+                        <th>Liên hệ</th>
+                        <th>Hạng hội viên</th>
+                        <th class="text-center">Số đơn</th>
+                        <th class="text-end">Tổng chi tiêu</th>
+                        <th class="text-end pe-4">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in customers %}
+                    <tr class="customer-row" data-rank="{{ c.rank }}">
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center">
+                                {% if c.avatar %}
+                                <img src="{{ c.avatar }}" class="table-avatar me-3">
+                                {% else %}
+                                <div class="table-avatar me-3 bg-light d-flex align-items-center justify-content-center text-muted fw-bold">{{ c.name[0] if c.name else 'U' }}</div>
+                                {% endif %}
+                                <div>
+                                    <div class="fw-bold text-dark">{{ c.name or 'Chưa đặt tên' }}</div>
+                                    <small class="text-muted" style="font-size: 11px;">Tham gia: Vừa xong</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="small text-dark"><i class="fas fa-phone me-1 text-muted"></i> {{ c.username }}</div>
+                            {% if c.email %}
+                            <div class="small text-muted"><i class="fas fa-envelope me-1"></i> {{ c.email }}</div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if 'Vàng' in c.rank %}
+                                <span class="badge badge-vip-gold rounded-pill px-3 py-2"><i class="fas fa-crown me-1"></i> VIP Vàng</span>
+                            {% elif 'Bạc' in c.rank %}
+                                <span class="badge badge-vip-silver rounded-pill px-3 py-2"><i class="fas fa-star me-1"></i> VIP Bạc</span>
+                            {% else %}
+                                <span class="badge badge-member rounded-pill px-3 py-2">Thành viên</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center fw-bold">{{ c.order_count }}</td>
+                        <td class="text-end fw-bold text-primary">{{ "{:,.0f}".format(c.total_spent) }} đ</td>
+                        <td class="text-end pe-4">
+    <a href="/admin/orders?user={{ c.username }}" class="btn btn-sm btn-light border rounded-circle text-primary" title="Xem lịch sử mua hàng">
+        <i class="fas fa-eye"></i>
+    </a>
+    
+    <a href="/admin/customer/delete/{{ c.username }}" class="btn btn-sm btn-light border rounded-circle text-danger ms-1" onclick="return confirm('CẢNH BÁO: Bạn có chắc muốn xóa khách hàng {{ c.name }}?\nHành động này không thể hoàn tác!')" title="Xóa tài khoản">
+        <i class="fas fa-trash"></i>
+    </a>
+</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if customers|length == 0 %}
+        <div class="text-center py-5 text-muted">
+            <i class="fas fa-users-slash fa-3x mb-3 opacity-25"></i>
+            <p>Chưa có dữ liệu khách hàng</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="modal fade" id="voucherModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form class="modal-content border-0 shadow" id="voucherForm">
+            <div class="modal-header bg-warning text-dark border-0">
+                <h5 class="modal-title fw-bold"><i class="fas fa-gift me-2"></i>Phát Voucher Toàn Sàn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="alert alert-info small border-0 bg-info bg-opacity-10 text-info">
+                    <i class="fas fa-info-circle me-1"></i> Voucher sẽ được gửi vào mục "Kho Voucher" của tất cả khách hàng.
+                </div>
+                <input type="hidden" name="username" value="all">
+                <div class="mb-3">
+                    <label class="fw-bold mb-1">Mã Voucher</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white"><i class="fas fa-barcode text-muted"></i></span>
+                        <input type="text" name="code" id="voucherCodeInput" class="form-control" placeholder="VD: SALE50, TET2025" required style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="fw-bold mb-1">Giảm giá (%)</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white"><i class="fas fa-percent text-muted"></i></span>
+                        <input type="number" name="discount" id="voucherDiscountInput" class="form-control" placeholder="Nhập số % giảm (VD: 20)" required min="1" max="100">
+                    </div>
+                </div>
+                <div id="voucherMessage"></div>
+            </div>
+            <div class="modal-footer border-0 bg-light">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-warning fw-bold px-4" onclick="sendVoucher()">🚀 Gửi ngay</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function sendVoucher() {
+    const code = document.getElementById('voucherCodeInput').value.trim().toUpperCase();
+    const discount = document.getElementById('voucherDiscountInput').value;
+    const msgEl = document.getElementById('voucherMessage');
+    
+    if (!code || !discount) {
+        msgEl.innerHTML = '<div class="alert alert-danger">Vui lòng nhập đầy đủ thông tin</div>';
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('username', 'all');
+    formData.append('code', code);
+    formData.append('discount', discount);
+    formData.append('ajax', 'true');
+    
+    msgEl.innerHTML = '<div class="alert alert-info">Đang gửi...</div>';
+    
+    fetch('/admin/send_voucher', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => {
+        // Check content type
+        const contentType = res.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return res.json().then(data => ({ json: true, data: data, url: res.url }));
+        } else {
+            // HTML response - redirect or error page
+            return res.text().then(html => ({ json: false, html: html, url: res.url, redirected: res.redirected }));
+        }
+    })
+    .then(result => {
+        if (result.json) {
+            // JSON response
+            if (result.data.success) {
+                msgEl.innerHTML = '<div class="alert alert-success">✅ ' + result.data.message + '</div>';
+                // Close modal and reload
+                setTimeout(() => {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('voucherModal'));
+                    modal.hide();
+                    window.location.reload();
+                }, 1500);
+            } else {
+                msgEl.innerHTML = '<div class="alert alert-danger">❌ ' + result.data.message + '</div>';
+            }
+        } else {
+            // HTML response
+            if (result.redirected || result.html && !result.html.includes('login')) {
+                msgEl.innerHTML = '<div class="alert alert-success">✅ Gửi voucher thành công!</div>';
+                setTimeout(() => {
+                    window.location.href = result.url;
+                }, 1000);
+            } else if (result.html && result.html.includes('login')) {
+                msgEl.innerHTML = '<div class="alert alert-danger">❌ Phiên đăng nhập hết hạn!</div>';
+            } else {
+                msgEl.innerHTML = '<div class="alert alert-danger">❌ Có lỗi xảy ra</div>';
+            }
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        msgEl.innerHTML = '<div class="alert alert-danger">❌ Lỗi: ' + err.message + '</div>';
+    });
+}
+</script>
+
+<script>
+    // 1. Tìm kiếm nhanh (Client-side)
+    function filterTable() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toUpperCase();
+        const rows = document.querySelectorAll(".customer-row");
+        
+        rows.forEach(row => {
+            const text = row.innerText.toUpperCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
+    }
+
+    // 2. Lọc theo Rank
+    function filterRank(rank) {
+        const rows = document.querySelectorAll(".customer-row");
+        rows.forEach(row => {
+            const rowRank = row.getAttribute('data-rank');
+            if (rank === 'all' || rowRank.includes(rank)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+</script>
+{% endblock %}
