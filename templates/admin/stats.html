@@ -1,7 +1,7 @@
 {% extends "admin/layout.html" %}
 
 {% block content %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
 
 <style>
     /* 1. Filter Buttons (Pill shape) */
@@ -141,73 +141,191 @@
     <div class="stat-card p-0 overflow-hidden">
         <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
             <h6 class="fw-bold m-0">Top Sản Phẩm Bán Chạy</h6>
-            <a href="#" class="text-primary text-decoration-none small fw-bold">Xem tất cả</a>
+            <a href="/admin/products" class="text-primary text-decoration-none small fw-bold">Xem tất cả</a>
         </div>
         <div class="table-responsive">
             <table class="table table-custom mb-0 table-hover">
                 <thead class="bg-light">
                     <tr>
-                        <th class="ps-4">TÊN SẢN PHẨM</th>
+                        <th class="ps-4" style="width: 40px;">#</th>
+                        <th>TÊN MÓN ĂN</th>
                         <th class="text-center">ĐÃ BÁN</th>
-                        <th class="text-end">DOANH THU</th>
-                        <th class="text-end pe-4">XU HƯỚNG</th>
+                        <th class="text-end pe-4">DOANH THU</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="ps-4 fw-bold text-dark">Áo Sơ Mi Oxford Slimfit</td>
-                        <td class="text-center text-secondary">450</td>
-                        <td class="text-end fw-bold">135.000.000 ₫</td>
-                        <td class="text-end pe-4"><span class="trend-up">▲ 12%</span></td>
-                    </tr>
-                    <tr>
-                        <td class="ps-4 fw-bold text-dark">Quần Tây Nam Cao Cấp</td>
-                        <td class="text-center text-secondary">320</td>
-                        <td class="text-end fw-bold">98.500.000 ₫</td>
-                        <td class="text-end pe-4"><span class="trend-up">▲ 5%</span></td>
-                    </tr>
-                    <tr>
-                        <td class="ps-4 fw-bold text-dark">Áo Polo Basic</td>
-                        <td class="text-center text-secondary">210</td>
-                        <td class="text-end fw-bold">52.000.000 ₫</td>
-                        <td class="text-end pe-4"><span class="trend-down">▼ 2%</span></td>
-                    </tr>
+                    {% if data.top_products %}
+                        {% for p in data.top_products %}
+                        <tr>
+                            <td class="ps-4 text-muted fw-bold">{{ loop.index }}</td>
+                            <td class="fw-bold text-dark">
+                                <i class="fas fa-utensils me-2 text-warning small"></i>
+                                {{ p.name }}
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1">{{ p.sold }} phần</span>
+                            </td>
+                            <td class="text-end pe-4 fw-bold text-success">
+                                {{ "{:,.0f}".format(p.revenue) }} đ
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                <i class="fas fa-chart-bar fa-2x mb-2 d-block text-light"></i>
+                                Chưa có đơn hàng hoàn thành trong kỳ này
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- AI Chat with Data -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold m-0">
+                        <i class="fas fa-robot me-2 text-primary"></i>
+                        AI Business Advisor - Hỏi đáp dữ liệu
+                    </h6>
+                    <button class="btn btn-sm btn-outline-primary" onclick="askAI()">
+                        <i class="fas fa-paper-plane me-1"></i> Gửi câu hỏi
+                    </button>
+                </div>
+                <div class="mb-3">
+                    <input type="text" id="aiQuestion" class="form-control" placeholder="Ví dụ: Doanh thu tuần này so với tuần trước thế nào? Món nào ế nhất?">
+                </div>
+                <div id="aiAnswer" class="p-3 bg-light rounded" style="min-height: 80px; display: none;">
+                    <div class="d-flex align-items-start">
+                        <div class="bg-primary text-white rounded-circle p-2 me-2" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-robot small"></i>
+                        </div>
+                        <div>
+                            <strong class="text-primary">FongAI:</strong>
+                            <p class="mb-0 mt-1" id="aiAnswerText"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Du lieu tu server
-    const revenueDataRaw = {{ data.revenue_daily|tojson if data and data.revenue_daily else [0,0,0,0,0,0,0] }};
-    const revenueData = Array.isArray(revenueDataRaw) ? revenueDataRaw.map(x => x.value || x) : [];
-    const chartLabels = Array.isArray(revenueDataRaw) ? revenueDataRaw.map(x => x.label || '') : [];
+    (function(run) {
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+        else run();
+    })(function() {
+        if (!window.Chart) {
+            const c = document.getElementById('growthChart');
+            if (c && c.parentElement) {
+                c.parentElement.innerHTML = '<div class="alert alert-danger py-2 mb-0">Chart.js chưa load được (window.Chart bị undefined). Hãy F5 lại trang hoặc kiểm tra chặn CDN.</div>';
+            }
+            return;
+        }
 
-    const ctx = document.getElementById('growthChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar', // Dạng cột
-        data: {
-            labels: chartLabels.length > 0 ? chartLabels : ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
-            datasets: [{
-                label: 'Doanh thu (triệu đồng)',
-                data: revenueData.length > 0 ? revenueData : [12, 19, 15, 25, 22, 30, 35],
-                backgroundColor: '#1d4ed8', // Màu xanh đậm
-                borderRadius: 4, // Bo tròn đầu cột
-                barThickness: 30 // Độ rộng cột
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'top', align: 'end', labels: { boxWidth: 20, usePointStyle: true } }
+        // Du lieu tu server
+        const revenueDataRaw = {{ data.revenue_daily|tojson if data and data.revenue_daily else [0,0,0,0,0,0,0] }};
+        const revenueData = Array.isArray(revenueDataRaw) ? revenueDataRaw.map(x => (x && x.value !== undefined) ? Number(x.value) : (typeof x === 'number' ? x : Number(x) || 0)) : [];
+        const chartLabels = Array.isArray(revenueDataRaw) ? revenueDataRaw.map(x => (x && x.label !== undefined) ? String(x.label) : '') : [];
+
+        const canvas = document.getElementById('growthChart');
+        try {
+            if (!canvas) throw new Error('Không tìm thấy canvas #growthChart');
+            const ctx = canvas.getContext('2d');
+            if (!ctx) throw new Error('Không lấy được 2d context từ canvas');
+
+            new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartLabels.length > 0 ? chartLabels : ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+                datasets: [{
+                    label: 'Doanh thu (triệu đồng)',
+                    data: revenueData.length > 0 ? revenueData : [12, 19, 15, 25, 22, 30, 35],
+                    backgroundColor: '#1d4ed8',
+                    borderRadius: 4,
+                    barThickness: 30
+                }]
             },
-            scales: {
-                y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
-                x: { grid: { display: false } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', align: 'end', labels: { boxWidth: 20, usePointStyle: true } }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
+                    x: { grid: { display: false } }
+                }
+            }
+            });
+        } catch (e) {
+            console.error('Growth chart error:', e);
+            if (canvas && canvas.parentElement) {
+                const msg = (e && e.message) ? e.message : String(e);
+                canvas.parentElement.innerHTML = '<div class="alert alert-danger py-2">Lỗi biểu đồ tăng trưởng: ' + msg + '</div>';
             }
         }
     });
+
+    // AI Chat with Data
+    function askAI() {
+        const question = document.getElementById('aiQuestion').value.trim();
+        if (!question) {
+            alert('Vui lòng nhập câu hỏi!');
+            return;
+        }
+
+        const answerDiv = document.getElementById('aiAnswer');
+        const answerText = document.getElementById('aiAnswerText');
+        
+        answerDiv.style.display = 'block';
+        answerText.innerHTML = '<em>Đang phân tích dữ liệu...</em>';
+
+        // Gọi AI phân tích
+        fetch('/api/v1/ai/chat-process', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                message: question + '. Hãy trả lời ngắn gọn bằng tiếng Việt, tập trung vào các con số và insights quan trọng.' 
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.reply) {
+                answerText.innerHTML = data.reply;
+            } else {
+                // Fallback nếu không có API key
+                const revenue = {{ data.revenue if data else 0 }};
+                const totalOrders = {{ data.total_orders if data else 0 }};
+                const topProducts = {{ data.top_products|tojson if data else [] }};
+                
+                let answer = '';
+                if (question.includes('doanh thu')) {
+                    answer = `Doanh thu hiện tại: <strong>{{ "{:,.0f}".format(data.revenue if data else 0) }}đ</strong> với <strong>${totalOrders}</strong> đơn hàng.`;
+                } else if (question.includes('ế') || question.includes('bán chậm')) {
+                    if (topProducts && topProducts.length > 0) {
+                        const slowSellers = topProducts.slice(-2);
+                        answer = 'Các món bán chậm: ' + slowSellers.map(p => p.name).join(', ') + '. Gợi ý: Tạo combo giảm giá hoặc marketing mạnh hơn.';
+                    } else {
+                        answer = 'Chưa có đủ dữ liệu để phân tích. Cần thêm đơn hàng để đưa ra gợi ý chính xác.';
+                    }
+                } else {
+                    answer = 'Dữ liệu hiện tại: ' + revenue + 'đ doanh thu, ' + totalOrders + ' đơn hàng. Top sản phẩm: ' + (topProducts ? topProducts.slice(0,3).map(p=>p.name).join(', ') : 'chưa có');
+                }
+                answerText.innerHTML = answer;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            // Fallback response
+            const revenue = {{ data.revenue if data else 0 }};
+            answerText.innerHTML = `Dựa trên dữ liệu hiện tại: <strong>{{ "{:,.0f}".format(data.revenue if data else 0) }}đ</strong> doanh thu. Để có phân tích chi tiết, vui lòng cấu hình API key cho AI.`;
+        });
+    }
 </script>
 {% endblock %}

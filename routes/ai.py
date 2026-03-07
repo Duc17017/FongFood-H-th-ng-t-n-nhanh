@@ -6,8 +6,17 @@ import time
 import requests
 from datetime import datetime, timedelta
 from flask import Blueprint, request, jsonify, session
+# Sử dụng google.genai thay vì google.generativeai (đã bị deprecate)
+try:
+    import google.genai as genai
+    GENAI_CLIENT_AVAILABLE = True
+except ImportError:
+    import google.generativeai as genai
+    GENAI_CLIENT_AVAILABLE = False
+from config import GEMINI_API_KEY, FLASK_DEBUG
 from utils import db_get, db_put, db_patch
 import logging
+
 
 # Thêm decorators cho API - đặt ở đầu file
 def require_login(f):
@@ -36,6 +45,17 @@ def require_admin(f):
 
 ai_bp = Blueprint("ai_v1", __name__)
 logger = logging.getLogger(__name__)
+
+# Kích hoạt API Key cho Gemini (nếu có).
+def _configure_gemini():
+    if not GEMINI_API_KEY:
+        return False
+    try:
+        # google.genai không cần configure - API key được truyền khi tạo Client
+        return True
+    except Exception:
+        logger.exception("Gemini configure failed")
+        return False
 
 # ==================== AI VOICE ORDERING ====================
 
@@ -1542,3 +1562,107 @@ def ai_send_campaign():
     except Exception as e:
         logger.error(f"Send Campaign Error: {e}")
         return jsonify({"success": False, "message": "Lỗi gửi chiến dịch"}), 500
+
+# ==================== AI CHATBOT CSKH (GEMINI) ====================
+
+# Kích hoạt API Key cho Gemini (nếu có)
+if not _configure_gemini():
+    logger.warning("GEMINI_API_KEY is not set or failed to configure - Gemini chatbot will use fallback logic.")
+
+
+@ai_bp.route("/chat-process", methods=["POST"])
+def chat_process():
+    user_message = request.json.get("message", "")
+    user = session.get("user", "guest") # Lấy user từ session
+    
+    if not user_message:
+        return jsonify({"reply": "Dạ Fong Food có thể giúp gì cho bạn ạ?"})
+
+    # 1. Lưu tin nhắn của USER vào database
+    import uuid
+    from datetime import datetime
+    
+    chat_id = f"chats/{user}"
+    existing_chats = db_get(chat_id) or []
+    if isinstance(existing_chats, dict):
+        existing_chats = list(existing_chats.values())
+        
+    user_msg_data = {
+        "id": str(uuid.uuid4()),
+        "sender": "user",
+        "message": user_message,
+        "timestamp": datetime.now().isoformat()
+    }
+    existing_chats.append(user_msg_data)
+    
+    # 2. Xử lý AI (Logic cũ)
+    reply_text = ""
+    if not GEMINI_API_KEY or not _configure_gemini():
+        try:
+            fallback = get_ai_chatbot_response(user_message, user)
+            reply_text = fallback.get("message") or "Dạ bạn cho Fong Food xin câu hỏi cụ thể hơn ạ!"
+        except Exception:
+            reply_text = "Dạ hệ thống AI chưa được cấu hình key Gemini. Bạn thêm `GEMINI_API_KEY` vào file .env rồi tải lại trang giúp mình nhé!"
+    else:
+        try:
+            # Gọi AI lấy response (giữ nguyên logic cũ)
+            raw_products = db_get("products") or {}
+            menu_text = ""
+            if isinstance(raw_products, dict):
+                products_list = raw_products.values()
+            else:
+                products_list = [p for p in raw_products if p]
+            for p in products_list:
+                if isinstance(p, dict):
+                    name = p.get("name", "")
+                    price = p.get("price", 0)
+                    desc = p.get("description", "")
+                    menu_text += f"- {name}: {{:,.0f}}đ (Mô tả: {desc})\n".format(price)
+
+            system_prompt = f"""Bạn là nhân viên chăm sóc khách hàng cực kỳ dễ thương và khéo léo của quán ăn vặt Fong Food. ..."""
+
+            # Xử lý khác nhau cho từng thư viện
+            if GENAI_CLIENT_AVAILABLE:
+                # Sử dụng google.genai client mới
+                try:
+                    import google.genai as genai_client
+                    genai_client = genai_client.Client(api_key=GEMINI_API_KEY)
+                    response = genai_client.models.generate_content(
+                        model="gemini-2.0-flash",
+                        contents=user_message
+                    )
+                    reply_text = response.text if hasattr(response, 'text') else str(response)
+                except Exception as e:
+                    logger.exception("Gemini chat error")
+                    fallback = get_ai_chatbot_response(user_message, user)
+                    reply_text = fallback.get("message") or "Dạ bạn cho Fong Food xin câu hỏi cụ thể hơn ạ!"
+            else:
+                # Sử dụng google.generativeai client cũ
+                try:
+                    model = genai.GenerativeModel(model_name="gemini-flash-latest", system_instruction=system_prompt)
+                    response = model.generate_content(user_message)
+                    reply_text = getattr(response, "text", None) or ""
+                except Exception as e:
+                    logger.exception("Gemini chat error")
+                    fallback = get_ai_chatbot_response(user_message, user)
+                    reply_text = fallback.get("message") or "Dạ bạn cho Fong Food xin câu hỏi cụ thể hơn ạ!"
+
+            reply_text = reply_text.replace("*", "").strip() or "Dạ bạn cho Fong Food xin câu hỏi cụ thể hơn ạ!"
+        except Exception as e:
+            logger.exception("Gemini full error")
+            if FLASK_DEBUG:
+                reply_text = f"Lỗi: {e}"
+            else:
+                reply_text = "Xin lỗi bạn, Fong Food đang đông khách, bạn đợi mình vài giây nhé!"
+
+    # 3. Lưu tin nhắn của ADMIN/BOT vào database
+    bot_msg_data = {
+        "id": str(uuid.uuid4()),
+        "sender": "admin",
+        "message": reply_text,
+        "timestamp": datetime.now().isoformat()
+    }
+    existing_chats.append(bot_msg_data)
+    db_put(chat_id, existing_chats)
+
+    return jsonify({"reply": reply_text})

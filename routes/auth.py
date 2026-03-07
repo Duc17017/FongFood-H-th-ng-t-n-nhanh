@@ -19,23 +19,30 @@ auth_bp = Blueprint("auth", __name__)
 otp_storage = {}
 logger = logging.getLogger(__name__)
 
+@auth_bp.route("/kiemtra")
+def kiemtra():
+    return "<h1>CHÚC MỪNG! MÁY CHỦ FLASK CỦA BẠN ĐANG CHẠY RẤT HOÀN HẢO!</h1>"
+
+# --- 0. MÀN HÌNH MỞ ĐẦU (SPLASH SCREEN) ---
+@auth_bp.route("/fongfood")  # <-- Đổi cái này thành /fongfood
+def splash():
+    return render_template("splash.html")
+
 # --- 1. ĐĂNG NHẬP ---
-@auth_bp.route("/", methods=["GET", "POST"])
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         u = request.form.get("username")
-        p = request.form.get("password")
-
-        # Check Admin (có thể tách ra DB riêng trong tương lai)
+        p = request.form.get("password") 
+        # 1. Check Admin mặc định (tài khoản kỹ thuật)
         if u == "admin" and p == "admin123":
             session["user"] = u
             session["role"] = "admin"
             session["name"] = "Admin"
-            logger.info("Admin %s logged in", u)
+            logger.info("Admin %s logged in (hard-coded)", u)
             return redirect("/admin/dashboard")
 
-        # Check User từ DB (Dùng hàm tìm kiếm an toàn + password hash)
+        # 2. Check User từ DB (dùng phone / username)
         user_data = find_user(u)
 
         if user_data and verify_password(user_data.get("password"), p):
@@ -45,11 +52,18 @@ def login():
             except Exception as exc:
                 logger.warning("Không thể lưu login_token cho user %s: %s", u, exc)
 
+            # Lấy role từ DB, mặc định là customer
+            role = user_data.get("role", "customer")
+
             session["user"] = u
-            session["name"] = user_data.get("name")
-            session["role"] = "customer"
+            session["name"] = user_data.get("name") or u
+            session["role"] = role
             session["login_token"] = new_token
-            logger.info("User %s logged in", u)
+            logger.info("User %s logged in with role %s", u, role)
+
+            # Điều hướng theo role
+            if role == "admin":
+                return redirect("/admin/dashboard")
             return redirect("/home")
 
         logger.warning("Đăng nhập thất bại cho user %s", u)
@@ -124,7 +138,8 @@ def send_otp():
         # Log OTP
         logger.info(f"=== OTP CODE === Phone: {target} | Code: {otp_code} ====================")
         
-        # DEBUG MODE: Return OTP directly for testing (remove in production)
+        # Luôn trả về OTP để hiển thị trực tiếp cho user
+        # Chỉ trả về trong message khi là debug mode
         debug_msg = ""
         if FLASK_DEBUG:
             debug_msg = f" [DEBUG: OTP is {otp_code}]"
@@ -132,7 +147,7 @@ def send_otp():
         return jsonify({
             "success": True, 
             "message": f"Da gui ma OTP!{debug_msg}",
-            "otp_code": otp_code if FLASK_DEBUG else None
+            "otp_code": otp_code  # Luôn trả về OTP để hiển thị
         })
     except Exception as e:
         logger.exception("Loi gui OTP: %s", e)

@@ -6,39 +6,106 @@
     <title>QUẢN TRỊ VIÊN - FONG FOOD</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+        :root {
+            --primary-color: #d32f2f;
+            --primary-dark: #b71c1c;
+            --primary-light: #ff5252;
+            --secondary-color: #1e293b;
+            --secondary-light: #334155;
+            --success-color: #00c853;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #0d6efd;
+            --bg-light: #f1f5f9;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
         
-        /* Navbar PC (Giữ nguyên) */
-        .admin-navbar { background: #1e293b; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .navbar-brand { font-weight: 800; letter-spacing: 1px; color: #fff !important; }
-        .nav-link { color: #cbd5e1 !important; font-weight: 500; transition: 0.2s; padding: 0.5rem 1rem !important; }
-        .nav-link:hover, .nav-link.active { color: #fff !important; background: rgba(255,255,255,0.1); border-radius: 6px; }
-        .admin-avatar { width: 32px; height: 32px; background: #3b82f6; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 8px; }
+        body { 
+            background-color: var(--bg-light); 
+            font-family: 'Inter', sans-serif; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        /* Navbar PC */
+        .admin-navbar { 
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-light) 100%); 
+            box-shadow: var(--shadow-md);
+        }
+        .navbar-brand { 
+            font-weight: 800; 
+            letter-spacing: 1px; 
+            color: #fff !important;
+            font-size: 1.3rem;
+        }
+        .nav-link { 
+            color: #94a3b8 !important; 
+            font-weight: 500; 
+            transition: all 0.2s; 
+            padding: 0.6rem 1rem !important;
+            border-radius: 8px;
+            margin: 0 2px;
+        }
+        .nav-link:hover, .nav-link.active { 
+            color: #fff !important; 
+            background: rgba(255,255,255,0.15);
+        }
+        .admin-avatar { 
+            width: 36px; height: 36px; 
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: white; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 700;
+            font-size: 14px;
+        }
 
         /* Footer PC */
-        .admin-footer { background: #fff; padding: 20px 0; text-align: center; color: #64748b; font-size: 13px; border-top: 1px solid #e2e8f0; margin-top: auto; }
+        .admin-footer { 
+            background: #fff; 
+            padding: 20px 0; 
+            text-align: center; 
+            color: var(--text-muted); 
+            font-size: 13px; 
+            border-top: 1px solid var(--border-color); 
+            margin-top: auto; 
+        }
 
-        /* --- CSS CHO MENU MOBILE (MỚI) --- */
+        /* Menu Mobile */
         .mobile-bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
-            background: #fffafb; /* Màu nền hơi hồng nhạt cho sạch */
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            background: #fff;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
             display: flex; justify-content: space-around; align-items: center;
-            z-index: 1000; border-top: 1px solid #eee;
+            z-index: 1000; border-top: 1px solid var(--border-color);
         }
 
         .nav-item-mobile {
             text-align: center; 
-            color: #999; /* Màu xám mặc định */
+            color: var(--text-muted);
             text-decoration: none; 
-            font-size: 11px; 
+            font-size: 9px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: center; 
-            width: 20%;
+            flex: 1;
             transition: 0.2s;
+            font-weight: 500;
+            padding: 5px 2px;
         }
 
         .nav-item-mobile i {
@@ -46,21 +113,85 @@
             margin-bottom: 4px;
         }
 
-        /* Khi Active (Được chọn) -> Màu đỏ giống ảnh */
         .nav-item-mobile.active {
-            color: #dc3545 !important; /* Màu đỏ */
+            color: var(--primary-color) !important;
             font-weight: 700;
         }
-        
+
         /* Ẩn Navbar PC khi ở Mobile */
         @media (max-width: 991px) {
             .admin-navbar, .admin-footer { display: none !important; }
-            body { padding-bottom: 80px; } /* Đẩy nội dung lên để không bị menu che */
+            body { padding-bottom: 80px; }
         }
         
         /* Ẩn Menu Mobile khi ở PC */
         @media (min-width: 992px) {
             .mobile-bottom-nav { display: none !important; }
+        }
+
+        /* Card styles */
+        .admin-card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+        .admin-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        /* Stat cards */
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Dropdown */
+        .dropdown-menu {
+            border: none;
+            box-shadow: var(--shadow-lg);
+            border-radius: var(--radius-md);
+            padding: 8px;
+        }
+        .dropdown-item {
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .dropdown-item:hover {
+            background: var(--bg-light);
+            color: var(--primary-color);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            border: none;
+            font-weight: 600;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
         }
     </style>
 </head>
@@ -68,24 +199,29 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark admin-navbar sticky-top d-none d-lg-block">
         <div class="container">
-            <a class="navbar-brand" href="/admin/dashboard"><i class="fas fa-shield-alt text-warning me-2"></i>ADMIN PORTAL</a>
+            <a class="navbar-brand" href="/admin/dashboard">
+                <i class="fas fa-shield-alt text-warning me-2"></i>FONG FOOD
+                <span style="font-size: 0.7rem; opacity: 0.7; font-weight: 400;">ADMIN</span>
+            </a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/admin/dashboard' }}" href="/admin/dashboard"><i class="fas fa-chart-bar me-1"></i> Tổng quan</a></li>
-                    <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/admin/orders' }}" href="/admin/orders"><i class="fas fa-file-invoice me-1"></i> Đơn hàng</a></li>
-                    <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/admin/products' }}" href="/admin/products"><i class="fas fa-utensils me-1"></i> Món ăn</a></li>
-                    <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/admin/customers' }}" href="/admin/customers"><i class="fas fa-users me-1"></i> Khách hàng</a></li>
-                    <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/admin/stats' }}" href="/admin/stats"><i class="fas fa-chart-line me-1"></i> Thống kê</a></li>
+                    <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/admin/dashboard' }}" href="/admin/dashboard"><i class="fas fa-chart-pie me-2"></i> Tổng quan</a></li>
+                    <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/admin/orders' }}" href="/admin/orders"><i class="fas fa-receipt me-2"></i> Đơn hàng</a></li>
+                    <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/admin/products' }}" href="/admin/products"><i class="fas fa-utensils me-2"></i> Món ăn</a></li>
+                    <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/admin/customers' }}" href="/admin/customers"><i class="fas fa-users me-2"></i> Khách hàng</a></li>
+                    <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/admin/stats' }}" href="/admin/stats"><i class="fas fa-chart-line me-2"></i> Thống kê</a></li>
+                    <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/admin/chat' }}" href="/admin/chat"><i class="fas fa-comments me-2"></i> Tin nhắn</a></li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
-                            <div class="admin-avatar">A</div> {{ session.get('name', 'Admin') }}
+                            <div class="admin-avatar me-2">A</div> 
+                            <span class="text-white">{{ session.get('name', 'Admin') }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
-                            <li><a class="dropdown-item" href="/admin/profile">Hồ sơ</a></li>
+                            <li><a class="dropdown-item" href="/admin/profile"><i class="fas fa-user-circle me-2"></i>Hồ sơ</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+                            <li><a class="dropdown-item text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -93,7 +229,7 @@
         </div>
     </nav>
 
-    <div class="container admin-content">
+    <div class="container admin-content py-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -108,38 +244,40 @@
     </div>
 
     <footer class="admin-footer d-none d-lg-block">
-        <div class="container"><strong>Fong Food Admin System</strong> &copy; 2024. All rights reserved.</div>
+        <div class="container">
+            <strong>Fong Food Admin</strong> &copy; 2024. Powered by AI
+        </div>
     </footer>
 
     <div class="mobile-bottom-nav d-lg-none">
         <a href="/admin/dashboard" class="nav-item-mobile {{ 'active' if request.path == '/admin/dashboard' }}">
-            <i class="fas fa-chart-bar"></i>
+            <i class="fas fa-chart-pie"></i>
             <span>Tổng quan</span>
         </a>
         
         <a href="/admin/orders" class="nav-item-mobile {{ 'active' if request.path == '/admin/orders' }}">
-            <i class="fas fa-file-invoice"></i>
+            <i class="fas fa-receipt"></i>
             <span>Đơn hàng</span>
         </a>
         
-        <a href="/admin/qr-scan" class="nav-item-mobile {{ 'active' if request.path == '/admin/qr-scan' }}">
-            <i class="fas fa-qrcode"></i>
-            <span>Quét QR</span>
+        <a href="/admin/products" class="nav-item-mobile {{ 'active' if request.path == '/admin/products' }}">
+            <i class="fas fa-utensils"></i>
+            <span>Món ăn</span>
         </a>
 
         <a href="/admin/customers" class="nav-item-mobile {{ 'active' if request.path == '/admin/customers' }}">
             <i class="fas fa-users"></i>
-            <span>Khách</span>
+            <span>Khách hàng</span>
         </a>
 
-        <a href="/admin/stats" class="nav-item-mobile {{ 'active' if request.path == '/admin/stats' }}">
-            <i class="fas fa-chart-line"></i>
-            <span>Thống kê</span>
+        <a href="/admin/chat" class="nav-item-mobile {{ 'active' if request.path == '/admin/chat' }}">
+            <i class="fas fa-comments"></i>
+            <span>Tin nhắn</span>
         </a>
 
-        <a href="/logout" class="nav-item-mobile">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Thoát</span>
+        <a href="/admin/profile" class="nav-item-mobile {{ 'active' if request.path == '/admin/profile' }}">
+            <i class="fas fa-user-circle"></i>
+            <span>Profile</span>
         </a>
     </div>
 

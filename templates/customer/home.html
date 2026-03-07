@@ -77,7 +77,7 @@
     .delay-5 { animation-delay: 0.5s; }
 
     /* ============================================
-       3. HERO BANNER SECTION
+       3. HERO BANNER SECTION WITH PARALLAX
     ============================================ */
     .hero-banner {
         position: relative;
@@ -86,14 +86,44 @@
         margin-bottom: 30px;
     }
 
-    .hero-banner .carousel-item img {
+    .hero-banner .carousel-item {
         height: 200px;
+    }
+
+    .hero-banner .carousel-item img {
+        height: 100%;
         object-fit: cover;
-        transition: transform var(--transition-slow);
+        transition: transform 0.5s ease-out;
+        will-change: transform;
     }
 
     .hero-banner:hover .carousel-item img {
-        transform: scale(1.05);
+        transform: scale(1.08);
+    }
+
+    /* Parallax effect for banner images */
+    .parallax-container {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+        border-radius: 16px;
+        margin-bottom: 20px;
+    }
+    
+    .parallax-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 120%;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.3s ease-out;
+        will-change: transform;
+    }
+    
+    .parallax-container:hover .parallax-bg {
+        transform: translateY(-10%);
     }
 
     .hero-overlay {
@@ -869,161 +899,6 @@
         color: var(--text-muted);
     }
 
-    /* ============================================
-       10. AI CHATBOT WIDGET
-    ============================================ */
-    .ai-chatbot-toggle {
-        position: fixed;
-        bottom: 80px;
-        right: 20px;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: var(--gradient-primary);
-        color: white;
-        border: none;
-        box-shadow: var(--shadow-lg);
-        cursor: pointer;
-        z-index: 999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        transition: all var(--transition-normal);
-        animation: aiGlow 2s ease-in-out infinite;
-    }
-
-    .ai-chatbot-toggle:hover {
-        transform: scale(1.1);
-    }
-
-    .ai-chatbot-panel {
-        position: fixed;
-        bottom: 150px;
-        right: 20px;
-        width: 350px;
-        max-width: calc(100vw - 40px);
-        height: 450px;
-        background: var(--bg-white);
-        border-radius: var(--border-radius-xl);
-        box-shadow: var(--shadow-lg);
-        z-index: 998;
-        display: none;
-        flex-direction: column;
-        overflow: hidden;
-    }
-
-    .ai-chatbot-panel.show {
-        display: flex;
-        animation: aiSlideUp 0.3s ease;
-    }
-
-    .chatbot-header {
-        background: var(--gradient-primary);
-        color: white;
-        padding: 15px 20px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .chatbot-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-    }
-
-    .chatbot-title {
-        font-weight: 700;
-        font-size: 16px;
-    }
-
-    .chatbot-subtitle {
-        font-size: 11px;
-        opacity: 0.9;
-    }
-
-    .chatbot-messages {
-        flex: 1;
-        padding: 20px;
-        overflow-y: auto;
-        background: #f9f9f9;
-    }
-
-    .chat-message {
-        margin-bottom: 15px;
-        display: flex;
-        gap: 10px;
-    }
-
-    .chat-message.bot {
-        justify-content: flex-start;
-    }
-
-    .chat-message.user {
-        justify-content: flex-end;
-    }
-
-    .message-bubble {
-        max-width: 80%;
-        padding: 12px 16px;
-        border-radius: 18px;
-        font-size: 13px;
-        line-height: 1.5;
-    }
-
-    .chat-message.bot .message-bubble {
-        background: var(--bg-white);
-        color: var(--text-dark);
-        border-bottom-left-radius: 4px;
-        box-shadow: var(--shadow-sm);
-    }
-
-    .chat-message.user .message-bubble {
-        background: var(--primary-color);
-        color: white;
-        border-bottom-right-radius: 4px;
-    }
-
-    .chatbot-input {
-        padding: 15px;
-        border-top: 1px solid #eee;
-        display: flex;
-        gap: 10px;
-    }
-
-    .chatbot-input input {
-        flex: 1;
-        padding: 12px 16px;
-        border: 1px solid #ddd;
-        border-radius: 25px;
-        outline: none;
-        font-size: 13px;
-    }
-
-    .chatbot-input input:focus {
-        border-color: var(--primary-color);
-    }
-
-    .chatbot-input button {
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        background: var(--gradient-primary);
-        color: white;
-        border: none;
-        cursor: pointer;
-        transition: all var(--transition-fast);
-    }
-
-    .chatbot-input button:hover {
-        transform: scale(1.05);
-    }
 
     /* ============================================
        11. RESPONSIVE ADJUSTMENTS
@@ -1256,7 +1131,7 @@
                 </div>
             </a>
             <a href="/menu?q=bread" class="category-card">
-                <img src="/static/bánh mì.png" class="category-img" alt="Bánh mì">
+                <img src="/static/b%C3%A1nh%20m%C3%AC.png" class="category-img" alt="Bánh mì">
                 <div class="category-overlay">
                     <span class="category-title">Bánh mì</span>
                 </div>
@@ -1296,11 +1171,27 @@
             {% if ai_recommendations %}
             <div class="col-12 mb-3">
                 <div class="p-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; color: white;">
-                    <div class="d-flex align-items-center mb-2">
-                        <i class="fas fa-robot me-2 fa-lg"></i>
-                        <h5 class="mb-0 fw-bold">AI Goị Y Cho Ban</h5>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-robot me-2 fa-lg"></i>
+                            <h5 class="mb-0 fw-bold">AI Gợi Ý Cho Bạn</h5>
+                        </div>
+                        {% if weather %}
+                        <div class="d-flex align-items-center">
+                            {% if weather.condition == 'rainy' %}
+                            <i class="fas fa-cloud-rain me-1"></i>
+                            {% elif weather.condition == 'hot' %}
+                            <i class="fas fa-sun me-1"></i>
+                            {% elif weather.condition == 'cold' %}
+                            <i class="fas fa-snowflake me-1"></i>
+                            {% else %}
+                            <i class="fas fa-cloud me-1"></i>
+                            {% endif %}
+                            <span class="small">{{ weather.temp }}°C - {{ weather.description }}</span>
+                        </div>
+                        {% endif %}
                     </div>
-                    <p class="mb-0 opacity-75" style="font-size: 0.9rem;">Dua tren lich su mua hang va thoi gian trong ngay</p>
+                    <p class="mb-0 opacity-75" style="font-size: 0.9rem;">Dựa trên thời tiết, thời gian và lịch sử mua hàng của bạn</p>
                 </div>
             </div>
             {% for pid, p, score in ai_recommendations %}
@@ -1472,42 +1363,6 @@
 
 </div>
 
-<!-- ============================================
-     AI CHATBOT WIDGET
-============================================ -->
-<button class="ai-chatbot-toggle" onclick="toggleChatbot()" title="AI Assistant">
-    <i class="fas fa-robot"></i>
-</button>
-
-<div class="ai-chatbot-panel" id="chatbotPanel">
-    <div class="chatbot-header">
-        <div class="chatbot-avatar">
-            <i class="fas fa-robot" style="color: #667eea;"></i>
-        </div>
-        <div>
-            <div class="chatbot-title">FongAI Assistant</div>
-            <div class="chatbot-subtitle">Luôn sẵn sàng hỗ trợ bạn</div>
-        </div>
-        <button onclick="toggleChatbot()" style="margin-left: auto; background: none; border: none; color: white; cursor: pointer;">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-    <div class="chatbot-messages" id="chatMessages">
-        <div class="chat-message bot">
-            <div class="message-bubble">
-                Xin chào! 👋 Tôi là FongAI - trợ lý ảo của FongFood. Tôi có thể giúp bạn:
-                <br>• Tìm món ăn ngon
-                <br>• Giải đáp thắc mắc
-                <br>• Hỗ trợ đặt hàng
-                <br><br>Bạn cần gì hôm nay?
-            </div>
-        </div>
-    </div>
-    <div class="chatbot-input">
-        <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." onkeypress="handleChatKeypress(event)">
-        <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
-    </div>
-</div>
 
 <!-- AI Toast Notification -->
 <div class="ai-toast" id="aiToast">
@@ -1561,6 +1416,10 @@
     function toggleChatbot() {
         const panel = document.getElementById('chatbotPanel');
         panel.classList.toggle('show');
+        // Mỗi lần mở panel, đảm bảo đã tải lịch sử gần nhất
+        if (panel.classList.contains('show')) {
+            loadChatHistory();
+        }
     }
 
     function handleChatKeypress(event) {
@@ -1579,17 +1438,41 @@
         addMessage(message, 'user');
         input.value = '';
 
-        // Simulate AI response
-        setTimeout(() => {
-            const aiResponse = generateAIResponse(message);
-            addMessage(aiResponse, 'bot');
-        }, 500);
+        // Typing indicator
+        const typingId = 'typing-' + Date.now();
+        addMessage('<em>FongAI đang trả lời...</em>', 'bot', typingId);
+
+        // Call backend Gemini chatbot
+        fetch('/api/v1/ai/chat-process', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
+        })
+        .then(res => res.json())
+        .then(data => {
+            removeMessageById(typingId);
+            if (data && data.reply) {
+                addMessage(data.reply, 'bot');
+            } else {
+                // fallback JS
+                const fallback = generateAIResponse(message);
+                addMessage(fallback, 'bot');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            removeMessageById(typingId);
+            // fallback JS
+            const fallback = generateAIResponse(message);
+            addMessage(fallback, 'bot');
+        });
     }
 
-    function addMessage(text, sender) {
+    function addMessage(text, sender, msgId = null) {
         const messagesContainer = document.getElementById('chatMessages');
         const messageDiv = document.createElement('div');
         messageDiv.className = `chat-message ${sender}`;
+        if (msgId) messageDiv.id = msgId;
 
         const bubble = document.createElement('div');
         bubble.className = 'message-bubble';
@@ -1600,23 +1483,185 @@
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
+    function removeMessageById(id) {
+        const el = document.getElementById(id);
+        if (el) el.remove();
+    }
+
     function generateAIResponse(message) {
         const lowerMessage = message.toLowerCase();
 
-        if (lowerMessage.includes('menu') || lowerMessage.includes('thực đơn') || lowerMessage.includes('món ăn')) {
+        // Hỏi gợi ý ăn gì hôm nay
+        if (
+            lowerMessage.includes('ăn gì') ||
+            lowerMessage.includes('an gi') ||
+            lowerMessage.includes('nên ăn') ||
+            lowerMessage.includes('nen an') ||
+            lowerMessage.includes('gợi ý') ||
+            lowerMessage.includes('goi y') ||
+            lowerMessage.includes('hôm nay ăn') ||
+            lowerMessage.includes('hom nay an')
+        ) {
+            return `Hôm nay FongFood gợi ý cho bạn vài lựa chọn:\n
+            <br>• 🍗 Combo gà rán + khoai tây chiên cho bữa no bụng\n
+            <br>• 🍜 Bún/phở nóng nếu bạn thích món nước\n
+            <br>• 🥤 Trà đào hoặc trà sữa mát lạnh để giải khát\n
+            <br><br>Bạn có thể vào <a href="/menu" class="text-primary">thực đơn</a> và chọn danh mục bạn thích, FongFood sẽ giao tận nơi cho bạn nhé!`;
+        }
+
+        if (lowerMessage.includes('menu') || lowerMessage.includes('thực đơn') || lowerMessage.includes('mon an') || lowerMessage.includes('món ăn')) {
             return 'Bạn có thể xem thực đơn tại <a href="/menu" class="text-primary">đây</a>. Chúng tôi có rất nhiều món ngon như: Bún phở, đồ ăn nhanh, pizza, đồ uống... Bạn thích món gì nhất?';
-        } else if (lowerMessage.includes('giá') || lowerMessage.includes('price') || lowerMessage.includes('tiền')) {
+        } else if (lowerMessage.includes('giá') || lowerMessage.includes('gia ') || lowerMessage.includes('price') || lowerMessage.includes('tiền')) {
             return 'Giá món ăn tại FongFood rất hợp lý! Từ 25.000đ đến 150.000đ tùy món. Nhiều ưu đãi giảm giá đang chờ bạn khám phá!';
         } else if (lowerMessage.includes('giao') || lowerMessage.includes('ship') || lowerMessage.includes('delivery')) {
-            return 'FongFood giao hàng siêu tốc chỉ trong 30 phút! Miễn phí giao hàng cho đơn từ 100.000đ. 🚀';
+            return 'FongFood giao hàng siêu tốc chỉ trong khoảng 30 phút! Miễn phí giao hàng cho đơn từ 100.000đ. 🚀';
         } else if (lowerMessage.includes('xin chào') || lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-            return 'Xin chào! Rất vui được hỗ trợ bạn! 😊 Bạn đang thèm món gì hôm nay?';
-        } else if (lowerMessage.includes('cảm ơn') || lowerMessage.includes('thank')) {
-            return 'Không có gì! Rất hân hạnh được hỗ trợ bạn. Nếu cần gì khác, đừng ngần ngại hỏi nhé! 🙏';
+            return 'Xin chào! Rất vui được hỗ trợ bạn! Bạn đang thèm món gì hôm nay?';
+        } else if (lowerMessage.includes('cảm ơn') || lowerMessage.includes('cam on') || lowerMessage.includes('thank')) {
+            return 'Không có gì! Rất hân hạnh được hỗ trợ bạn. Nếu cần gì khác, đừng ngần ngại hỏi nhé!';
         } else {
             return 'Cảm ơn bạn đã nhắn tin! Tôi sẽ chuyển yêu cầu đến đội ngũ hỗ trợ. Bạn có thể xem thêm tại <a href="/menu" class="text-primary">thực đơn</a> hoặc <a href="/support" class="text-primary">liên hệ hỗ trợ</a> nếu cần giúp đỡ thêm nhé!';
         }
     }
+
+    // ============================================
+    // 2. TẢI LỊCH SỬ CHAT & POLLING ADMIN REPLY
+    // ============================================
+    function renderChatHistory(messages) {
+        const container = document.getElementById('chatMessages');
+        if (!container) return;
+
+        // Xóa nội dung mặc định để tránh trùng lặp
+        container.innerHTML = '';
+
+        messages.forEach(msg => {
+            const sender = msg.sender === 'user' ? 'user' : 'bot';
+            addMessage(msg.message, sender);
+        });
+    }
+
+    function loadChatHistory() {
+        fetch('/api/get-chat-updates')
+            .then(res => res.json())
+            .then(data => {
+                if (data && Array.isArray(data.all_messages) && data.all_messages.length > 0) {
+                    renderChatHistory(data.all_messages);
+                }
+            })
+            .catch(err => console.error('loadChatHistory error:', err));
+    }
+
+    function startChatPolling() {
+        // Poll mỗi 5s để nhận tin nhắn admin gửi từ màn hình quản trị
+        setInterval(() => {
+            fetch('/api/get-chat-updates')
+                .then(res => res.json())
+                .then(data => {
+                    if (data && Array.isArray(data.messages) && data.messages.length > 0) {
+                        data.messages.forEach(msg => {
+                            addMessage(msg.message, 'bot');
+                            // Hiển thị thông báo như Zalo
+                            showNewMessageNotification(msg.message);
+                        });
+                        // Hiện badge thông báo
+                        const badge = document.getElementById('chatNewBadge');
+                        if (badge) badge.style.display = 'flex';
+                    }
+                })
+                .catch(err => console.error('chat polling error:', err));
+        }, 5000);
+    }
+
+    // Hiển thị thông báo tin nhắn mới kiểu Zalo
+    function showNewMessageNotification(message) {
+        // Tạo toast notification
+        const toast = document.createElement('div');
+        toast.className = 'chat-notification-toast';
+        toast.innerHTML = `
+            <div class="chat-notification-icon">
+                <i class="fas fa-comment-dots"></i>
+            </div>
+            <div class="chat-notification-content">
+                <div class="chat-notification-title">CSKH Fong Food</div>
+                <div class="chat-notification-message">${message.substring(0, 50)}${message.length > 50 ? '...' : ''}</div>
+            </div>
+            <button class="chat-notification-close" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        document.body.appendChild(toast);
+
+        // Tự động đóng sau 5 giây
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, 5000);
+    }
+
+    // Thêm style cho notification
+    const notificationStyle = document.createElement('style');
+    notificationStyle.textContent = `
+        .chat-notification-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            z-index: 10000;
+            animation: slideInRight 0.3s ease;
+            max-width: 320px;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .chat-notification-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #d32f2f, #ff5252);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .chat-notification-content {
+            flex-grow: 1;
+            min-width: 0;
+        }
+        .chat-notification-title {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 14px;
+        }
+        .chat-notification-message {
+            color: #64748b;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-notification-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 5px;
+            margin-left: 8px;
+        }
+        .chat-notification-close:hover {
+            color: #d32f2f;
+        }
+    `;
+    document.head.appendChild(notificationStyle);
 
     // ============================================
     // 3. AI QUICK VIEW
@@ -1715,23 +1760,11 @@
         initScrollAnimations();
         initAISearch();
         trackAIRecommendations();
+        // Đảm bảo lịch sử chat không bị mất khi F5 hoặc quay lại trang Home
+        loadChatHistory();
+        startChatPolling();
     });
 
-    // ============================================
-    // 8. SESSION CHECK (from layout.html)
-    // ============================================
-    // Keep the session check from original layout
-    setInterval(function() {
-        fetch('/check-session-status')
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'kick') {
-                    alert('Tài khoản của bạn đã được đăng nhập ở thiết bị khác!\nHệ thống sẽ tự động đăng xuất.');
-                    window.location.href = '/login';
-                }
-            })
-            .catch(err => console.log('Checking session...', err));
-    }, 3000);
 </script>
 
 {% endblock %}

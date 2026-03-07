@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+    .voucher-card {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        border-radius: 12px;
+        padding: 15px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 15px;
+    }
+    .voucher-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 10px;
+        background: repeating-linear-gradient(
+            to bottom,
+            white,
+            white 5px,
+            transparent 5px,
+            transparent 10px
+        );
+    }
+    .voucher-card .discount {
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .voucher-card .code {
+        background: rgba(255,255,255,0.3);
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-family: monospace;
+        font-size: 14px;
+    }
+    .voucher-card .min-order {
+        font-size: 12px;
+        opacity: 0.9;
+    }
+    .voucher-card.expired {
+        background: linear-gradient(135deg, #9E9E9E 0%, #757575 100%);
+    }
+</style>
+
+<div class="bg-white border-bottom p-3 sticky-top d-flex justify-content-between align-items-center">
+    <h5 class="m-0 fw-bold"> voucher CỦA TÔI</h5>
+    <a href="/home" class="text-danger small text-decoration-none"><i class="fas fa-arrow-left"></i> Về trang chủ</a>
+</div>
+
+<div class="container py-3 pb-5">
+    {% if vouchers %}
+        {% for v in vouchers %}
+        <div class="voucher-card {{ 'expired' if v.valid_until and v.valid_until < '' else '' }}">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="discount">{{ v.discount }}%</div>
+                    <div class="min-order">Đơn tối thiểu {{ "{:,.0f}".format(v.min_order) }}đ</div>
+                </div>
+                <div class="text-end">
+                    <div class="code">{{ v.code }}</div>
+                    <small class="opacity-75">Hết hạn: {{ v.valid_until[:10] if v.valid_until else 'Không giới hạn' }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-center py-5 text-muted">
+            <i class="fas fa-ticket-alt fa-3x mb-3 opacity-25"></i>
+            <p>Chưa có voucher nào</p>
+            <a href="/home" class="btn btn-primary btn-sm">Mua sắm ngay</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

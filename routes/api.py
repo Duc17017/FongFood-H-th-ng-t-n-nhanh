@@ -91,7 +91,7 @@ def api_register():
 
 @api_bp.route("/auth/login", methods=["POST"])
 def api_login():
-    """API đăng nhập"""
+    """API đăng nhập - Hỗ trợ mobile/web API"""
     data = request.json
     username = data.get("username")
     password = data.get("password")
@@ -118,11 +118,13 @@ def api_login():
         return jsonify({"success": False, "message": "Mật khẩu không đúng"}), 401
 
     login_token = str(uuid.uuid4())
-    session["user"] = username
-    session["role"] = user.get("role", "customer")
-    session["login_token"] = login_token
 
+    # Cập nhật token trong DB
     db_patch(f"users/{username}", {"login_token": login_token, "last_login": datetime.now().isoformat()})
+
+    # Nếu là request từ web có session, lưu vào session
+    if session.get("user"):
+        session["login_token"] = login_token
 
     return jsonify({
         "success": True,
@@ -137,7 +139,7 @@ def api_login():
             "rank": user.get("rank", "Đồng"),
             "avatar": user.get("avatar", ""),
         },
-        "token": login_token
+        "token": login_token  # Token dùng cho mobile API
     })
 
 
@@ -779,7 +781,11 @@ def api_check_voucher():
     
     voucher = None
     if isinstance(vouchers, dict):
-        voucher = vouchers.get(voucher_code)
+        # Search by code in the voucher object, not by key
+        for v_key, v_data in vouchers.items():
+            if isinstance(v_data, dict) and v_data.get("code") == voucher_code:
+                voucher = v_data
+                break
     elif isinstance(vouchers, list):
         for v in vouchers:
             if isinstance(v, dict) and v.get("code") == voucher_code:
@@ -810,7 +816,19 @@ def api_check_voucher():
     v_type = voucher.get("type", "percent")
     v_discount = float(voucher.get("discount", 0) or 0)
     min_order = float(voucher.get("min_order", 0) or 0)
-    
+
+    # Get order_total from request to calculate discount
+    order_total = float(data.get("order_total", 0) or 0)
+
+    # Check minimum order
+    if order_total > 0 and order_total < min_order:
+        return jsonify({"success": False, "message": f"Đơn hàng tối thiểu {min_order:,}đ để dùng voucher này"}), 400
+
+    # Calculate discount amount
+    discount_amount = 0
+    if v_type == "percent":
+        discount_amount = int(order_total * v_discount / 100)
+
     return jsonify({
         "success": True,
         "message": f"Voucher hợp lệ! Giảm {v_discount}%",
@@ -819,7 +837,8 @@ def api_check_voucher():
             "discount": v_discount,
             "type": v_type,
             "min_order": min_order
-        }
+        },
+        "discount_amount": discount_amount
     })
 
 

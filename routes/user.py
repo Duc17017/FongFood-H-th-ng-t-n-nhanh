@@ -1,3 +1,4 @@
+
 import base64
 import logging
 import time
@@ -38,9 +39,10 @@ def get_user_db(username):
 
 # --- AI GỢI Ý MÓN ĂN ---
 def get_ai_recommendations(username, products):
-    """AI gợi ý món ăn dựa trên thời gian và lịch sử"""
+    """AI gợi ý món ăn dựa trên thời tiết, thời gian và lịch sử"""
     from datetime import datetime
     import random
+    import requests
     
     # Lấy lịch sử đơn hàng
     raw_orders = db_get("orders") or {}
@@ -59,14 +61,59 @@ def get_ai_recommendations(username, products):
     hour = datetime.now().hour
     time_category = "drink" if hour < 10 or (14 <= hour < 18) else "food"
     
+    # Lấy thông tin thời tiết thực tế (Hà Nội)
+    weather_info = {"condition": "normal", "temp": 25, "description": "Trời bình thường"}
+    try:
+        from config import OPENWEATHER_API_KEY
+        if OPENWEATHER_API_KEY:
+            weather_url = f"https://api.openweathermap.org/data/2.5/weather?q=Hanoi,vn&appid={OPENWEATHER_API_KEY}&units=metric"
+            weather_response = requests.get(weather_url, timeout=5)
+            if weather_response.status_code == 200:
+                weather_data = weather_response.json()
+                temp = weather_data.get("main", {}).get("temp", 25)
+                weather_id = weather_data.get("weather", [{}])[0].get("id", 800)
+                
+                # Phân loại thời tiết
+                if weather_id >= 200 and weather_id < 300:  # Thunderstorm
+                    weather_info = {"condition": "rainy", "temp": temp, "description": "Trời bão"}
+                elif weather_id >= 300 and weather_id < 600:  # Drizzle, Rain
+                    weather_info = {"condition": "rainy", "temp": temp, "description": "Trời mưa"}
+                elif weather_id >= 600 and weather_id < 700:  # Snow
+                    weather_info = {"condition": "cold", "temp": temp, "description": "Trời tuyết lạnh"}
+                elif weather_id == 800:  # Clear
+                    if temp > 30:
+                        weather_info = {"condition": "hot", "temp": temp, "description": "Trời nóng"}
+                    elif temp < 20:
+                        weather_info = {"condition": "cold", "temp": temp, "description": "Trời mát lạnh"}
+                    else:
+                        weather_info = {"condition": "normal", "temp": temp, "description": "Trời nắng đẹp"}
+                elif weather_id > 800:  # Clouds
+                    weather_info = {"condition": "cloudy", "temp": temp, "description": "Trời nhiều mây"}
+    except Exception as e:
+        logger.warning(f"Không lấy được thời tiết: {e}")
+    
     # Lọc sản phẩm theo gợi ý
     recommendations = []
     for pid, p in products.items():
         score = 0
         name = p.get("name", "").lower()
         
-        # Ưu tiên theo thời gian
-        if time_category == "food" and any(x in name for x in ["com", "pho", "chao", "mi", "ga", "bo"]):
+        # Ưu tiên THEO THỜI TIẾT (quan trọng nhất)
+        if weather_info["condition"] in ["rainy", "cold"]:
+            # Trời lạnh/mưa: ưu tiên món nóng
+            if any(x in name for x in ["lau", "hot", "nuong", "ram", "sup", "chao", "pho", "bun"]):
+                score += 5
+            elif any(x in name for x in ["tra", "sinh to", "nuoc", "cold", "đá"]):
+                score -= 3  # Giảm ưu tiên đồ lạnh
+        elif weather_info["condition"] == "hot":
+            # Trời nóng: ưu tiên đồ uống lạnh
+            if any(x in name for x in ["tra", "sinh to", "nuoc", "cafe", "coffee", "coca", "pepsi"]):
+                score += 5
+            elif any(x in name for x in ["lau", "hot", "nuong"]):
+                score -= 2
+        
+        # Ưu tiên theo thời gian trong ngày
+        if time_category == "food" and any(x in name for x in ["com", "pho", "chao", "mi", "ga", "bo", "bun"]):
             score += 3
         elif time_category == "drink" and any(x in name for x in ["tra", "nuoc", "cafe", "coffee", "sinh to"]):
             score += 3
@@ -81,7 +128,7 @@ def get_ai_recommendations(username, products):
             score += 2
         
         if score > 0:
-            recommendations.append((pid, p, score))
+            recommendations.append((pid, p, score, weather_info))
     
     # Sắp xếp và lấy top 6
     recommendations.sort(key=lambda x: x[2], reverse=True)
@@ -100,7 +147,31 @@ def home():
     username = session.get("user")
     ai_recommendations = get_ai_recommendations(username, products) if username else []
     
-    return render_template("customer/home.html", hot_products=hot_products, ai_recommendations=ai_recommendations)
+    # Lấy thông tin thời tiết để hiển thị
+    weather_info = {"condition": "normal", "temp": 25, "description": "Trời bình thường"}
+    try:
+        from config import OPENWEATHER_API_KEY
+        if OPENWEATHER_API_KEY:
+            import requests
+            weather_url = f"https://api.openweathermap.org/data/2.5/weather?q=Hanoi,vn&appid={OPENWEATHER_API_KEY}&units=metric"
+            weather_response = requests.get(weather_url, timeout=5)
+            if weather_response.status_code == 200:
+                weather_data = weather_response.json()
+                weather_info["temp"] = weather_data.get("main", {}).get("temp", 25)
+                weather_id = weather_data.get("weather", [{}])[0].get("id", 800)
+                if weather_id >= 200 and weather_id < 600:
+                    weather_info["condition"] = "rainy"
+                    weather_info["description"] = "Trời mưa"
+                elif weather_id == 800 and weather_info["temp"] > 30:
+                    weather_info["condition"] = "hot"
+                    weather_info["description"] = "Trời nóng"
+                elif weather_info["temp"] < 20:
+                    weather_info["condition"] = "cold"
+                    weather_info["description"] = "Trời lạnh"
+    except:
+        pass
+    
+    return render_template("customer/home.html", hot_products=hot_products, ai_recommendations=ai_recommendations, weather=weather_info)
 
 
 @customer_bp.route("/menu")
@@ -619,7 +690,71 @@ def change_password():
 @customer_bp.route("/support")
 @login_required(role="customer")
 def support():
-    return render_template("customer/support.html")
+    user = session["user"]
+    # Lấy lịch sử chat từ Firebase
+    raw_chats = db_get(f"chats/{user}") or []
+    chat_history = raw_chats if isinstance(raw_chats, list) else list(raw_chats.values()) if raw_chats else []
+    return render_template("customer/support.html", chat_history=chat_history)
+
+
+# --- API: LƯU TIN NHẮN CHAT VÀO FIREBASE ---
+@customer_bp.route("/api/save-chat", methods=["POST"])
+@login_required(role="customer")
+def save_chat():
+    """Lưu tin nhắn chat vào Firebase"""
+    data = request.json
+    user = session["user"]
+    message = data.get("message", "")
+    sender = data.get("sender", "user")  # "user" hoặc "admin"
+
+    if not message:
+        return jsonify({"success": False, "message": "Tin nhắn trống"})
+
+    # Lấy lịch sử chat hiện tại
+    raw_chats = db_get(f"chats/{user}") or []
+    chat_history = raw_chats if isinstance(raw_chats, list) else list(raw_chats.values()) if raw_chats else []
+
+    # Thêm tin nhắn mới
+    import uuid
+    new_message = {
+        "id": str(uuid.uuid4()),
+        "message": message,
+        "sender": sender,
+        "timestamp": datetime.now().isoformat(),
+        "is_read": False
+    }
+    chat_history.append(new_message)
+
+    # Lưu lại vào Firebase
+    db_put(f"chats/{user}", chat_history)
+
+    return jsonify({"success": True, "message": "Đã lưu tin nhắn"})
+
+
+# --- API: LẤY TIN NHẮN CHAT MỚI (Polling) ---
+@customer_bp.route("/api/get-chat-updates", methods=["GET"])
+@login_required(role="customer")
+def get_chat_updates():
+    """Lấy tin nhắn mới từ admin (dùng polling)"""
+    user = session["user"]
+    raw_chats = db_get(f"chats/{user}") or []
+    chat_history = raw_chats if isinstance(raw_chats, list) else list(raw_chats.values()) if raw_chats else []
+
+    # Lấy tin nhắn từ admin chưa đọc
+    admin_messages = [m for m in chat_history if m.get("sender") == "admin" and not m.get("is_read", False)]
+
+    # Đánh dấu các tin nhắn admin vừa trả về là đã đọc để tránh lặp lại nhiều lần
+    if admin_messages:
+        for msg in chat_history:
+            if msg.get("sender") == "admin" and not msg.get("is_read", False):
+                msg["is_read"] = True
+        db_put(f"chats/{user}", chat_history)
+
+    return jsonify({
+        "success": True,
+        "messages": admin_messages,
+        "all_messages": chat_history[-20:] if len(chat_history) > 20 else chat_history  # Lấy 20 tin gần nhất
+    })
 
 # --- LOGIC "AI" TRẢ LỜI TỰ ĐỘNG (NÂNG CẤP: DÀI HƠN & TỰ NHIÊN HƠN) ---
 def get_ai_response(msg):
@@ -688,14 +823,89 @@ def get_ai_response(msg):
 
 # --- API: NHẬN TIN NHẮN & TRẢ LỜI ---
 @customer_bp.route("/api/chat-process", methods=["POST"])
+@login_required(role="customer")
 def api_chat_process():
+    from routes.ai import get_ai_chatbot_response
+    import uuid
+    
     data = request.json
     user_msg = data.get("message", "")
-
+    user = session.get("user")
+    
     time.sleep(1.5)
     
-    bot_reply = get_ai_response(user_msg)
-    return jsonify({"reply": bot_reply})
+    # Lưu tin nhắn của user vào database
+    chat_id = f"chats/{user}"
+    existing_chats = db_get(chat_id) or []
+    if isinstance(existing_chats, dict):
+        existing_chats = list(existing_chats.values())
+    
+    user_msg_data = {
+        "id": str(uuid.uuid4()),
+        "sender": "user",
+        "message": user_msg,
+        "timestamp": datetime.now().isoformat()
+    }
+    existing_chats.append(user_msg_data)
+    db_put(chat_id, existing_chats)
+    
+    # AI trả lời
+    bot_reply = get_ai_chatbot_response(user_msg, user)
+    reply_text = bot_reply.get("message", "") if isinstance(bot_reply, dict) else bot_reply
+    
+    # Lưu tin nhắn của AI/Admin vào database
+    existing_chats = db_get(chat_id) or []
+    if isinstance(existing_chats, dict):
+        existing_chats = list(existing_chats.values())
+    
+    bot_msg_data = {
+        "id": str(uuid.uuid4()),
+        "sender": "admin",
+        "message": reply_text,
+        "timestamp": datetime.now().isoformat()
+    }
+    existing_chats.append(bot_msg_data)
+    db_put(chat_id, existing_chats)
+    
+    return jsonify({"reply": reply_text})
+
+# --- API: ĐỒNG BỘ GIỎ HÀNG TỪ LOCALSTORAGE ---
+@customer_bp.route("/api/sync-cart", methods=["POST"])
+@login_required(role="customer")
+def sync_cart():
+    """Đồng bộ giỏ hàng từ localStorage lên server"""
+    data = request.json
+    local_cart = data.get("cart", {})
+    user = session["user"]
+
+    # Lấy giỏ hàng hiện tại từ server
+    raw_cart = db_get(f"carts/{user}") or {}
+    server_cart = normalize_data(raw_cart, "id")
+
+    # Merge giỏ hàng: cộng dồn số lượng
+    for pid, item in local_cart.items():
+        if pid in server_cart:
+            server_cart[pid]["qty"] += item.get("qty", 1)
+        else:
+            server_cart[pid] = {
+                "name": item.get("name", ""),
+                "price": item.get("price", 0),
+                "qty": item.get("qty", 1),
+                "id": pid,
+            }
+
+    db_put(f"carts/{user}", server_cart)
+    return jsonify({"success": True, "message": "Đã đồng bộ giỏ hàng"})
+
+
+@customer_bp.route("/api/get-cart", methods=["GET"])
+@login_required(role="customer")
+def get_cart_api():
+    """Lấy giỏ hàng hiện tại (dùng trước khi logout)"""
+    user = session["user"]
+    raw_cart = db_get(f"carts/{user}") or {}
+    return jsonify({"cart": raw_cart})
+
 
 @customer_bp.context_processor
 def inject_global_vars():

@@ -555,28 +555,56 @@
 
           <div class="row g-3">
             <div class="col-6">
-              <div
-                class="payment-option active"
-                onclick="selectPayment('cash', this)"
-              >
+              <div class="payment-option active w-100 text-center p-3 border rounded-3" id="btn-cash" onclick="handlePayment('cash')">
                 <div class="payment-icon" style="color: var(--success-color)">
-                  <i class="fas fa-money-bill-wave"></i>
+                  <i class="fas fa-money-bill-wave fa-2x d-block mb-2"></i>
                 </div>
                 <div class="payment-name">Tiền mặt</div>
               </div>
             </div>
             <div class="col-6">
-              <div class="payment-option" onclick="selectPayment('qr', this)">
+              <div class="payment-option w-100 text-center p-3 border rounded-3" id="btn-qr" onclick="handlePayment('qr')">
                 <div class="payment-icon" style="color: #1976d2">
-                  <i class="fas fa-qrcode"></i>
+                  <i class="fas fa-qrcode fa-2x d-block mb-2"></i>
                 </div>
                 <div class="payment-name">QR Code</div>
               </div>
             </div>
           </div>
 
+          <script>
+          function handlePayment(method) {
+            console.log('Payment method selected:', method);
+            document.getElementById("paymentInput").value = method;
+
+            // Update button styles
+            document.getElementById('btn-cash').classList.remove('active');
+            document.getElementById('btn-qr').classList.remove('active');
+            document.getElementById('btn-' + method).classList.add('active');
+
+            // Show/hide QR section
+            const qr = document.getElementById("qrSection");
+            if (method === "qr") {
+              qr.classList.remove("d-none");
+              updatePaymentInfo();
+            } else {
+              qr.classList.add("d-none");
+            }
+          }
+          </script>
+
           <!-- QR Section -->
           <div id="qrSection" class="qr-section d-none">
+            <div class="alert alert-info mb-3">
+                <div class="fw-bold"><i class="fas fa-university me-2"></i>THÔNG TIN CHUYỂN KHOẢN</div>
+                <div class="small mt-2">
+                    <div>Ngân hàng: <strong>MB Bank</strong></div>
+                    <div>Số tài khoản: <strong>0865054042</strong></div>
+                    <div>Chủ tài khoản: <strong>NGUYEN MINH DUC</strong></div>
+                    <div class="text-danger fw-bold mt-2">Nội dung: <span id="transferContent">FONGFOOD{{ session['user'] }}</span></div>
+                    <div class="text-danger fw-bold">Số tiền: <span id="transferAmount">{{ "{:,.0f}".format(ns.total) }}đ</span></div>
+                </div>
+            </div>
             <div class="qr-content">
               <img
                 src="https://img.freepik.com/free-vector/scan-me-qr-code_78370-2915.jpg"
@@ -586,7 +614,7 @@
               <div class="qr-info">
                 <h6><i class="fas fa-qrcode me-2"></i>Quét mã thanh toán</h6>
                 <p class="mb-1 text-muted small">
-                  Nội dung: <strong>FONGFOOD {{ session['user'] }}</strong>
+                  Nội dung: <strong id="qrContentDisplay">FONGFOOD {{ session['user'] }}</strong>
                 </p>
                 <span class="ai-badge"
                   ><i class="fas fa-robot"></i> AI tự động duyệt đơn</span
@@ -729,6 +757,18 @@
           <!-- Voucher input -->
           <div class="mb-3">
             <label class="summary-label mb-1">Mã giảm giá / Voucher</label>
+
+            {% if available_vouchers %}
+            <select class="form-select mb-2" id="voucherSelect" onchange="selectVoucherFromDropdown()">
+              <option value="">-- Chọn voucher --</option>
+              {% for v in available_vouchers %}
+              <option value="{{ v.code }}" data-discount="{{ v.discount }}" data-min="{{ v.min_order }}">
+                {{ v.code }} - Giảm {{ v.discount }}% (Tối thiểu {{ "{:,.0f}".format(v.min_order) }}đ)
+              </option>
+              {% endfor %}
+            </select>
+            {% endif %}
+
             <div class="input-group">
               <span class="input-group-text bg-white"
                 ><i class="fas fa-ticket-alt text-muted"></i
@@ -749,7 +789,7 @@
           <!-- Summary -->
           <div class="summary-row">
             <span class="summary-label">Tạm tính</span>
-            <span class="summary-value">{{ "{:,.0f}".format(ns.total) }}đ</span>
+            <span class="summary-value" id="subtotalValue" data-value="{{ ns.total }}">{{ "{:,.0f}".format(ns.total) }}đ</span>
           </div>
           <div class="summary-row">
             <span class="summary-label">Phí giao hàng</span>
@@ -759,14 +799,12 @@
           </div>
           <div class="summary-row">
             <span class="summary-label">Giảm giá</span>
-            <span class="summary-value" style="color: var(--success-color)"
-              >-{{ "{:,.0f}".format(discount_amount if discount_amount is defined else 0) }}đ</span
-            >
+            <span class="summary-value" style="color: var(--success-color)" id="discountValue">-{{ "{:,.0f}".format(discount_amount if discount_amount is defined else 0) }}đ</span>
           </div>
 
           <div class="summary-total">
             <span class="total-label">Tổng cộng</span>
-            <span class="total-value">{{ "{:,.0f}".format(ns.total) }}đ</span>
+            <span class="total-value" id="totalValue">{{ "{:,.0f}".format(ns.total) }}đ</span>
           </div>
 
           <button type="submit" class="checkout-btn">
@@ -793,25 +831,76 @@
 </div>
 
 <script>
-  function selectPayment(method, element) {
-    document.getElementById("paymentInput").value = method;
-    document
-      .querySelectorAll(".payment-option")
-      .forEach((el) => el.classList.remove("active"));
-    element.classList.add("active");
+  // Global discount variable
+  let appliedDiscount = 0;
+  let appliedCode = '';
+  let currentTotal = 0;
+  const CART_STORAGE_KEY = 'fongfood_cart';
 
-    const qr = document.getElementById("qrSection");
-    if (method === "qr") {
-      qr.classList.remove("d-none");
-    } else {
-      qr.classList.add("d-none");
+  // Lưu giỏ hàng vào localStorage
+  function saveCartToLocal() {
+    const cartItems = [];
+    {% for pid, item in cart.items() %}
+    cartItems.push({
+      id: "{{ pid }}",
+      name: "{{ item.name }}",
+      price: {{ item.price or 0 }},
+      qty: {{ item.qty or 1 }}
+    });
+    {% endfor %}
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+  }
+
+  // Gọi khi trang load
+  document.addEventListener('DOMContentLoaded', function() {
+    saveCartToLocal();
+  });
+
+  function updatePaymentInfo() {
+    // Get current total
+    const totalEl = document.getElementById('totalValue');
+    const totalText = totalEl.textContent.replace(/[^\d]/g, '');
+    currentTotal = parseInt(totalText) || 0;
+
+    // Update transfer info
+    const transferContent = document.getElementById('transferContent');
+    const transferAmount = document.getElementById('transferAmount');
+    const qrContentDisplay = document.getElementById('qrContentDisplay');
+
+    const username = "{{ session['user'] }}";
+    if (transferContent) transferContent.textContent = 'FONGFOOD' + username;
+    if (transferAmount) transferAmount.textContent = currentTotal.toLocaleString('vi-VN') + 'đ';
+    if (qrContentDisplay) qrContentDisplay.textContent = 'FONGFOOD ' + username;
+  }
+
+  function selectVoucherFromDropdown() {
+    const select = document.getElementById('voucherSelect');
+    if (!select) return;
+
+    const code = select.value;
+    const discount = select.options[select.selectedIndex]?.dataset?.discount || 0;
+
+    if (code) {
+      document.getElementById('voucherInput').value = code;
+      applyVoucher();
     }
   }
 
   function applyVoucher() {
+    console.log('=== applyVoucher function called ===');
     const code = document.getElementById('voucherInput').value.trim().toUpperCase();
     const msgEl = document.getElementById('voucherMessage');
-    
+    const subtotalEl = document.getElementById('subtotalValue');
+
+    if (!msgEl) {
+      console.error('voucherMessage element not found!');
+      return;
+    }
+
+    const subtotal = subtotalEl ? parseFloat(subtotalEl.dataset.value || 0) : 0;
+
+    console.log('Applying voucher:', code, 'subtotal:', subtotal);
+
     if (!code) {
       msgEl.innerHTML = '<span class="text-danger">Vui lòng nhập mã voucher</span>';
       return;
@@ -822,22 +911,49 @@
     fetch('/api/v1/voucher/check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: code })
+      body: JSON.stringify({ code: code, order_total: subtotal })
     })
     .then(res => res.json())
     .then(data => {
+      console.log('Voucher response:', data);
       if (data.success) {
         msgEl.innerHTML = '<span class="text-success"><i class="fas fa-check-circle"></i> ' + data.message + '</span>';
-        // Enable submit
-        document.querySelector('.checkout-btn').disabled = false;
+        appliedDiscount = data.discount_amount || 0;
+        appliedCode = code;
+        console.log('Applied discount:', appliedDiscount);
+        updateTotalWithDiscount();
       } else {
         msgEl.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle"></i> ' + data.message + '</span>';
+        appliedDiscount = 0;
+        appliedCode = '';
+        updateTotalWithDiscount();
       }
     })
     .catch(err => {
-      console.error(err);
+      console.error('Voucher error:', err);
       msgEl.innerHTML = '<span class="text-danger">Lỗi kết nối server</span>';
     });
+  }
+
+  function updateTotalWithDiscount() {
+    const subtotalEl = document.getElementById('subtotalValue');
+    const discountEl = document.getElementById('discountValue');
+    const totalEl = document.getElementById('totalValue');
+
+    const subtotal = subtotalEl ? parseFloat(subtotalEl.dataset.value || 0) : 0;
+    const discount = appliedDiscount;
+    const total = Math.max(0, subtotal - discount);
+
+    console.log('Updating total: subtotal=', subtotal, 'discount=', discount, 'total=', total);
+
+    if (discountEl) discountEl.textContent = '-' + discount.toLocaleString('vi-VN') + 'đ';
+    if (totalEl) totalEl.textContent = total.toLocaleString('vi-VN') + 'đ';
+
+    // Update payment info if QR is selected
+    const qrSection = document.getElementById('qrSection');
+    if (qrSection && !qrSection.classList.contains('d-none')) {
+      updatePaymentInfo();
+    }
   }
 
   let map, marker;

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FONG FOOD - Đang tải...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #D32F2F 0%, #FF5722 50%, #FF6B35 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .logo-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+            margin: 0 auto;
+        }
+
+        .logo img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .logo-subtext {
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+            }
+        }
+
+        /* Button styles */
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+            z-index: 10;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #D32F2F;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #D32F2F;
+        }
+
+        .btn-admin {
+            background: rgba(0,0,0,0.3);
+            color: white;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+        }
+
+        .btn-admin:hover {
+            background: rgba(0,0,0,0.5);
+        }
+
+        /* Wave animation */
+        .wave-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background-repeat: repeat-x;
+            transform-origin: center bottom;
+        }
+
+        .wave1 {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.3' d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: 50% 100%;
+            animation: wave 10s linear infinite;
+            opacity: 0.8;
+        }
+
+        .wave2 {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.5' d='M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,224C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: 50% 100%;
+            animation: wave 7s linear infinite reverse;
+            opacity: 0.6;
+            bottom: 10px;
+        }
+
+        .wave3 {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.8' d='M0,160L48,176C96,192,192,224,288,240C384,256,480,256,576,240C672,224,768,192,864,186.7C960,181,1056,203,1152,224C1248,245,1344,267,1392,277.3L1440,288L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: 50% 100%;
+            animation: wave 5s linear infinite;
+            opacity: 0.4;
+            bottom: 20px;
+        }
+
+        @keyframes wave {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+    <script>
+        // Auto redirect only if already logged in
+        var role = "";
+        if (role === "admin") {
+            setTimeout(function() {
+                window.location.href = "/admin/dashboard";
+            }, 1500);
+        } else if (role === "customer") {
+            setTimeout(function() {
+                window.location.href = "/home";
+            }, 1500);
+        }
+    </script>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="logo">
+            <svg viewBox="0 0 100 100" width="80" height="80">
+                <circle cx="50" cy="50" r="45" fill="#D32F2F"/>
+                <text x="50" y="60" text-anchor="middle" font-size="30" font-weight="bold" fill="white">F</text>
+                <text x="50" y="75" text-anchor="middle" font-size="12" fill="white">FOOD</text>
+            </svg>
+        </div>
+        <div class="logo-text">FONG FOOD</div>
+        <div class="logo-subtext">Đồ ăn ngon - Giao hàng nhanh</div>
+    </div>
+
+    <div class="btn-container">
+        <a href="/login" class="btn btn-primary">Đăng nhập</a>
+        <a href="/register" class="btn btn-secondary">Đăng ký</a>
+        <a href="/admin/dashboard" class="btn btn-admin">🔧 Quản trị viên</a>
+    </div>
+
+    <div class="wave-container">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+    </div>
+</body>
+</html>

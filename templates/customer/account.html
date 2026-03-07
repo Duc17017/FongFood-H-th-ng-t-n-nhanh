@@ -269,8 +269,32 @@
                 </div>
                 <div class="menu-text">
                     Đơn hàng của tôi
-                    <span class="menu-badge">3</span>
+                    {% if order_count > 0 %}<span class="menu-badge">{{ order_count }}</span>{% endif %}
                 </div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+
+            <a href="/my-vouchers" class="account-menu-item">
+                <div class="menu-icon" style="background: #FFF8E1; color: #FF8F00;">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+                <div class="menu-text"> voucher của tôi</div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+
+            <a href="/qr-scan" class="account-menu-item">
+                <div class="menu-icon" style="background: #E8F5E9; color: #00B14F;">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <div class="menu-text">Quét mã QR đơn hàng</div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+
+            <a href="/notifications" class="account-menu-item">
+                <div class="menu-icon" style="background: #E3F2FD; color: #1976D2;">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="menu-text">Thông báo đẩy</div>
                 <i class="fas fa-chevron-right menu-arrow"></i>
             </a>
 

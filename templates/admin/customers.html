@@ -180,14 +180,46 @@
     <div class="modal-dialog">
         <form class="modal-content border-0 shadow" id="voucherForm">
             <div class="modal-header bg-warning text-dark border-0">
-                <h5 class="modal-title fw-bold"><i class="fas fa-gift me-2"></i>Phát Voucher Toàn Sàn</h5>
+                <h5 class="modal-title fw-bold"><i class="fas fa-gift me-2"></i>Phát Voucher</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
                 <div class="alert alert-info small border-0 bg-info bg-opacity-10 text-info">
-                    <i class="fas fa-info-circle me-1"></i> Voucher sẽ được gửi vào mục "Kho Voucher" của tất cả khách hàng.
+                    <i class="fas fa-info-circle me-1"></i> Voucher sẽ được gửi vào mục "Kho Voucher" của khách hàng.
                 </div>
-                <input type="hidden" name="username" value="all">
+
+                <!-- Chọn loại gửi -->
+                <div class="mb-3">
+                    <label class="fw-bold mb-2">Gửi cho:</label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sendType" id="sendAll" value="all" checked onchange="toggleUserSelect()">
+                            <label class="form-check-label" for="sendAll">
+                                <i class="fas fa-users text-success"></i> Tất cả khách hàng
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sendType" id="sendSpecific" value="specific" onchange="toggleUserSelect()">
+                            <label class="form-check-label" for="sendSpecific">
+                                <i class="fas fa-user text-primary"></i> Chọn khách hàng
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chọn khách hàng cụ thể -->
+                <div class="mb-3" id="userSelectSection" style="display: none;">
+                    <label class="fw-bold mb-1">Chọn khách hàng:</label>
+                    <select name="specific_user" id="specificUserSelect" class="form-select">
+                        <option value="">-- Chọn khách hàng --</option>
+                        {% for c in customers %}
+                        <option value="{{ c.username }}">{{ c.name }} ({{ c.username }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <input type="hidden" name="username" id="usernameInput" value="all">
+
                 <div class="mb-3">
                     <label class="fw-bold mb-1">Mã Voucher</label>
                     <div class="input-group">
@@ -213,44 +245,63 @@
 </div>
 
 <script>
+function toggleUserSelect() {
+    const sendAll = document.getElementById('sendAll').checked;
+    const userSelectSection = document.getElementById('userSelectSection');
+    const usernameInput = document.getElementById('usernameInput');
+
+    if (sendAll) {
+        userSelectSection.style.display = 'none';
+        usernameInput.value = 'all';
+    } else {
+        userSelectSection.style.display = 'block';
+        usernameInput.value = '';
+    }
+}
+
 function sendVoucher() {
     const code = document.getElementById('voucherCodeInput').value.trim().toUpperCase();
     const discount = document.getElementById('voucherDiscountInput').value;
+    const sendAll = document.getElementById('sendAll').checked;
+    const specificUser = document.getElementById('specificUserSelect').value;
     const msgEl = document.getElementById('voucherMessage');
-    
+
     if (!code || !discount) {
         msgEl.innerHTML = '<div class="alert alert-danger">Vui lòng nhập đầy đủ thông tin</div>';
         return;
     }
-    
+
+    if (!sendAll && !specificUser) {
+        msgEl.innerHTML = '<div class="alert alert-danger">Vui lòng chọn khách hàng</div>';
+        return;
+    }
+
+    const username = sendAll ? 'all' : specificUser;
+
     const formData = new FormData();
-    formData.append('username', 'all');
+    formData.append('username', username);
     formData.append('code', code);
     formData.append('discount', discount);
     formData.append('ajax', 'true');
-    
+
     msgEl.innerHTML = '<div class="alert alert-info">Đang gửi...</div>';
-    
+
     fetch('/admin/send_voucher', {
         method: 'POST',
         body: formData
     })
     .then(res => {
-        // Check content type
         const contentType = res.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
             return res.json().then(data => ({ json: true, data: data, url: res.url }));
         } else {
-            // HTML response - redirect or error page
             return res.text().then(html => ({ json: false, html: html, url: res.url, redirected: res.redirected }));
         }
     })
     .then(result => {
         if (result.json) {
-            // JSON response
             if (result.data.success) {
                 msgEl.innerHTML = '<div class="alert alert-success">✅ ' + result.data.message + '</div>';
-                // Close modal and reload
                 setTimeout(() => {
                     const modal = bootstrap.Modal.getInstance(document.getElementById('voucherModal'));
                     modal.hide();
@@ -260,7 +311,6 @@ function sendVoucher() {
                 msgEl.innerHTML = '<div class="alert alert-danger">❌ ' + result.data.message + '</div>';
             }
         } else {
-            // HTML response
             if (result.redirected || result.html && !result.html.includes('login')) {
                 msgEl.innerHTML = '<div class="alert alert-success">✅ Gửi voucher thành công!</div>';
                 setTimeout(() => {

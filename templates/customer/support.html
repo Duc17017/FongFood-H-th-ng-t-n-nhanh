@@ -2,109 +2,208 @@
 
 {% block content %}
 <style>
-    /* Ẩn bớt header/footer mặc định của layout để giống App Chat full màn hình */
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .chat-container {
+            height: calc(100vh - 120px);
+            border-radius: 0;
+        }
+        
+        .chat-header {
+            padding: 12px 15px;
+        }
+        
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .chat-header-text h4 {
+            font-size: 16px;
+        }
+        
+        .chat-messages {
+            padding: 15px 10px;
+            gap: 10px;
+        }
+        
+        .message {
+            max-width: 85%;
+            padding: 10px 14px;
+            font-size: 13px;
+        }
+        
+        .msg-admin .message {
+            border-radius: 16px 16px 16px 4px;
+        }
+        
+        .msg-user .message {
+            border-radius: 16px 16px 4px 16px;
+        }
+        
+        .chat-input-container {
+            padding: 12px;
+        }
+        
+        .chat-input {
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+        
+        .send-btn {
+            width: 42px;
+            height: 42px;
+        }
+        
+        .quick-replies {
+            padding: 8px 10px;
+            gap: 8px;
+        }
+        
+        .quick-reply-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+    }
+    
     .chat-container {
         display: flex;
         flex-direction: column;
-        height: calc(100vh - 140px); /* Trừ đi header/nav của layout */
+        height: calc(100vh - 180px);
         background: #f0f2f5;
         position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
     
-    /* Header của khung Chat */
     .chat-header {
-        background: white;
-        padding: 10px 15px;
+        background: linear-gradient(135deg, #d32f2f 0%, #ff5252 100%);
+        padding: 15px 20px;
         display: flex;
         align-items: center;
-        border-bottom: 1px solid #ddd;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        border-bottom: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     .admin-avatar {
-        width: 40px; height: 40px; border-radius: 50%;
-        object-fit: cover; margin-right: 10px;
-        border: 2px solid #2ecc71; /* Viền xanh Online */
-        padding: 1px;
+        width: 45px; height: 45px; border-radius: 50%;
+        object-fit: cover; margin-right: 12px;
+        border: 2px solid white;
+        padding: 2px;
+        background: white;
     }
     .online-dot {
-        width: 10px; height: 10px; background: #2ecc71;
+        width: 12px; height: 12px; background: #00c853;
         border-radius: 50%; display: inline-block; margin-right: 5px;
+        border: 2px solid white;
     }
 
-    /* Vùng nội dung chat */
     .chat-box {
         flex-grow: 1;
         padding: 20px;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: 12px;
+        background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
     }
 
-    /* Bong bóng tin nhắn */
     .message {
         max-width: 75%;
-        padding: 10px 15px;
+        padding: 12px 16px;
         border-radius: 20px;
         font-size: 14px;
         line-height: 1.5;
         position: relative;
         word-wrap: break-word;
+        animation: messageIn 0.3s ease;
     }
     
-    /* Tin nhắn của Khách (Bên phải, màu đỏ) */
+    @keyframes messageIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
     .msg-user {
         align-self: flex-end;
-        background: #D32F2F;
+        background: linear-gradient(135deg, #d32f2f 0%, #e53935 100%);
         color: white;
         border-bottom-right-radius: 5px;
+        box-shadow: 0 2px 8px rgba(211, 47, 47, 0.3);
     }
     
-    /* Tin nhắn của Admin (Bên trái, màu trắng) */
     .msg-admin {
         align-self: flex-start;
         background: white;
         color: #333;
         border-bottom-left-radius: 5px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .admin-name-tag {
-        font-size: 10px; color: #999; margin-bottom: 3px; margin-left: 5px;
+        font-size: 11px; color: #666; margin-bottom: 4px; margin-left: 8px;
+        font-weight: 600;
+    }
+    .msg-time {
+        font-size: 10px;
+        opacity: 0.7;
+        margin-top: 4px;
+        text-align: right;
     }
 
-    /* Thanh nhập liệu (Dính dưới đáy) */
     .chat-input-area {
         background: white;
-        padding: 10px;
+        padding: 15px 20px;
         display: flex;
         align-items: center;
         border-top: 1px solid #eee;
+        gap: 10px;
     }
     .chat-input {
         flex-grow: 1;
-        border: none;
-        background: #f0f2f5;
-        padding: 10px 15px;
-        border-radius: 20px;
+        border: 2px solid #e9ecef;
+        background: #f8f9fa;
+        padding: 12px 18px;
+        border-radius: 25px;
         outline: none;
+        transition: all 0.3s;
+        font-size: 14px;
+    }
+    .chat-input:focus {
+        border-color: #d32f2f;
+        background: white;
     }
     .btn-send {
-        background: none; border: none; color: #D32F2F;
-        font-size: 20px; margin-left: 10px; cursor: pointer;
+        background: linear-gradient(135deg, #d32f2f 0%, #ff5252 100%);
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        box-shadow: 0 2px 10px rgba(211, 47, 47, 0.4);
+    }
+    .btn-send:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(211, 47, 47, 0.5);
     }
 
-    /* Hiệu ứng "Đang nhập..." */
     .typing-indicator {
         display: none;
         align-self: flex-start;
         background: white;
-        padding: 8px 15px;
+        padding: 12px 20px;
         border-radius: 20px;
         border-bottom-left-radius: 5px;
         margin-bottom: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .typing-dot {
-        height: 7px; width: 7px;
+        height: 8px; width: 8px;
         background: #bbb; border-radius: 50%;
         display: inline-block;
         animation: typing 1s infinite ease-in-out;
@@ -112,36 +211,83 @@
     .typing-dot:nth-child(1) { animation-delay: 0s; }
     .typing-dot:nth-child(2) { animation-delay: 0.2s; }
     .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes typing { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
+    @keyframes typing { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
 
+    /* Quick replies */
+    .quick-replies {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 10px 20px;
+        background: #f8f9fa;
+        border-top: 1px solid #eee;
+    }
+    .quick-reply-btn {
+        background: white;
+        border: 1px solid #dee2e6;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: #495057;
+    }
+    .quick-reply-btn:hover {
+        background: #d32f2f;
+        color: white;
+        border-color: #d32f2f;
+    }
+
+    .chat-status {
+        font-size: 12px;
+        color: rgba(255,255,255,0.9);
+    }
 </style>
 
-<div class="chat-container">
-    <div class="chat-header">
-        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" class="admin-avatar">
-        <div>
-            <div class="fw-bold" style="font-size: 14px;">CSKH Fong Food <i class="fas fa-check-circle text-primary small"></i></div>
-            <div class="text-success small" style="font-size: 11px;"><span class="online-dot"></span>Đang hoạt động</div>
+<div class="container py-3">
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" class="admin-avatar">
+            <div>
+                <div class="fw-bold text-white" style="font-size: 16px;">CSKH Fong Food <i class="fas fa-check-circle text-white-50 small"></i></div>
+                <div class="chat-status"><span class="online-dot"></span>Luôn sẵn sàng hỗ trợ</div>
+            </div>
         </div>
-    </div>
 
-    <div class="chat-box" id="chatBox">
-        <div class="admin-name-tag">CSKH Fong Food</div>
-        <div class="message msg-admin">
-            Xin chào {{ session.get('name') }}! 👋<br>
-            Mình là trợ lý ảo của Fong Food. Bạn cần hỗ trợ gì về đơn hàng hay thực đơn không ạ?
+        <div class="chat-box" id="chatBox">
+            {% if chat_history and chat_history|length > 0 %}
+                {% for msg in chat_history %}
+                <div class="admin-name-tag">{% if msg.sender == 'admin' %}CSKH Fong Food{% else %}Bạn{% endif %}</div>
+                <div class="message {% if msg.sender == 'user' %}msg-user{% else %}msg-admin{% endif %}">
+                    {{ msg.message }}
+                    <div class="msg-time">{{ msg.timestamp[:16] if msg.timestamp else '' }}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="admin-name-tag">CSKH Fong Food</div>
+                <div class="message msg-admin">
+                    Xin chào {{ session.get('name') }}! 👋<br>
+                    Mình là trợ lý ảo của Fong Food. Bạn cần hỗ trợ gì về đơn hàng hay thực đơn không ạ?
+                </div>
+            {% endif %}
+            
+            <div class="typing-indicator" id="typing">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+            </div>
         </div>
-        
-        <div class="typing-indicator" id="typing">
-            <span class="typing-dot"></span>
-            <span class="typing-dot"></span>
-            <span class="typing-dot"></span>
-        </div>
-    </div>
 
-    <div class="chat-input-area">
-        <input type="text" id="msgInput" class="chat-input" placeholder="Nhập tin nhắn..." onkeypress="handleEnter(event)">
-        <button class="btn-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+        <div class="quick-replies">
+            <button class="quick-reply-btn" onclick="sendQuickReply('Tôi muốn đặt món')">🍜 Đặt món</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('Kiểm tra đơn hàng')">📦 Đơn hàng</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('Tôi cần hỗ trợ')">❓ Hỗ trợ</button>
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="msgInput" class="chat-input" placeholder="Nhập tin nhắn..." onkeypress="handleEnter(event)">
+            <button class="btn-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
     </div>
 </div>
 
@@ -149,8 +295,99 @@
     const chatBox = document.getElementById('chatBox');
     const typing = document.getElementById('typing');
     const input = document.getElementById('msgInput');
+    const userName = "{{ session.get('name', 'Bạn') }}";
 
-    // Tự động cuộn xuống cuối
+    // Hiển thị thông báo tin nhắn mới kiểu Zalo
+    function showNewMessageNotification(message) {
+        // Tạo toast notification
+        const toast = document.createElement('div');
+        toast.className = 'chat-notification-toast';
+        toast.innerHTML = `
+            <div class="chat-notification-icon">
+                <i class="fas fa-comment-dots"></i>
+            </div>
+            <div class="chat-notification-content">
+                <div class="chat-notification-title">CSKH Fong Food</div>
+                <div class="chat-notification-message">${message.substring(0, 50)}${message.length > 50 ? '...' : ''}</div>
+            </div>
+            <button class="chat-notification-close" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        document.body.appendChild(toast);
+
+        // Tự động đóng sau 5 giây
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, 5000);
+    }
+
+    // Thêm style cho notification
+    const notificationStyle = document.createElement('style');
+    notificationStyle.textContent = `
+        .chat-notification-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            z-index: 10000;
+            animation: slideInRight 0.3s ease;
+            max-width: 320px;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .chat-notification-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #d32f2f, #ff5252);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .chat-notification-content {
+            flex-grow: 1;
+            min-width: 0;
+        }
+        .chat-notification-title {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 14px;
+        }
+        .chat-notification-message {
+            color: #64748b;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-notification-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 5px;
+            margin-left: 8px;
+        }
+        .chat-notification-close:hover {
+            color: #d32f2f;
+        }
+    `;
+    document.head.appendChild(notificationStyle);
+
     function scrollToBottom() {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
@@ -159,22 +396,37 @@
         if (e.key === 'Enter') sendMessage();
     }
 
-    function appendMessage(text, isUser) {
+    function formatTime(timestamp) {
+        if (!timestamp) return '';
+        const date = new Date(timestamp);
+        return date.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+    }
+
+    function appendMessage(text, isUser, timestamp = null) {
+        // Remove empty welcome message if exists
+        const existingWelcome = document.querySelector('.msg-admin:not(.has-content)');
+        
         const msgDiv = document.createElement('div');
         msgDiv.className = isUser ? 'message msg-user' : 'message msg-admin';
-        msgDiv.innerHTML = text;
         
-        // Chèn trước cái typing indicator
+        const timeStr = timestamp ? formatTime(timestamp) : formatTime(new Date().toISOString());
+        msgDiv.innerHTML = `${text}<div class="msg-time">${timeStr}</div>`;
+        
         chatBox.insertBefore(msgDiv, typing);
         
         if (!isUser) {
-            // Thêm tag tên nếu là Admin
             const nameTag = document.createElement('div');
             nameTag.className = 'admin-name-tag';
             nameTag.innerText = 'CSKH Fong Food';
             chatBox.insertBefore(nameTag, msgDiv);
         }
+        
         scrollToBottom();
+    }
+
+    function sendQuickReply(text) {
+        input.value = text;
+        sendMessage();
     }
 
     function sendMessage() {
@@ -189,18 +441,18 @@
         typing.style.display = 'block';
         scrollToBottom();
 
-        // 3. Gọi API xử lý
-        fetch('/api/chat-process', {
+        // 3. Gọi AI xử lý (Backend sẽ lưu cả user và bot message)
+        fetch('/api/v1/ai/chat-process', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ message: text })
         })
         .then(res => res.json())
         .then(data => {
-            // Ẩn hiệu ứng gõ
             typing.style.display = 'none';
-            // Hiện tin nhắn Admin
-            appendMessage(data.reply, false);
+            const reply = data.reply || "Cảm ơn bạn đã nhắn tin!";
+            appendMessage(reply, false);
+            // Không cần gọi save-chat ở đây vì ai.py đã lưu rồi
         })
         .catch(err => {
             console.error(err);
@@ -208,6 +460,31 @@
             appendMessage("Lỗi kết nối! Vui lòng thử lại.", false);
         });
     }
+            typing.style.display = 'none';
+            appendMessage("Lỗi kết nối! Vui lòng thử lại.", false);
+        });
+    }
+
+    // Poll for new messages from admin
+    setInterval(function() {
+        fetch('/api/get-chat-updates')
+            .then(res => res.json())
+            .then(data => {
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach(msg => {
+                        appendMessage(msg.message, false, msg.timestamp);
+                    });
+                    // Hiển thị notification khi có tin mới
+                    if (typeof showNewMessageNotification === 'function') {
+                        showNewMessageNotification(data.messages[data.messages.length - 1].message);
+                    }
+                }
+            })
+            .catch(err => console.log('Polling error:', err));
+    }, 5000);
+
+    // Initial scroll to bottom
+    scrollToBottom();
 </script>
 
 {% endblock %}

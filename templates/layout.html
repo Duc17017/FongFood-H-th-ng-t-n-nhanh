@@ -49,6 +49,91 @@
         .cart-badge { font-size: 10px; padding: 3px 6px; background: #FFD700; color: #333; font-weight: bold; border-radius: 10px; }
         .mobile-cart-badge { position: absolute; top: -5px; right: 5px; background: #D32F2F; color: white; font-size: 9px; padding: 2px 5px; border-radius: 10px; border: 1px solid white; }
         .notif-dot { position: absolute; top: -2px; right: -5px; width: 10px; height: 10px; background: #dc3545; border-radius: 50%; border: 2px solid white; }
+
+        /* ============================================
+           DARK MODE - TỰ ĐỘNG THEO HỆ THỐNG
+        ============================================ */
+        @media (prefers-color-scheme: dark) {
+            body { 
+                background-color: #121212 !important; 
+                color: #e0e0e0 !important;
+            }
+            .bg-white, .card, .mobile-header, .mobile-search-area, .mobile-bottom-nav, .desktop-navbar {
+                background-color: #1e1e1e !important;
+                color: #e0e0e0 !important;
+            }
+            .navbar-dark {
+                background-color: #1e1e1e !important;
+            }
+            .navbar-dark .nav-link, .navbar-brand {
+                color: #e0e0e0 !important;
+            }
+            .dropdown-menu {
+                background-color: #2d2d2d !important;
+                color: #e0e0e0 !important;
+            }
+            .dropdown-item {
+                color: #e0e0e0 !important;
+            }
+            .dropdown-item:hover {
+                background-color: #3d3d3d !important;
+            }
+            .mobile-search-input {
+                background: #2d2d2d !important;
+                color: #e0e0e0 !important;
+            }
+            .footer-pc {
+                background-color: #0d0d0d !important;
+            }
+            .text-muted {
+                color: #9e9e9e !important;
+            }
+            .bg-light {
+                background-color: #2d2d2d !important;
+            }
+            .border-bottom {
+                border-color: #3d3d3d !important;
+            }
+            .shadow-sm, .box-shadow {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+            }
+        }
+
+        /* ============================================
+           PARALLAX BANNER STYLES
+        ============================================ */
+        .parallax-banner {
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        .parallax-banner .banner-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s ease-out;
+            will-change: transform;
+        }
+        .parallax-banner:hover .banner-bg {
+            transform: translateY(-10px) scale(1.05);
+        }
+        .parallax-banner .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(211,47,47,0.85) 0%, rgba(255,82,82,0.7) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -70,9 +155,9 @@
                         <li class="nav-item position-relative">
     <a class="nav-link {{ 'active' if request.path == '/notifications' else '' }}" href="/notifications">
         <i class="fas fa-bell"></i> Thông báo
-        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-            <span class="visually-hidden">New alerts</span>
-        </span>
+        {% if unread_notif_count > 0 %}
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:10px;">{{ unread_notif_count }}</span>
+        {% endif %}
     </a>
 </li>
                         <li class="nav-item dropdown ms-3">
@@ -228,47 +313,599 @@
     </footer>
 
     {% if session.get('role') == 'customer' %}
-<div class="mobile-bottom-nav d-lg-none">
-    <a href="/home" class="nav-item-mobile {{ 'active' if request.path == '/home' else '' }}"><i class="fas fa-home"></i> <span>Trang chủ</span></a>
-    <a href="/menu" class="nav-item-mobile {{ 'active' if request.path.startswith('/menu') else '' }}"><i class="fas fa-utensils"></i> <span>Thực đơn</span></a>
-    <a href="/cart" class="nav-item-mobile {{ 'active' if request.path == '/cart' else '' }}">
-        <div class="position-relative"><i class="fas fa-shopping-cart"></i>{% if total_cart_items > 0 %}<span class="mobile-cart-badge">{{ total_cart_items }}</span>{% endif %}</div><span>Giỏ hàng</span>
-    </a>
-    
-    <a href="/qr-scan" class="nav-item-mobile {{ 'active' if request.path == '/qr-scan' else '' }}">
-        <i class="fas fa-qrcode"></i> <span>Quét QR</span>
-    </a>
+    <!-- ============================================ -->
+    <!-- MOBILE BOTTOM NAVIGATION -->
+    <!-- ============================================ -->
+    <div class="mobile-bottom-nav d-lg-none">
+        <a href="/home" class="nav-item-mobile {{ 'active' if request.path == '/home' else '' }}">
+            <i class="fas fa-home"></i>
+            <span>Trang chủ</span>
+        </a>
+        
+        <a href="/menu" class="nav-item-mobile {{ 'active' if request.path.startswith('/menu') else '' }}">
+            <i class="fas fa-utensils"></i>
+            <span>Thực đơn</span>
+        </a>
+        
+        <a href="/cart" class="nav-item-mobile {{ 'active' if request.path == '/cart' else '' }}" style="position: relative;">
+            <i class="fas fa-shopping-cart"></i>
+            {% if total_cart_items > 0 %}
+            <span class="mobile-cart-badge">{{ total_cart_items }}</span>
+            {% endif %}
+            <span>Giỏ hàng</span>
+        </a>
 
-   <a href="/account" class="nav-item-mobile {{ 'active' if request.path == '/account' or request.path == '/profile' else '' }}">
-    <i class="fas fa-user"></i> <span>Cá nhân</span>
-</a>
-</div>
+        <a href="/history" class="nav-item-mobile {{ 'active' if request.path == '/history' else '' }}">
+            <i class="fas fa-receipt"></i>
+            <span>Đơn hàng</span>
+        </a>
+
+        <a href="/profile" class="nav-item-mobile {{ 'active' if request.path == '/profile' else '' }}">
+            <i class="fas fa-user"></i>
+            <span>Tài khoản</span>
+        </a>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- CHAT WIDGET - Hiển thị trên tất cả các trang -->
+    <!-- ============================================ -->
+    <style>
+        .chat-widget-toggle {
+            position: fixed;
+            bottom: 140px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d32f2f 0%, #ff5252 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+            cursor: pointer;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            transition: all 0.3s;
+        }
+        @media (min-width: 992px) {
+            .chat-widget-toggle {
+                bottom: 30px;
+            }
+        }
+        .chat-widget-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(211, 47, 47, 0.5);
+        }
+        .chat-widget-toggle .badge-dot {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background: #00c853;
+            border-radius: 50%;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .chat-widget-panel {
+            position: fixed;
+            bottom: 210px;
+            right: 20px;
+            width: 360px;
+            max-width: calc(100vw - 40px);
+            height: 450px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 998;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        @media (min-width: 992px) {
+            .chat-widget-panel {
+                bottom: 100px;
+                height: 500px;
+            }
+        }
+        @media (max-width: 480px) {
+            .chat-widget-panel {
+                left: 10px;
+                right: 10px;
+                width: auto;
+                max-width: none;
+                height: calc(100vh - 280px);
+            }
+        }
+        .chat-widget-panel.show {
+            display: flex;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .chat-widget-header {
+            background: linear-gradient(135deg, #d32f2f 0%, #ff5252 100%);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .chat-widget-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .chat-widget-title {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .chat-widget-subtitle {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+        
+        .chat-widget-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+        .chat-msg {
+            display: flex;
+            margin-bottom: 12px;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        .chat-msg.user {
+            justify-content: flex-end;
+        }
+        .chat-msg.bot {
+            justify-content: flex-start;
+        }
+        
+        /* Bot Avatar */
+        .chat-msg-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .chat-msg-avatar.bot-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 14px;
+        }
+        
+        /* Message animation */
+        .msg-bubble-animate {
+            animation: messageSlideIn 0.3s ease-out;
+        }
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Typing animation dots */
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.6); }
+            40% { transform: scale(1); }
+        }
+        .chat-msg-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .chat-msg.user .chat-msg-bubble {
+            background: #d32f2f;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-msg.bot .chat-msg-bubble {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .chat-msg-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 4px;
+            text-align: right;
+        }
+        .chat-msg.user .chat-msg-time {
+            text-align: right;
+        }
+        
+        .chat-widget-input {
+            padding: 12px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            background: white;
+        }
+        .chat-widget-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            outline: none;
+            font-size: 13px;
+        }
+        .chat-widget-input input:focus {
+            border-color: #d32f2f;
+        }
+        .chat-widget-input button {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d32f2f 0%, #ff5252 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+        .chat-widget-input button:hover {
+            transform: scale(1.05);
+        }
+        
+        .chat-widget-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            opacity: 0.8;
+        }
+        .chat-widget-close:hover {
+            opacity: 1;
+        }
+        
+        /* Typing indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 10px 14px;
+            background: white;
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            width: fit-content;
+            margin-bottom: 12px;
+        }
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.6); }
+            40% { transform: scale(1); }
+        }
+    </style>
+
+    <!-- Chat Toggle Button -->
+    <button class="chat-widget-toggle" onclick="toggleChatWidget()" title="Chat với Fong Food">
+        <i class="fas fa-comments"></i>
+        <span class="badge-dot" id="chatNewBadge" style="display: none;">!</span>
+    </button>
+
+    <!-- Chat Panel -->
+    <div class="chat-widget-panel" id="chatWidgetPanel">
+        <div class="chat-widget-header">
+            <div class="chat-widget-avatar">
+                <i class="fas fa-robot" style="color: #667eea;"></i>
+            </div>
+            <div>
+                <div class="chat-widget-title">FongAI Assistant</div>
+                <div class="chat-widget-subtitle">Luôn sẵn sàng hỗ trợ bạn</div>
+            </div>
+            <button class="chat-widget-close" onclick="toggleChatWidget()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-widget-messages" id="chatWidgetMessages">
+            <!-- Tin nhắn sẽ được hiển thị ở đây -->
+        </div>
+        <div class="chat-widget-input">
+            <input type="text" id="chatWidgetInput" placeholder="Nhập tin nhắn..." onkeypress="handleChatWidgetEnter(event)">
+            <button onclick="sendChatWidgetMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
     <script>
+        // Chat Widget Functions
+        function toggleChatWidget() {
+            const panel = document.getElementById('chatWidgetPanel');
+            panel.classList.toggle('show');
+            if (panel.classList.contains('show')) {
+                loadChatWidgetHistory();
+                document.getElementById('chatNewBadge').style.display = 'none';
+            }
+        }
+
+        function handleChatWidgetEnter(e) {
+            if (e.key === 'Enter') sendChatWidgetMessage();
+        }
+
+        function formatChatTime(timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+        }
+
+        function appendChatWidgetMessage(text, isUser) {
+            const container = document.getElementById('chatWidgetMessages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = isUser ? 'chat-msg user' : 'chat-msg bot';
+            
+            const time = formatChatTime(new Date().toISOString());
+            
+            // User: no avatar, Bot: show avatar
+            let html = '';
+            if (!isUser) {
+                html += `<div class="chat-msg-avatar bot-avatar"><i class="fas fa-robot"></i></div>`;
+            }
+            html += `<div class="chat-msg-bubble msg-bubble-animate">
+                ${text}
+                <div class="chat-msg-time">${time}</div>
+            </div>`;
+            
+            msgDiv.innerHTML = html;
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTypingWidget() {
+            const container = document.getElementById('chatWidgetMessages');
+            const existing = document.getElementById('typingWidget');
+            if (existing) existing.remove();
+            
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-msg bot';
+            typingDiv.id = 'typingWidget';
+            typingDiv.innerHTML = `
+                <div class="chat-msg-avatar bot-avatar"><i class="fas fa-robot"></i></div>
+                <div class="typing-indicator">
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                </div>
+            `;
+            container.appendChild(typingDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function hideTypingWidget() {
+            const typing = document.getElementById('typingWidget');
+            if (typing) typing.remove();
+        }
+
+        function sendChatWidgetMessage() {
+            const input = document.getElementById('chatWidgetInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            appendChatWidgetMessage(message, true);
+            input.value = '';
+            showTypingWidget();
+
+            // Check if admin will reply within 10 seconds
+            let adminReplied = false;
+            let aiCalled = false;
+
+            // Function to call AI if admin doesn't reply
+            function callAI() {
+                if (aiCalled || adminReplied) return;
+                aiCalled = true;
+
+                fetch('/api/v1/ai/chat-process', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    hideTypingWidget();
+                    if (data && data.reply) {
+                        appendChatWidgetMessage(data.reply, false);
+                    } else {
+                        appendChatWidgetMessage('Xin lỗi, có lỗi xảy ra. Vui lòng thử lại!', false);
+                    }
+                })
+                .catch(err => {
+                    hideTypingWidget();
+                    console.error(err);
+                    appendChatWidgetMessage('Lỗi kết nối! Vui lòng thử lại.', false);
+                });
+            }
+
+            // Poll to check if admin replied within 10 seconds
+            let pollCount = 0;
+            const pollInterval = setInterval(() => {
+                pollCount++;
+                
+                fetch('/api/get-chat-updates')
+                    .then(res => res.json())
+                    .then(data => {
+                        // Check if there's a new admin message after our user's message
+                        if (data && data.messages && data.messages.length > 0) {
+                            const latestMsg = data.messages[data.messages.length - 1];
+                            if (latestMsg.sender === 'admin') {
+                                adminReplied = true;
+                                clearInterval(pollInterval);
+                                hideTypingWidget();
+                                // Admin message will be shown by the polling function
+                            }
+                        }
+                    })
+                    .catch(err => console.log('Polling error:', err));
+
+                // After 10 seconds (5 polls x 2s), call AI if admin hasn't replied
+                if (pollCount >= 5) {
+                    clearInterval(pollInterval);
+                    if (!adminReplied) {
+                        callAI();
+                    }
+                }
+            }, 2000);
+        }
+
+        function loadChatWidgetHistory() {
+            fetch('/api/get-chat-updates')
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById('chatWidgetMessages');
+                    container.innerHTML = '';
+                    if (data && Array.isArray(data.all_messages)) {
+                        data.all_messages.forEach(msg => {
+                            appendChatWidgetMessage(msg.message, msg.sender === 'user');
+                        });
+                    }
+                })
+                .catch(err => console.error('loadChatHistory error:', err));
+        }
+
+        // Poll for new messages from admin
+        setInterval(function() {
+            fetch('/api/get-chat-updates')
+                .then(res => res.json())
+                .then(data => {
+                    if (data && Array.isArray(data.messages) && data.messages.length > 0) {
+                        const panel = document.getElementById('chatWidgetPanel');
+                        data.messages.forEach(msg => {
+                            appendChatWidgetMessage(msg.message, false);
+                        });
+                        if (!panel.classList.contains('show')) {
+                            document.getElementById('chatNewBadge').style.display = 'flex';
+                        }
+                    }
+                })
+                .catch(err => console.log('Chat polling error:', err));
+        }, 5000);
+    </script>
+    {% endif %}
+
+    <script>
+        // ====== LƯU GIỎ HÀNG VÀO LOCALSTORAGE ======
+        const CART_STORAGE_KEY = 'fongfood_cart';
+
+        // Lưu giỏ hàng vào localStorage
+        function saveCartToLocal(cartData) {
+            localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartData));
+        }
+
+        // Đọc giỏ hàng từ localStorage
+        function getCartFromLocal() {
+            const data = localStorage.getItem(CART_STORAGE_KEY);
+            return data ? JSON.parse(data) : {};
+        }
+
+        // Đồng bộ giỏ hàng từ localStorage lên server khi đăng nhập
+        function syncCartToServer() {
+            const localCart = getCartFromLocal();
+            if (Object.keys(localCart).length > 0) {
+                fetch('/api/sync-cart', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({cart: localCart})
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        // Xóa local sau khi đồng bộ thành công
+                        localStorage.removeItem(CART_STORAGE_KEY);
+                        location.reload();
+                    }
+                })
+                .catch(err => console.log('Sync cart error:', err));
+            }
+        }
+
+        // Kiểm tra session và đồng bộ giỏ hàng khi trang load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof isLoggedIn !== 'undefined' && isLoggedIn) {
+                syncCartToServer();
+            }
+        });
+
+        {% if session.get('user') %}
+        // Kiểm tra session định kỳ
         setInterval(function() {
             fetch('/check-session-status')
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'kick') {
-                        alert('Tài khoản của bạn đã được đăng nhập ở thiết bị khác!\nHệ thống sẽ tự động đăng xuất.');
-                        window.location.href = '/login'; // Chuyển ngay về trang đăng nhập
+                        // Lưu giỏ hàng trước khi logout
+                        fetch('/api/get-cart')
+                            .then(r => r.json())
+                            .then(cartData => {
+                                if (cartData.cart) {
+                                    saveCartToLocal(cartData.cart);
+                                }
+                            })
+                            .finally(() => {
+                                alert('Tài khoản của bạn đã được đăng nhập ở thiết bị khác!\nHệ thống sẽ tự động đăng xuất.');
+                                window.location.href = '/login';
+                            });
                     }
                 })
                 .catch(err => console.log('Checking session...', err));
-        }, 3000); // Cứ 3 giây kiểm tra 1 lần
+        }, 3000);
     </script>
     {% endif %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- PWA Service Worker Registration -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/static/service-worker.js')
-                    .then(reg => console.log('SW registered:', reg.scope))
-                    .catch(err => console.log('SW registration failed:', err));
-            });
-        }
-    </script>
 </body>
 </html>

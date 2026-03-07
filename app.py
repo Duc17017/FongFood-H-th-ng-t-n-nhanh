@@ -11,11 +11,15 @@ from functools import wraps
 from flask import Flask, request, session, redirect, url_for, flash, g, jsonify, make_response, render_template
 from flask_cors import CORS
 from dotenv import load_dotenv
+from pathlib import Path
 
-from config import SECRET_KEY, FLASK_DEBUG, FIREBASE_URL
+# Load .env trước khi import config để đảm bảo biến môi trường được nạp
+BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(dotenv_path=BASE_DIR / ".env")
+
+from config import SECRET_KEY, FLASK_DEBUG, FIREBASE_URL, GEMINI_API_KEY
 from utils import db_get, db_put, db_patch
 
-load_dotenv()
 
 logging.basicConfig(
     filename="app.log",
@@ -27,6 +31,8 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
 app.debug = FLASK_DEBUG
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
@@ -43,10 +49,12 @@ app.register_blueprint(api_bp, url_prefix="/api/v1")
 app.register_blueprint(ai_bp, url_prefix="/api/v1/ai")
 
 # PWA: Serve manifest.json from static folder
-@app.route("/manifest.json")
-def manifest():
-    from flask import send_from_directory
-    return send_from_directory("static", "manifest.json")
+
+@app.route("/")
+def index():
+    """Trang chủ mặc định - chuyển hướng đến login"""
+    return redirect(url_for("auth.login"))
+
 
 
 def get_user_from_db(username):
@@ -115,16 +123,13 @@ def inject_global_vars():
                 if isinstance(item, dict):
                     total_cart += int(item.get("qty", 0))
 
-        raw_notifs = db_get("notifications") or {}
-        notif_items = (
-            raw_notifs if isinstance(raw_notifs, list) else raw_notifs.values()
-        )
+        raw_notifs = db_get(f"notifications/{user}") or []
+        notif_items = list(raw_notifs.values()) if isinstance(raw_notifs, dict) else raw_notifs
 
         if notif_items:
             for n in notif_items:
-                if isinstance(n, dict):
-                    if n.get("user") == user and not n.get("is_read"):
-                        unread_notif += 1
+                if isinstance(n, dict) and not n.get("is_read"):
+                    unread_notif += 1
 
     return dict(total_cart_items=total_cart, unread_notif_count=unread_notif)
 
@@ -161,10 +166,10 @@ if __name__ == "__main__":
         local_ip = "127.0.0.1"
     
     print("\n" + "="*50)
-    print("🚀 FONG FOOD APP STARTED!")
+    print("FONG FOOD APP STARTED!")
     print("="*50)
-    print(f"📱 Local:    http://127.0.0.1:5000")
-    print(f"💻 Network:  http://{local_ip}:5000")
-    print(f"🔐 Admin:    http://{local_ip}:5000/admin")
+    print(f"Local:    http://127.0.0.1:5001")
+    print(f"Network:  http://{local_ip}:5001")
+    print(f"Admin:    http://{local_ip}:5001/admin")
     print("="*50 + "\n")
-    app.run(debug=False, host="0.0.0.0", port=5000)
+    app.run(debug=False, host="0.0.0.0", port=5001)

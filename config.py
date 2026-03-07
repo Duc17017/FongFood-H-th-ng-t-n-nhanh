@@ -1,8 +1,11 @@
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
+# Luôn nạp .env theo đường dẫn tuyệt đối để tránh chạy Flask ở cwd khác
+BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(dotenv_path=BASE_DIR / ".env")
 
 SECRET_KEY = os.getenv("SECRET_KEY", "dev_secret_key_change_me")
 FIREBASE_URL = os.getenv(

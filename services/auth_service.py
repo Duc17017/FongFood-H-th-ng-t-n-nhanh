@@ -24,14 +24,23 @@ def normalize_users(data: Any) -> Dict[str, Dict[str, Any]]:
 
 
 def find_user(username: str) -> Dict[str, Any] | None:
-    """Tìm user an toàn trong DB (kể cả khi dữ liệu đang lưu là List)."""
+    """Tìm user an toàn trong DB (kể cả khi dữ liệu đang lưu là List).
+    Tìm theo: username, phone, hoặc email.
+    """
     data = db_get("users") or {}
     if isinstance(data, dict):
-        return data.get(username)
+        # Tìm theo key (username/phone)
+        if username in data:
+            return data[username]
+        # Tìm theo email
+        for key, u in data.items():
+            if isinstance(u, dict) and str(u.get("email")).lower() == username.lower():
+                return u
     if isinstance(data, list):
         for u in data:
-            if isinstance(u, dict) and u.get("username") == username:
-                return u
+            if isinstance(u, dict):
+                if u.get("username") == username or str(u.get("email")).lower() == username.lower():
+                    return u
     return None
 
 
@@ -59,11 +68,12 @@ def verify_password(stored_password: str, provided_password: str) -> bool:
     if not stored_password:
         return False
 
-    # Thử coi như hash
+    # Thử coi như hash (werkzeug hỗ trợ nhiều loại: pbkdf2, scrypt, argon2)
     try:
-        if stored_password.startswith("pbkdf2:"):
+        if ":" in stored_password and not stored_password.startswith("pbkdf2:sha256"):
+            # scrypt, argon2, pbkdf2:sha256 variants
             return check_password_hash(stored_password, provided_password)
-    except Exception as exc:  # pragma: no cover - chỉ log lỗi bất thường
+    except Exception as exc:
         logger.warning("Lỗi verify password hash: %s", exc)
 
     # Fallback hỗ trợ dữ liệu cũ lưu plain text

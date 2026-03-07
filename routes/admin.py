@@ -22,6 +22,31 @@ def normalize_data(data, key_field='id'):
         return res
     return {}
 
+
+def _send_notification(username, title, message, link="/"):
+    """Hàm gửi thông báo cho user"""
+    import uuid
+    notif_id = str(uuid.uuid4())
+    notif = {
+        "id": notif_id,
+        "title": title,
+        "message": message,
+        "link": link,
+        "time": datetime.now().strftime("%H:%M %d/%m"),
+        "is_read": False,
+    }
+
+    # Lưu vào notifications/{username}
+    existing = db_get(f"notifications/{username}") or []
+    if isinstance(existing, dict):
+        existing[notif_id] = notif
+    else:
+        if not isinstance(existing, list):
+            existing = []
+        existing.append(notif)
+
+    db_put(f"notifications/{username}", existing)
+
 @admin_bp.route("/dashboard")
 @admin_required
 def dashboard():
@@ -277,6 +302,76 @@ def generate_ai_desc():
     )
 
 
+# ==================== AI FRAUD DETECTION ====================
+@admin_bp.route("/api/fraud-check", methods=["POST"])
+@admin_required
+def check_fraud():
+    """
+    AI Fraud Detection - Kiểm tra đơn hàng có bất thường không
+    """
+    try:
+        data = request.json
+        order = data.get("order", {})
+        
+        # Các yếu tố cần kiểm tra
+        risk_score = 0
+        risk_factors = []
+        
+        # 1. Tài khoản mới tinh (chưa có đơn nào)
+        user = order.get("user")
+        if user:
+            raw_orders = db_get("orders") or {}
+            user_orders = [o for o in raw_orders.values() if isinstance(o, dict) and o.get("user") == user]
+            if len(user_orders) == 0:
+                risk_score += 30
+                risk_factors.append("Tài khoản mới chưa có đơn hàng nào")
+        
+        # 2. Đơn hàng lớn bất thường (> 1 triệu)
+        total = float(order.get("total", 0))
+        if total > 1000000:
+            risk_score += 40
+            risk_factors.append(f"Đơn hàng lớn ({total:,.0f}đ)")
+        
+        # 3. Thanh toán tiền mặt (COD) + đơn lớn
+        payment = order.get("paymentMethod", "").lower()
+        if "cod" in payment or "tiền mặt" in payment:
+            if total > 500000:
+                risk_score += 20
+                risk_factors.append("Thanh toán COD với đơn > 500k")
+        
+        # 4. Nhiều món giống nhau trong 1 đơn
+        items = order.get("items") or order.get("details") or []
+        if items:
+            item_names = [item.get("name", "").lower() for item in items]
+            if len(item_names) != len(set(item_names)):
+                risk_score += 15
+                risk_factors.append("Có nhiều món giống nhau trong đơn")
+        
+        # Xác định mức độ rủi ro
+        if risk_score >= 70:
+            risk_level = "HIGH"
+            recommendation = "Cần xác nhận qua điện thoại trước khi chế biến"
+        elif risk_score >= 40:
+            risk_level = "MEDIUM"
+            recommendation = "Theo dõi đặc biệt, kiểm tra địa chỉ giao hàng"
+        else:
+            risk_level = "LOW"
+            recommendation = "Đơn hàng bình thường, tiếp tục xử lý"
+        
+        return jsonify({
+            "success": True,
+            "risk_score": risk_score,
+            "risk_level": risk_level,
+            "risk_factors": risk_factors,
+            "recommendation": recommendation,
+            "needs_verification": risk_score >= 40
+        })
+        
+    except Exception as e:
+        logger.error(f"AI Fraud Check Error: {e}")
+        return jsonify({"success": False, "message": "Lỗi kiểm tra fraud"}), 500
+
+
 @admin_bp.route("/order/<oid>")
 @admin_required
 def order_detail(oid):
@@ -300,13 +395,137 @@ def profile():
     return render_template("admin/profile.html", user=admin_info)
 
 
-@admin_bp.route("/qr-scan")
+@admin_bp.route("/chat")
 @admin_required
-def admin_qr_scan():
-    """
-    Trang quét QR code dành cho Admin
-    """
-    return render_template("admin/qr_scan.html")
+def admin_chat():
+    """Trang quản lý tin nhắn chat của khách hàng"""
+    from routes.user import normalize_data
+    
+    raw_users = db_get("users") or {}
+    if isinstance(raw_users, list):
+        users = {u.get('username'): u for u in raw_users if u}
+    else:
+        users = raw_users
+    
+    # Lấy tất cả khách hàng có tin nhắn
+    customers = []
+    total_unread = 0
+    
+    for username, u in users.items():
+        if u.get("role") == "admin":
+            continue
+        
+        # Lấy chat history
+        raw_chats = db_get(f"chats/{username}") or []
+        chat_history = raw_chats if isinstance(raw_chats, list) else list(raw_chats.values()) if raw_chats else []
+        
+        # Đếm tin nhắn chưa đọc
+        unread = sum(1 for m in chat_history if m.get("sender") == "user" and not m.get("is_read", False))
+        total_unread += unread
+        
+        # Tin nhắn cuối cùng
+        last_msg = chat_history[-1] if chat_history else None
+        last_message = last_msg.get("message", "")[:50] if last_msg else ""
+        last_time = ""
+        if last_msg and last_msg.get("timestamp"):
+            try:
+                from datetime import datetime
+                dt = datetime.fromisoformat(last_msg["timestamp"])
+                last_time = dt.strftime("%H:%M %d/%m")
+            except:
+                pass
+        
+        customers.append({
+            "username": username,
+            "name": u.get("name", username),
+            "chat_history": chat_history[-20:],  # Lấy 20 tin gần nhất
+            "unread": unread,
+            "last_message": last_message,
+            "last_time": last_time
+        })
+    
+    # Sắp xếp: ai có tin nhắn mới lên đầu
+    customers.sort(key=lambda x: (x["unread"], x["last_time"]), reverse=True)
+    
+    return render_template("admin/chat.html", customers=customers, total_unread=total_unread)
+
+
+# ========== ADMIN CHAT API ==========
+@admin_bp.route("/api/admin/save-chat", methods=["POST"])
+@admin_required
+def admin_save_chat():
+    """Admin gửi tin nhắn cho khách"""
+    data = request.json
+    username = data.get("username")
+    message = data.get("message")
+    
+    if not username or not message:
+        return jsonify({"success": False, "message": "Thiếu thông tin"})
+    
+    # Lấy chat history hiện tại
+    raw_chats = db_get(f"chats/{username}") or []
+    chat_history = raw_chats if isinstance(raw_chats, list) else list(raw_chats.values()) if raw_chats else []
+    
+    # Thêm tin nhắn mới
+    import uuid
+    new_message = {
+        "id": str(uuid.uuid4()),
+        "message": message,
+        "sender": "admin",
+        "timestamp": datetime.now().isoformat(),
+        # is_read = False để phía khách phát hiện là tin mới,
+        # sau khi client đọc xong sẽ được đánh dấu True trong get_chat_updates
+        "is_read": False
+    }
+    chat_history.append(new_message)
+    
+    db_put(f"chats/{username}", chat_history)
+    
+    return jsonify({"success": True})
+
+
+@admin_bp.route("/api/admin/get-chat/<username>", methods=["GET"])
+@admin_required
+def admin_get_chat(username):
+    """Admin lấy tin nhắn của khách"""
+    raw_chats = db_get(f"chats/{username}") or []
+    chat_history = raw_chats if isinstance(raw_chats, list) else list(raw_chats.values()) if raw_chats else []
+    
+    return jsonify({
+        "success": True,
+        "messages": chat_history[-50:]  # Lấy 50 tin gần nhất
+    })
+
+
+@admin_bp.route("/api/admin/mark-chat-read", methods=["POST"])
+@admin_required
+def admin_mark_chat_read():
+    """Đánh dấu tin nhắn đã đọc"""
+    data = request.json
+    username = data.get("username")
+    
+    raw_chats = db_get(f"chats/{username}") or []
+    chat_history = raw_chats if isinstance(raw_chats, list) else list(raw_chats.values()) if raw_chats else []
+    
+    for msg in chat_history:
+        if msg.get("sender") == "user":
+            msg["is_read"] = True
+    
+    db_put(f"chats/{username}", chat_history)
+    
+    return jsonify({"success": True})
+
+
+@admin_bp.route("/api/admin/clear-chat", methods=["POST"])
+@admin_required
+def admin_clear_chat():
+    """Xóa tin nhắn của khách"""
+    data = request.json
+    username = data.get("username")
+    
+    db_put(f"chats/{username}", [])
+    
+    return jsonify({"success": True})
 
 
 @admin_bp.route("/send_voucher", methods=["GET", "POST"])
@@ -363,6 +582,32 @@ def send_voucher():
 
     db_put("vouchers", vouchers)
     logger.info(f"=== SEND_VOUCHER: saved voucher = {vouchers[code]} ===")
+
+    # Gửi thông báo cho user nhận voucher
+    try:
+        if username == "all":
+            # Gửi cho tất cả users
+            all_users = db_get("users") or {}
+            if isinstance(all_users, dict):
+                for user_key, user_data in all_users.items():
+                    _send_notification(
+                        user_key,
+                        "🎁 Voucher mới!",
+                        f"Bạn nhận được voucher giảm {discount}%! Mã: {code}. Đơn tối thiểu 50,000đ",
+                        "/my-vouchers"
+                    )
+            logger.info(f"=== SEND_VOUCHER: Đã gửi thông báo cho tất cả users ===")
+        else:
+            # Gửi cho 1 user cụ thể
+            _send_notification(
+                username,
+                "🎁 Voucher mới!",
+                f"Bạn nhận được voucher giảm {discount}%! Mã: {code}. Đơn tối thiểu 50,000đ",
+                "/my-vouchers"
+            )
+            logger.info(f"=== SEND_VOUCHER: Đã gửi thông báo cho user {username} ===")
+    except Exception as notify_err:
+        logger.warning(f"Lỗi gửi thông báo voucher: {notify_err}")
 
     msg = f"Đã tạo voucher {code} giảm {discount}% cho khách hàng."
     flash(msg, "success")

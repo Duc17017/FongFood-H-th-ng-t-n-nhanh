@@ -62,6 +62,8 @@
                     <input type="text" name="otp_phone" class="form-control form-control-sm border-danger" placeholder="Nhập mã OTP 6 số">
                     <span class="text-muted ms-2 small" id="timerPhone">60s</span>
                 </div>
+                <!-- Hiển thị mã OTP -->
+                <div id="otpPhoneDisplay" class="mt-2"></div>
             </div>
         </div>
         <div class="mb-3">
@@ -75,6 +77,8 @@
                     <input type="text" name="otp_email" class="form-control form-control-sm border-danger" placeholder="Nhập mã OTP Email">
                     <span class="text-muted ms-2 small" id="timerEmail">60s</span>
                 </div>
+                <!-- Hiển thị mã OTP -->
+                <div id="otpEmailDisplay" class="mt-2"></div>
             </div>
         </div>
         
@@ -128,7 +132,19 @@
             method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ target: inputVal, purpose: 'register' }) 
         }).then(res => res.json()).then(data => {
-            if (data.success) { document.getElementById(groupId).style.display = 'block'; startTimer(btnId, timerId); alert("Đã gửi mã OTP!"); } 
+            if (data.success) { 
+                document.getElementById(groupId).style.display = 'block'; 
+                startTimer(btnId, timerId);
+                
+                // Hiển thị OTP trực tiếp trên trang cho user dễ thấy
+                const otpDisplay = (type === 'phone') ? 'otpPhoneDisplay' : 'otpEmailDisplay';
+                const displayEl = document.getElementById(otpDisplay);
+                if (displayEl && data.otp_code) {
+                    displayEl.innerHTML = '<div class="alert alert-success py-2 mt-2 text-center" style="font-size: 18px; font-weight: bold; letter-spacing: 2px;">Mã OTP của bạn: <span class="text-danger">' + data.otp_code + '</span></div>';
+                }
+                
+                alert("Đã gửi mã OTP! Mã đã hiển thị trên trang.");
+            } 
             else { alert(data.message); }
         }).catch(err => { console.error(err); alert("Lỗi kết nối Server!"); });
     }

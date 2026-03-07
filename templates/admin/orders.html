@@ -2,124 +2,243 @@
 
 {% block content %}
 <style>
-    /* 1. Tùy chỉnh thanh tìm kiếm giống ảnh */
-    .search-container {
-        max-width: 800px;
-        margin: 0 auto;
-        position: relative;
+    /* Kanban Board Styles */
+    .kanban-board {
+        display: flex;
+        gap: 15px;
+        overflow-x: auto;
+        padding-bottom: 20px;
     }
-    .custom-search-input {
-        width: 100%;
-        padding: 12px 20px 12px 45px; /* Chừa chỗ cho icon */
-        border: 1px solid #e2e8f0;
-        border-radius: 50px; /* Bo tròn hoàn toàn */
-        background-color: #fff;
+    .kanban-column {
+        min-width: 280px;
+        max-width: 280px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 15px;
+        flex-shrink: 0;
+    }
+    .kanban-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid;
+    }
+    .kanban-header.pending { border-color: #ffc107; }
+    .kanban-header.shipping { border-color: #0d6efd; }
+    .kanban-header.completed { border-color: #198754; }
+    .kanban-header.cancelled { border-color: #dc3545; }
+    
+    .kanban-title {
+        font-weight: 700;
         font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .kanban-count {
+        background: #e9ecef;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .kanban-card {
+        background: white;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        cursor: grab;
         transition: all 0.2s;
+    }
+    .kanban-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+    }
+    .kanban-card.dragging {
+        opacity: 0.5;
+        cursor: grabbing;
+    }
+    .kanban-card.drag-over {
+        border: 2px dashed #667eea;
+    }
+    
+    .order-id { font-weight: 700; color: #D32F2F; font-size: 14px; }
+    .order-customer { font-size: 13px; color: #333; margin: 5px 0; }
+    .order-total { font-weight: 600; color: #D32F2F; font-size: 14px; }
+    .order-time { font-size: 11px; color: #6c757d; }
+    
+    /* View toggle */
+    .view-toggle { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+    .view-btn {
+        padding: 8px 16px;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        background: white;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .view-btn.active { background: #D32F2F; color: white; border-color: #D32F2F; }
+    
+    /* Search */
+    .search-container { max-width: 800px; margin: 0 auto; position: relative; }
+    .custom-search-input {
+        width: 100%; padding: 12px 20px 12px 45px;
+        border: 1px solid #e2e8f0; border-radius: 50px;
+        background-color: #fff; font-size: 14px;
         box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
-    .custom-search-input:focus {
-        border-color: #3b82f6;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
     .search-icon {
-        position: absolute;
-        left: 18px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #94a3b8;
-    }
-
-    /* 2. Tùy chỉnh Bộ lọc (Filter Pills) */
-    .filter-container {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 20px;
-        margin-bottom: 40px;
-        flex-wrap: wrap;
-    }
-    .filter-pill {
-        padding: 8px 20px;
-        border-radius: 50px;
-        border: 1px solid #e2e8f0;
-        background: white;
-        color: #64748b;
-        font-size: 13px;
-        font-weight: 500;
-        text-decoration: none;
-        transition: all 0.2s;
-        cursor: pointer;
-    }
-    .filter-pill:hover {
-        background-color: #f8fafc;
-        border-color: #cbd5e1;
-        color: #334155;
-    }
-    /* Trạng thái đang chọn (Active) */
-    .filter-pill.active {
-        background-color: #2563eb; /* Màu xanh giống ảnh */
-        color: white;
-        border-color: #2563eb;
-        box-shadow: 0 2px 5px rgba(37, 99, 235, 0.2);
-    }
-
-    /* 3. Bảng và Trạng thái trống */
-    .order-card {
-        background: white;
-        border-radius: 12px;
-        border: none;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-    }
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: #94a3b8;
-    }
-    .empty-icon {
-        font-size: 40px;
-        margin-bottom: 15px;
-        opacity: 0.5;
+        position: absolute; left: 18px; top: 50%;
+        transform: translateY(-50%); color: #94a3b8;
     }
 </style>
 
 <div class="container-fluid">
-    
     <div class="text-center mb-4">
         <h5 class="fw-bold mb-1">Quản lý đơn hàng</h5>
         <small class="text-muted">Tổng: {{ orders|length }} đơn</small>
     </div>
 
-    <div class="search-container mb-3">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" id="searchInput" class="custom-search-input" placeholder="Tìm mã đơn, tên khách..." onkeyup="filterTable()">
+    <div class="view-toggle">
+        <button class="view-btn active" onclick="switchView('kanban')">
+            <i class="fas fa-columns me-1"></i> Kanban
+        </button>
+        <button class="view-btn" onclick="switchView('table')">
+            <i class="fas fa-list me-1"></i> Bảng
+        </button>
     </div>
 
-    <div class="filter-container">
-        {% set status = request.args.get('status', 'all') %}
-        
-        <a href="?status=all" class="filter-pill {{ 'active' if status == 'all' }}">Tất cả</a>
-        <a href="?status=pending" class="filter-pill {{ 'active' if status == 'pending' }}">Chờ xử lý</a>
-        <a href="?status=shipping" class="filter-pill {{ 'active' if status == 'shipping' }}">Đang giao</a>
-        <a href="?status=completed" class="filter-pill {{ 'active' if status == 'completed' }}">Hoàn thành</a>
-        <a href="?status=cancelled" class="filter-pill {{ 'active' if status == 'cancelled' }}">Đã hủy</a>
+    <!-- Kanban View -->
+    <div id="kanbanView" class="kanban-board">
+        <!-- Pending Column -->
+        <div class="kanban-column" ondragover="allowDrop(event)" ondrop="drop(event, 'pending')">
+            <div class="kanban-header pending">
+                <div class="kanban-title">
+                    <i class="fas fa-clock text-warning"></i> Chờ xử lý
+                </div>
+                <span class="kanban-count">{{ orders|selectattr('status', 'equalto', 'pending')|list|length }}</span>
+            </div>
+            <div class="kanban-cards" id="pending-cards">
+                {% for o in orders %}
+                {% if o.status == 'pending' %}
+                <div class="kanban-card" draggable="true" ondragstart="drag(event, '{{ o.id }}')" onclick="window.location.href='/admin/order/{{ o.id }}'">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <span class="order-id">#{{ o.id }}</span>
+                    </div>
+                    <div class="order-customer">{{ o.customerName }}</div>
+                    <div class="d-flex justify-content-between">
+                        <span class="order-total">{{ "{:,.0f}".format(o.total) }}đ</span>
+                        <span class="order-time">{{ o.date }}</span>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Shipping Column -->
+        <div class="kanban-column" ondragover="allowDrop(event)" ondrop="drop(event, 'shipping')">
+            <div class="kanban-header shipping">
+                <div class="kanban-title">
+                    <i class="fas fa-shipping-fast text-primary"></i> Đang giao
+                </div>
+                <span class="kanban-count">{{ orders|selectattr('status', 'equalto', 'shipping')|list|length }}</span>
+            </div>
+            <div class="kanban-cards" id="shipping-cards">
+                {% for o in orders %}
+                {% if o.status == 'shipping' %}
+                <div class="kanban-card" draggable="true" ondragstart="drag(event, '{{ o.id }}')" onclick="window.location.href='/admin/order/{{ o.id }}'">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <span class="order-id">#{{ o.id }}</span>
+                    </div>
+                    <div class="order-customer">{{ o.customerName }}</div>
+                    <div class="d-flex justify-content-between">
+                        <span class="order-total">{{ "{:,.0f}".format(o.total) }}đ</span>
+                        <span class="order-time">{{ o.date }}</span>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Completed Column -->
+        <div class="kanban-column" ondragover="allowDrop(event)" ondrop="drop(event, 'completed')">
+            <div class="kanban-header completed">
+                <div class="kanban-title">
+                    <i class="fas fa-check-circle text-success"></i> Hoàn thành
+                </div>
+                <span class="kanban-count">{{ orders|selectattr('status', 'equalto', 'completed')|list|length }}</span>
+            </div>
+            <div class="kanban-cards" id="completed-cards">
+                {% for o in orders %}
+                {% if o.status == 'completed' %}
+                <div class="kanban-card" draggable="true" ondragstart="drag(event, '{{ o.id }}')" onclick="window.location.href='/admin/order/{{ o.id }}'">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <span class="order-id">#{{ o.id }}</span>
+                    </div>
+                    <div class="order-customer">{{ o.customerName }}</div>
+                    <div class="d-flex justify-content-between">
+                        <span class="order-total">{{ "{:,.0f}".format(o.total) }}đ</span>
+                        <span class="order-time">{{ o.date }}</span>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Cancelled Column -->
+        <div class="kanban-column" ondragover="allowDrop(event)" ondrop="drop(event, 'cancelled')">
+            <div class="kanban-header cancelled">
+                <div class="kanban-title">
+                    <i class="fas fa-times-circle text-danger"></i> Đã hủy
+                </div>
+                <span class="kanban-count">{{ orders|selectattr('status', 'equalto', 'cancelled')|list|length }}</span>
+            </div>
+            <div class="kanban-cards" id="cancelled-cards">
+                {% for o in orders %}
+                {% if o.status == 'cancelled' %}
+                <div class="kanban-card" draggable="true" ondragstart="drag(event, '{{ o.id }}')" onclick="window.location.href='/admin/order/{{ o.id }}'">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <span class="order-id">#{{ o.id }}</span>
+                    </div>
+                    <div class="order-customer">{{ o.customerName }}</div>
+                    <div class="d-flex justify-content-between">
+                        <span class="order-total">{{ "{:,.0f}".format(o.total) }}đ</span>
+                        <span class="order-time">{{ o.date }}</span>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
     </div>
 
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            {% if orders|length > 0 %}
-                <div class="card order-card overflow-hidden">
+    <!-- Table View -->
+    <div id="tableView" style="display: none;">
+        <div class="search-container mb-3">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" class="custom-search-input" placeholder="Tìm mã đơn, tên khách..." onkeyup="filterTable()">
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                {% if orders|length > 0 %}
+                <div class="card" style="border-radius: 12px;">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0" id="ordersTable">
-                            <thead class="bg-light text-secondary small">
+                            <thead class="bg-light">
                                 <tr>
-                                    <th class="ps-4 py-3 border-0">Mã đơn</th>
-                                    <th class="py-3 border-0">Khách hàng</th>
-                                    <th class="py-3 border-0">Tổng tiền</th>
-                                    <th class="py-3 border-0">Trạng thái</th>
-                                    <th class="py-3 border-0">Thời gian</th>
-                                    <th class="py-3 border-0 text-end pe-4">Hành động</th>
+                                    <th class="ps-4">Mã đơn</th>
+                                    <th>Khách hàng</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thời gian</th>
+                                    <th class="text-end pe-4">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -127,27 +246,25 @@
                                 <tr>
                                     <td class="ps-4 fw-bold text-primary">#{{ o.id }}</td>
                                     <td>
-                                        <div class="fw-bold text-dark">{{ o.customerName }}</div>
-                                        <div class="small text-muted" style="font-size: 11px;">{{ o.paymentMethod }}</div>
+                                        <div class="fw-bold">{{ o.customerName }}</div>
+                                        <div class="small text-muted">{{ o.paymentMethod }}</div>
                                     </td>
                                     <td class="fw-bold text-danger">{{ "{:,.0f}".format(o.total) }} đ</td>
                                     <td>
                                         {% if o.status == 'pending' %}
-                                            <span class="badge bg-warning text-dark fw-normal px-3 rounded-pill">Chờ xử lý</span>
+                                            <span class="badge bg-warning text-dark">Chờ xử lý</span>
                                         {% elif o.status == 'shipping' %}
-                                            <span class="badge bg-primary fw-normal px-3 rounded-pill">Đang giao</span>
+                                            <span class="badge bg-primary">Đang giao</span>
                                         {% elif o.status == 'completed' %}
-                                            <span class="badge bg-success fw-normal px-3 rounded-pill">Hoàn thành</span>
+                                            <span class="badge bg-success">Hoàn thành</span>
                                         {% else %}
-                                            <span class="badge bg-secondary fw-normal px-3 rounded-pill">Đã hủy</span>
+                                            <span class="badge bg-secondary">Đã hủy</span>
                                         {% endif %}
                                     </td>
-                                    <td class="text-muted small">
-                                        {{ o.date }}
-                                    </td>
+                                    <td class="text-muted small">{{ o.date }}</td>
                                     <td class="text-end pe-4">
-                                        <a href="/admin/order/{{ o.id }}" class="btn btn-sm btn-light text-primary rounded-circle shadow-sm" style="width: 32px; height: 32px; padding: 0; line-height: 32px;" title="Xem chi tiết">
-                                            <i class="fas fa-eye"></i>
+                                        <a href="/admin/order/{{ o.id }}" class="btn btn-sm btn-light">
+                                            <i class="fas fa-eye text-primary"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -156,35 +273,73 @@
                         </table>
                     </div>
                 </div>
-            {% else %}
-                <div class="empty-state">
-                    <div class="empty-icon text-muted">
-                        <i class="far fa-folder-open"></i>
-                    </div>
-                    <p class="mb-0 text-muted">Không có đơn hàng nào</p>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-inbox text-muted" style="font-size: 40px;"></i>
+                    <p class="text-muted mt-3">Không có đơn hàng nào</p>
                 </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Script tìm kiếm nhanh (Client-side)
+    let draggedOrderId = null;
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+        ev.target.closest('.kanban-column').classList.add('drag-over');
+    }
+
+    function drag(ev, orderId) {
+        draggedOrderId = orderId;
+        ev.target.classList.add('dragging');
+    }
+
+    function drop(ev, newStatus) {
+        ev.preventDefault();
+        document.querySelectorAll('.kanban-column').forEach(col => col.classList.remove('drag-over'));
+        
+        if (draggedOrderId && newStatus) {
+            fetch(`/admin/update_status/${draggedOrderId}/${newStatus}`, { method: 'GET' })
+                .then(response => { if (response.ok) location.reload(); });
+        }
+        
+        document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+        draggedOrderId = null;
+    }
+
+    function switchView(view) {
+        const kanbanView = document.getElementById('kanbanView');
+        const tableView = document.getElementById('tableView');
+        const buttons = document.querySelectorAll('.view-btn');
+        
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        if (view === 'kanban') {
+            kanbanView.style.display = 'flex';
+            tableView.style.display = 'none';
+        } else {
+            kanbanView.style.display = 'none';
+            tableView.style.display = 'block';
+        }
+    }
+
     function filterTable() {
-        var input, filter, table, tr, td, i, txtValue;
-        input = document.getElementById("searchInput");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("ordersTable");
+        var input = document.getElementById("searchInput");
+        var filter = input.value.toUpperCase();
+        var table = document.getElementById("ordersTable");
         if (!table) return; 
         
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            // Tìm trong cột Mã đơn (0) và Tên khách (1)
-            tdId = tr[i].getElementsByTagName("td")[0];
-            tdName = tr[i].getElementsByTagName("td")[1];
+        var tr = table.getElementsByTagName("tr");
+        for (var i = 1; i < tr.length; i++) {
+            var tdId = tr[i].getElementsByTagName("td")[0];
+            var tdName = tr[i].getElementsByTagName("td")[1];
             if (tdId || tdName) {
-                txtValueId = tdId.textContent || tdId.innerText;
-                txtValueName = tdName.textContent || tdName.innerText;
+                var txtValueId = tdId.textContent || tdId.innerText;
+                var txtValueName = tdName.textContent || tdName.innerText;
                 if (txtValueId.toUpperCase().indexOf(filter) > -1 || txtValueName.toUpperCase().indexOf(filter) > -1) {
                     tr[i].style.display = "";
                 } else {

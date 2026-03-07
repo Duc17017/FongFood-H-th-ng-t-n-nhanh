@@ -92,8 +92,8 @@
     /* Avatar */
     .avatar-section {
         text-align: center;
-        margin-top: -60px;
-        padding-bottom: 20px;
+        margin-top: -70px;
+        padding-bottom: 25px;
         position: relative;
         z-index: 10;
     }
@@ -104,18 +104,25 @@
     }
 
     .avatar-preview {
-        width: 120px;
-        height: 120px;
+        width: 130px;
+        height: 130px;
         border-radius: 50%;
-        border: 4px solid white;
-        box-shadow: var(--shadow-lg);
+        border: 5px solid #FFD700;
+        box-shadow: 0 8px 30px rgba(211, 47, 47, 0.25);
         overflow: hidden;
-        background: var(--bg-light);
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         transition: all var(--transition-normal);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+        font-weight: 800;
+        color: #1e293b;
     }
 
     .avatar-preview:hover {
-        transform: scale(1.05);
+        transform: scale(1.08);
+        box-shadow: 0 12px 40px rgba(211, 47, 47, 0.35);
     }
 
     .avatar-preview img {
@@ -126,12 +133,12 @@
 
     .avatar-edit-btn {
         position: absolute;
-        bottom: 5px;
-        right: 5px;
-        width: 36px;
-        height: 36px;
+        bottom: 8px;
+        right: 8px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
-        background: var(--primary-color);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
         color: white;
         display: flex;
         align-items: center;
@@ -139,17 +146,22 @@
         cursor: pointer;
         border: 3px solid white;
         transition: all var(--transition-fast);
+        box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
     }
 
     .avatar-edit-btn:hover {
-        transform: scale(1.1);
-        background: var(--primary-dark);
+        transform: scale(1.15);
+        background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
     }
 
     .upload-note {
         font-size: 12px;
         color: var(--text-muted);
-        margin-top: 12px;
+        margin-top: 15px;
+        background: rgba(0,0,0,0.03);
+        padding: 8px 16px;
+        border-radius: 20px;
+        display: inline-block;
     }
 
     /* Form */
@@ -310,9 +322,78 @@
             padding: 20px 15px;
         }
     }
+
+    /* Menu Cards */
+    .menu-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: 12px;
+        padding: 20px 10px;
+        text-decoration: none;
+        color: #1e293b;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.2s;
+    }
+    .menu-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .menu-card i {
+        font-size: 24px;
+        color: #d32f2f;
+        margin-bottom: 8px;
+    }
+    .menu-card span {
+        font-size: 12px;
+        font-weight: 600;
+    }
 </style>
 
 <div class="profile-container ai-slide-up">
+    
+    <!-- Menu Items -->
+    <div class="row g-2 mb-3">
+        <div class="col-6">
+            <a href="/history" class="menu-card text-center">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Đơn hàng</span>
+            </a>
+        </div>
+        <div class="col-6">
+            <a href="/qr-scan" class="menu-card text-center">
+                <i class="fas fa-qrcode"></i>
+                <span>Quét mã</span>
+            </a>
+        </div>
+        <div class="col-6">
+            <a href="/address" class="menu-card text-center">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Địa chỉ</span>
+            </a>
+        </div>
+        <div class="col-6">
+            <a href="/settings" class="menu-card text-center">
+                <i class="fas fa-cog"></i>
+                <span>Cài đặt</span>
+            </a>
+        </div>
+        <div class="col-6">
+            <a href="/support" class="menu-card text-center">
+                <i class="fas fa-headset"></i>
+                <span>Hỗ trợ</span>
+            </a>
+        </div>
+        <div class="col-6">
+            <a href="/my_vouchers" class="menu-card text-center">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Voucher của tôi</span>
+            </a>
+        </div>
+    </div>
+
     <div class="profile-card">
         <div class="profile-header">
             <a href="/home" class="back-btn">
