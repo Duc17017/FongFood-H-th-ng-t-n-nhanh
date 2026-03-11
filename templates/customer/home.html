@@ -8,23 +8,23 @@
 
 <style>
     /* ============================================
-       1. CSS VARIABLES & THEME
+       GLOWING NEON THEME - Home Page Override
     ============================================ */
     :root {
-        --primary-color: #D32F2F;
-        --primary-light: #FF5252;
-        --primary-dark: #B71C1C;
+        --primary-color: #ef3942;
+        --primary-light: #ff414c;
+        --primary-dark: #cc3138;
         --accent-color: #FFD700;
         --success-color: #00B14F;
-        --text-dark: #1a1a1a;
-        --text-muted: #6c757d;
-        --text-light: #f8f9fa;
-        --bg-light: #f5f7fa;
-        --bg-white: #ffffff;
-        --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
-        --shadow-md: 0 4px 20px rgba(0,0,0,0.12);
-        --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
-        --gradient-primary: linear-gradient(135deg, #D32F2F 0%, #FF5252 100%);
+        --text-dark: #1a0b0c;
+        --text-muted: #9ca3af;
+        --text-light: #f8f6f6;
+        --bg-light: #1a0b0c;
+        --bg-white: #221011;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+        --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+        --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
+        --gradient-primary: linear-gradient(135deg, #ef3942 0%, #ff414c 100%);
         --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         --gradient-warm: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         --border-radius-sm: 8px;
@@ -34,6 +34,15 @@
         --transition-fast: 0.2s ease;
         --transition-normal: 0.3s ease;
         --transition-slow: 0.5s ease;
+        
+        /* Neumorphic */
+        --neu-shadow: 10px 10px 20px #120708, -10px -10px 20px #32191a;
+        --neu-shadow-inset: inset 6px 6px 12px #120708, inset -6px -6px 12px #32191a;
+    }
+
+    body {
+        background-color: var(--bg-light) !important;
+        color: var(--text-light);
     }
 
     /* ============================================
@@ -84,10 +93,11 @@
         border-radius: var(--border-radius-xl);
         overflow: hidden;
         margin-bottom: 30px;
+        box-shadow: var(--neu-shadow);
     }
 
     .hero-banner .carousel-item {
-        height: 200px;
+        height: 180px;
     }
 
     .hero-banner .carousel-item img {
@@ -172,7 +182,7 @@
         border-radius: 20px;
         font-size: 12px;
         font-weight: 700;
-        box-shadow: var(--shadow-md);
+        box-shadow: var(--shadow-md), 0 0 10px rgba(255, 215, 0, 0.5);
         animation: aiPulse 2s infinite;
     }
 
@@ -187,14 +197,14 @@
         background: var(--bg-white);
         border-radius: var(--border-radius-lg);
         padding: 25px 15px;
-        box-shadow: var(--shadow-sm);
+        box-shadow: var(--neu-shadow);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
         transition: all var(--transition-normal);
-        border: 2px solid transparent;
+        border: 1px solid rgba(255,255,255,0.05);
         position: relative;
         overflow: hidden;
     }
@@ -214,7 +224,7 @@
     .service-card:hover {
         transform: translateY(-8px);
         border-color: var(--primary-color);
-        box-shadow: var(--shadow-lg);
+        box-shadow: var(--neu-shadow), 0 0 20px rgba(239, 57, 66, 0.3);
     }
 
     .service-card:hover::before {
@@ -231,32 +241,35 @@
         margin-bottom: 15px;
         font-size: 28px;
         transition: all var(--transition-normal);
+        box-shadow: var(--neu-shadow-inset);
     }
 
     .service-icon.delivery {
-        background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
+        background: linear-gradient(135deg, #2a1516 0%, #1d0e0f 100%);
         color: var(--primary-color);
+        box-shadow: 0 0 15px rgba(239, 57, 66, 0.3);
     }
 
     .service-icon.support {
-        background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
-        color: #1976D2;
+        background: linear-gradient(135deg, #151a2a 0%, #0d0f1d 100%);
+        color: #64b5f6;
+        box-shadow: 0 0 15px rgba(100, 181, 246, 0.3);
     }
 
     .service-icon.payment {
-        background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
-        color: var(--success-color);
+        background: linear-gradient(135deg, #152a1d 0%, #0f1d14 100%);
+        color: #81c784;
+        box-shadow: 0 0 15px rgba(129, 199, 132, 0.3);
     }
 
     .service-card:hover .service-icon {
         transform: scale(1.1) rotate(5deg);
-        box-shadow: var(--shadow-md);
     }
 
     .service-title {
         font-size: 15px;
         font-weight: 700;
-        color: var(--text-dark);
+        color: var(--text-light);
         margin-bottom: 5px;
     }
 
@@ -325,10 +338,11 @@
     .section-title {
         font-size: 18px;
         font-weight: 800;
-        color: var(--text-dark);
+        color: var(--text-light);
         display: flex;
         align-items: center;
         gap: 10px;
+        text-shadow: 0 0 10px rgba(239, 57, 66, 0.3);
     }
 
     .section-title::before {
@@ -337,6 +351,7 @@
         height: 24px;
         background: var(--gradient-primary);
         border-radius: 2px;
+        box-shadow: 0 0 10px rgba(239, 57, 66, 0.5);
     }
 
     .view-all-link {
@@ -1194,8 +1209,8 @@
                     <p class="mb-0 opacity-75" style="font-size: 0.9rem;">Dựa trên thời tiết, thời gian và lịch sử mua hàng của bạn</p>
                 </div>
             </div>
-            {% for pid, p, score in ai_recommendations %}
-            <div class="product-card ai-scale-in" style="animation-delay: {{ loop.index * 0.05 }}s;">
+            {% for pid, p, score, _ in ai_recommendations %}
+            <div class="product-card ai-scale-in" style="animation-delay: {{ loop.index * 0.05 }}s; cursor: pointer;" onclick="window.location.href='/product/{{ pid }}'">
                 <div class="product-image-wrapper">
                     {% if p.image %}
                     <img loading="lazy" src="{{ p.image }}" alt="{{ p.name }}">
@@ -1204,10 +1219,10 @@
                     {% endif %}
                     <span class="ai-recommend-badge"><i class="fas fa-robot me-1"></i>AI</span>
                     <div class="product-actions">
-                        <button class="action-btn quick-view" onclick="quickView('{{ pid }}')" title="Xem nhanh">
+                        <a href="/product/{{ pid }}" class="action-btn quick-view" title="Xem chi tiết">
                             <i class="fas fa-eye"></i>
-                        </button>
-                        <a href="{{ url_for('customer.add_to_cart', pid=pid) }}" class="action-btn add-cart" title="Them vao gio">
+                        </a>
+                        <a href="#" onclick="event.preventDefault(); quickAddToCart('{{ pid }}')" class="action-btn add-cart" title="Thêm vào giỏ">
                             <i class="fas fa-plus"></i>
                         </a>
                     </div>
@@ -1227,7 +1242,7 @@
 
             {% if hot_products %}
                 {% for pid, p in hot_products.items() %}
-                <div class="product-card ai-scale-in" style="animation-delay: {{ loop.index * 0.1 }}s;">
+                <div class="product-card ai-scale-in" style="animation-delay: {{ loop.index * 0.1 }}s; cursor: pointer;" onclick="window.location.href='/product/{{ pid }}'">
                     <div class="product-image-wrapper">
                         {% if p.image %}
                         <img loading="lazy" src="{{ p.image }}" alt="{{ p.name }}">
@@ -1236,10 +1251,10 @@
                         {% endif %}
                         <span class="product-badge hot"><i class="fas fa-bolt me-1"></i>HOT</span>
                         <div class="product-actions">
-                            <button class="action-btn quick-view" onclick="quickView('{{ pid }}')" title="Xem nhanh">
+                            <a href="/product/{{ pid }}" class="action-btn quick-view" title="Xem chi tiết">
                                 <i class="fas fa-eye"></i>
-                            </button>
-                            <a href="{{ url_for('customer.add_to_cart', pid=pid) }}" class="action-btn add-cart" title="Thêm vào giỏ">
+                            </a>
+                            <a href="#" onclick="event.preventDefault(); quickAddToCart('{{ pid }}')" class="action-btn add-cart" title="Thêm vào giỏ">
                                 <i class="fas fa-plus"></i>
                             </a>
                         </div>
@@ -1667,13 +1682,38 @@
     // 3. AI QUICK VIEW
     // ============================================
     function quickView(productId) {
-        // Show quick view modal or navigate to product detail
-        window.location.href = '/menu?product=' + productId;
+        // Navigate to product detail page
+        window.location.href = '/product/' + productId;
     }
 
     // ============================================
     // 4. AI TOAST NOTIFICATION
     // ============================================
+    function quickAddToCart(pid) {
+        fetch(`/add-to-cart/${pid}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ quantity: 1 })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showToast(data.message || 'Đã thêm vào giỏ hàng!', 'success');
+                // Cập nhật số lượng giỏ hàng trong navbar
+                if (data.cart_count !== undefined) {
+                    const cartBadge = document.getElementById('cart-count');
+                    if (cartBadge) cartBadge.textContent = data.cart_count;
+                }
+            } else {
+                showToast(data.message || 'Có lỗi xảy ra', 'error');
+            }
+        })
+        .catch(err => {
+            console.error('Add to cart error:', err);
+            showToast('Có lỗi khi thêm vào giỏ', 'error');
+        });
+    }
+
     function showToast(message, type = 'success') {
         const toast = document.getElementById('aiToast');
         const icon = toast.querySelector('.toast-icon');

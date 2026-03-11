@@ -13,26 +13,33 @@
 
 <style>
   :root {
-    --primary-color: #d32f2f;
-    --primary-light: #ff5252;
-    --primary-dark: #b71c1c;
+    --primary-color: #ef3942;
+    --primary-light: #ff414c;
+    --primary-dark: #cc3138;
     --accent-color: #ffd700;
     --success-color: #00b14f;
-    --text-dark: #1a1a1a;
-    --text-muted: #6c757d;
-    --text-light: #f8f9fa;
-    --bg-light: #f5f7fa;
-    --bg-white: #ffffff;
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.12);
-    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.15);
-    --gradient-primary: linear-gradient(135deg, #d32f2f 0%, #ff5252 100%);
+    --text-dark: #f8f6f6;
+    --text-muted: #9ca3af;
+    --text-light: #f8f6f6;
+    --bg-light: #1a0b0c;
+    --bg-white: #221011;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
+    --gradient-primary: linear-gradient(135deg, #ef3942 0%, #ff414c 100%);
     --border-radius-sm: 8px;
     --border-radius-md: 12px;
     --border-radius-lg: 16px;
     --border-radius-xl: 24px;
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
+    --neu-shadow: 8px 8px 16px #120708, -8px -8px 16px #2e1516;
+    --neu-shadow-inset: inset 4px 4px 8px #120708, inset -4px -4px 8px #2e1516;
+  }
+
+  body {
+    background-color: var(--bg-light) !important;
+    color: var(--text-dark);
   }
 
   .ai-fade-in {
@@ -75,7 +82,8 @@
   .page-title {
     font-weight: 800;
     font-size: 22px;
-    color: var(--text-dark);
+    color: var(--text-light);
+    text-shadow: 0 0 10px rgba(239, 57, 66, 0.3);
   }
 
   .page-title i {

@@ -1,0 +1,340 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+    .product-detail-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 30px 0;
+        margin-bottom: 30px;
+    }
+    .product-image-main {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        display: block;
+    }
+    .product-image-fallback {
+        width: 100%;
+        height: 350px;
+        border-radius: 20px;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .product-image-fallback {
+        width: 100%;
+        height: 350px;
+        border-radius: 20px;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .product-badge-ai {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .product-price-main {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #D32F2F;
+    }
+    .product-price-original {
+        font-size: 1.2rem;
+        color: #999;
+        text-decoration: line-through;
+        margin-left: 10px;
+    }
+    .ai-content-card {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+        border-radius: 16px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    .ai-highlight-item {
+        background: white;
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    .ai-highlight-icon {
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .quantity-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 2px solid #dee2e6;
+        background: white;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+    }
+    .quantity-btn:hover {
+        border-color: #D32F2F;
+        color: #D32F2F;
+    }
+    .quantity-input {
+        width: 70px;
+        height: 45px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+        border: 2px solid #dee2e6;
+        border-radius: 10px;
+    }
+    .btn-add-to-cart {
+        background: linear-gradient(135deg, #D32F2F 0%, #FF5722 100%);
+        color: white;
+        border: none;
+        padding: 18px 40px;
+        border-radius: 50px;
+        font-size: 18px;
+        font-weight: 700;
+        transition: 0.3s;
+        box-shadow: 0 10px 30px rgba(211,47,47,0.3);
+    }
+    .btn-add-to-cart:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(211,47,47,0.4);
+    }
+    .btn-buy-now {
+        background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+        color: white;
+        border: none;
+        padding: 18px 40px;
+        border-radius: 50px;
+        font-size: 18px;
+        font-weight: 700;
+        transition: 0.3s;
+        box-shadow: 0 10px 30px rgba(76,175,80,0.3);
+    }
+    .btn-buy-now:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(76,175,80,0.4);
+    }
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+    }
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        background: #f5f5f5;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #667eea;
+    }
+    @media (max-width: 768px) {
+        .product-image-main, .product-image-fallback {
+            height: 250px;
+        }
+        .product-price-main {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="container py-4">
+    <!-- Back Button -->
+    <a href="{{ request.referrer or url_for('customer.menu') }}" class="btn btn-outline-secondary mb-3">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại
+    </a>
+
+    <div class="row">
+        <!-- Product Image -->
+        <div class="col-lg-6 mb-4">
+            <div style="position: relative; border-radius: 20px; overflow: hidden;">
+                {% if product.image and product.image.strip() %}
+                <img id="mainImage" src="{{ product.image }}" alt="{{ product.name }}" 
+                     class="product-image-main"
+                     onerror="this.style.opacity='0'; this.nextElementSibling.style.opacity='1';">
+                <div class="product-image-fallback position-absolute" style="top: 0; left: 0; height: 350px; opacity: 0; transition: opacity 0.3s; display: flex; align-items: center; justify-content: center; width: 100%;">
+                    <i class="fas fa-image text-muted fa-4x"></i>
+                </div>
+                {% else %}
+                <div class="product-image-fallback">
+                    <i class="fas fa-image text-muted fa-4x"></i>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-lg-6">
+            <!-- AI Badge -->
+            <div class="mb-3">
+                <span class="product-badge-ai">
+                    <i class="fas fa-robot"></i>
+                    AI Gợi ý
+                </span>
+            </div>
+
+            <h2 class="fw-bold mb-2">{{ product.name }}</h2>
+            
+            <p class="text-muted mb-3">{{ product.description if product.description else 'Món ăn đặc biệt của nhà hàng' }}</p>
+
+            <!-- Price -->
+            <div class="mb-4">
+                <span class="product-price-main">{{ ai_content.price_formatted }}</span>
+                {% if ai_content.original_price %}
+                <span class="product-price-original">{{ ai_content.original_price }}</span>
+                <span class="badge bg-success ms-2">{{ ai_content.discount }}</span>
+                {% endif %}
+            </div>
+
+            <!-- AI Content Card -->
+            <div class="ai-content-card">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="product-badge-ai">
+                        <i class="fas fa-clock"></i>
+                        {{ ai_content.time_desc }}
+                    </span>
+                    <span class="ms-2 text-muted">{{ ai_content.occasion }}</span>
+                </div>
+
+                <h6 class="fw-bold mb-3">Tại sao nên thử?</h6>
+                <div class="row g-2 mb-3">
+                    {% for highlight in ai_content.highlights %}
+                    <div class="col-4">
+                        <div class="ai-highlight-item">
+                            <div class="ai-highlight-icon">
+                                {% if loop.index == 1 %}🍴{% elif loop.index == 2 %}✨{% else %}🔥{% endif %}
+                            </div>
+                            <small class="fw-bold">{{ highlight }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="bg-white p-3 rounded">
+                    <i class="fas fa-lightbulb text-warning me-2"></i>
+                    <strong>Mẹo:</strong> {{ ai_content.tips }}
+                </div>
+            </div>
+
+            <!-- Quantity Selector -->
+            <div class="mb-4">
+                <label class="form-label fw-bold">Số lượng</label>
+                <div class="quantity-selector">
+                    <button class="quantity-btn" onclick="updateQuantity(-1)">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <input type="number" id="quantity" value="1" min="1" class="quantity-input" readonly>
+                    <button class="quantity-btn" onclick="updateQuantity(1)">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-3">
+                <button onclick="addToCart()" class="btn-add-to-cart flex-fill">
+                    <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
+                </button>
+                <button onclick="buyNow()" class="btn-buy-now flex-fill">
+                    <i class="fas fa-bolt me-2"></i>Mua ngay
+                </button>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="mt-4">
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-truck"></i></div>
+                    <div>
+                        <strong>Giao hàng nhanh</strong>
+                        <small class="text-muted d-block">30-45 phút</small>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div>
+                        <strong>Đảm bảo chất lượng</strong>
+                        <small class="text-muted d-block">Hoàn tiền nếu không hài lòng</small>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-headset"></i></div>
+                    <div>
+                        <strong>Hỗ trợ 24/7</strong>
+                        <small class="text-muted d-block">Liên hệ ngay nếu cần</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const productId = "{{ product.id }}";
+
+function updateQuantity(delta) {
+    const input = document.getElementById('quantity');
+    let val = parseInt(input.value) + delta;
+    if (val < 1) val = 1;
+    input.value = val;
+}
+
+function addToCart() {
+    const qty = parseInt(document.getElementById('quantity').value);
+    fetch(`/add_to_cart/${productId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: qty })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            updateCartCount(data.cart_count);
+            showToast('Đã thêm ' + qty + ' món vào giỏ hàng!', 'success');
+        }
+    });
+}
+
+function buyNow() {
+    addToCart();
+    setTimeout(() => {
+        window.location.href = '/cart';
+    }, 500);
+}
+
+function updateCartCount(count) {
+    const badge = document.querySelector('.cart-badge');
+    if (badge) badge.textContent = count;
+}
+
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `position-fixed bottom-0 start-50 translate-middle-x mb-5 px-4 py-3 rounded-pill shadow-lg`;
+    toast.style.cssText = `z-index: 9999; background: ${type === 'success' ? '#4CAF50' : '#f44336'}; color: white; font-weight: 600; animation: fadeIn 0.3s;`;
+    toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>${message}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
+}
+</script>
+{% endblock %}

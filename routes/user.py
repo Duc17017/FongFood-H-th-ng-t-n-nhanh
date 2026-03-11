@@ -192,6 +192,90 @@ def menu():
         filtered_products[pid] = p
     return render_template("customer/menu.html", products=filtered_products)
 
+
+@customer_bp.route("/product/<pid>")
+@login_required(role="customer")
+def product_detail(pid):
+    raw_products = db_get("products") or {}
+    products = normalize_data(raw_products, "id")
+    product = products.get(pid)
+    
+    if not product:
+        flash("Không tìm thấy sản phẩm", "error")
+        return redirect(url_for("customer.menu"))
+    
+    # AI tạo nội dung chi tiết sản phẩm
+    ai_content = generate_ai_product_content(product)
+    
+    return render_template("customer/product_detail.html", product=product, ai_content=ai_content)
+
+
+def generate_ai_product_content(product):
+    """AI tạo nội dung chi tiết sản phẩm"""
+    from datetime import datetime
+    
+    name = product.get("name", "")
+    category = product.get("category", "")
+    description = product.get("description", "")
+    price = product.get("price", 0)
+    
+    # AI generated content
+    hour = datetime.now().hour
+    
+    # Tạo mô tả chi tiết dựa trên thời gian
+    if 6 <= hour < 11:
+        time_desc = "Buổi sáng perfect!"
+        occasion = "Bữa sáng tuyệt vời"
+    elif 11 <= hour < 14:
+        time_desc = "Giờ ăn trưa!"
+        occasion = "Bữa trưa no bụng"
+    elif 14 <= hour < 18:
+        time_desc = "Chiều xuýt xoa!"
+        occasion = "Bữa xế nhẹ nhàng"
+    else:
+        time_desc = "Buổi tối sum vầy!"
+        occasion = "Bữa tối ấm cúng"
+    
+    # Tạo nội dung theo category
+    category_content = {
+        "fastfood": {
+            "highlights": ["Ngon nhanh", "Tiện lợi", "Đậm đà"],
+            "tips": "Nên ăn ngay sau khi nhận để giữ độ giòn tốt nhất"
+        },
+        "noodle": {
+            "highlights": ["Nước dùng ngọt thanh", "Bánh mềm dai vừa", "Topping đầy đủ"],
+            "tips": "Thêm chanh, ớt, hành phi để tăng hương vị"
+        },
+        "drink": {
+            "highlights": ["Thơm mát", "Giải khát", "Năng lượng tức thì"],
+            "tips": "Uống lạnh ngon hơn, có thể thêm đá"
+        },
+        "bread": {
+            "highlights": ["Giòn bên ngoài", "Mềm bên trong", "Nhân đầy đặn"],
+            "tips": "Nên hâm nóng lại nếu để qua đêm"
+        },
+        "pizza": {
+            "highlights": ["Đế giòn tan", "Phô mai kéo sợi", "Nhà làm tươi ngon"],
+            "tips": "Thêm xốt tiêu, ớt bột để tăng hương vị"
+        }
+    }
+    
+    content = category_content.get(category, {
+        "highlights": ["Ngon", "Tươi", "Chất lượng"],
+        "tips": "Thưởng thức ngay khi nhận được"
+    })
+    
+    return {
+        "time_desc": time_desc,
+        "occasion": occasion,
+        "highlights": content["highlights"],
+        "tips": content["tips"],
+        "price_formatted": "{:,.0f}đ".format(price),
+        "original_price": "{:,.0f}đ".format(price + 15000) if price > 0 else None,
+        "discount": "20%" if price > 0 else None
+    }
+
+
 # --- ROUTE 1: HIỂN THỊ TRANG PROFILE ---
 @customer_bp.route("/profile")
 @login_required(role="customer")
@@ -331,10 +415,16 @@ def update_cart(pid, action):
     return redirect(url_for("customer.cart"))
 
 
-@customer_bp.route("/add_to_cart/<pid>")
+@customer_bp.route("/add_to_cart/<pid>", methods=["POST"])
 @login_required(role="customer")
 def add_to_cart(pid):
     user = session["user"]
+    
+    # Support JSON body for quantity
+    quantity = 1
+    if request.is_json:
+        data = request.get_json() or {}
+        quantity = data.get("quantity", 1)
 
     raw_products = db_get("products") or {}
     products = normalize_data(raw_products, "id")
@@ -345,15 +435,19 @@ def add_to_cart(pid):
         user_cart = normalize_data(raw_cart, "id")
 
         if pid in user_cart:
-            user_cart[pid]["qty"] += 1
+            user_cart[pid]["qty"] += quantity
         else:
             user_cart[pid] = {
                 "name": product["name"],
                 "price": product.get("price", 0),
-                "qty": 1,
+                "qty": quantity,
                 "id": pid,
             }
         db_put(f"carts/{user}", user_cart)
+        
+        # Return JSON if requested, otherwise redirect
+        if request.is_json:
+            return jsonify({"success": True, "message": f"Đã thêm {product['name']} vào giỏ!", "cart_count": sum(item.get("qty", 1) for item in user_cart.values())})
         flash(f"Đã thêm {product['name']} vào giỏ!", "success")
     return redirect(request.referrer or url_for("customer.menu"))
 

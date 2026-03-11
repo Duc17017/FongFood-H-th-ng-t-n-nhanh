@@ -2,22 +2,131 @@
 {% block content %}
 
 <style>
+    /* GLOWING NEON - Menu Page */
+    :root {
+        --primary: #ef3942;
+        --bg-card: #221011;
+        --bg-dark: #1a0b0c;
+    }
+    
     /* CSS DANH MỤC NGANG */
-    .category-scroll-container { display: flex; gap: 15px; padding: 10px 5px; overflow-x: auto; scrollbar-width: none; margin-bottom: 20px; }
+    .category-scroll-container { 
+        display: flex; 
+        gap: 15px; 
+        padding: 15px 5px; 
+        overflow-x: auto; 
+        scrollbar-width: none; 
+        margin-bottom: 20px; 
+    }
     .category-scroll-container::-webkit-scrollbar { display: none; }
     @media (min-width: 992px) { .category-scroll-container { justify-content: center; gap: 30px; } }
-    .cat-item { text-decoration: none; color: #333; display: flex; flex-direction: column; align-items: center; transition: transform 0.2s; min-width: 75px; opacity: 0.7; }
-    .cat-item:hover { transform: translateY(-3px); opacity: 1; }
-    .cat-item.active { opacity: 1; font-weight: bold; } 
-    .cat-box { width: 65px; height: 65px; background: white; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; font-size: 28px; transition: 0.2s; border: 2px solid transparent; }
-    .cat-item.active .cat-box { border-color: #D32F2F; background: #fff5f5; }
-    .cat-item.active .cat-name { color: #D32F2F; }
-    .cat-name { font-size: 12px; font-weight: 600; color: #666; text-align: center; }
-    .cat-all i { color: #333; } .cat-fastfood i { color: #FFC107; } .cat-noodle i { color: #FF5722; } .cat-drink i { color: #00BCD4; } .cat-bread i { color: #795548; } .cat-pizza i { color: #F44336; }
-    .menu-card { background: white; border-radius: 16px; overflow: hidden; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.2s; height: 100%; }
-    .menu-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-    .btn-add-menu { width: 35px; height: 35px; border-radius: 50%; background: #D32F2F; color: white; border: none; display: flex; align-items: center; justify-content: center; }
+    .cat-item { 
+        text-decoration: none; 
+        color: var(--text-muted); 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        transition: all 0.2s; 
+        min-width: 75px; 
+        opacity: 0.6; 
+        padding: 10px;
+        border-radius: 16px;
+        background: var(--bg-card);
+        box-shadow: 6px 6px 12px #120708, -6px -6px 12px #32191a;
+    }
+    .cat-item:hover { 
+        transform: translateY(-3px); 
+        opacity: 1; 
+    }
+    .cat-item.active { 
+        opacity: 1; 
+        font-weight: bold; 
+        background: var(--primary);
+        box-shadow: 0 0 15px rgba(239, 57, 66, 0.5), 4px 4px 10px rgba(0,0,0,0.3);
+    }
+    .cat-box { 
+        width: 55px; 
+        height: 55px; 
+        background: var(--bg-dark); 
+        border-radius: 16px; 
+        box-shadow: inset 3px 3px 6px #120708, inset -3px -3px 6px #32191a;
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        margin-bottom: 8px; 
+        font-size: 22px; 
+        transition: 0.2s; 
+    }
+    .cat-item.active .cat-box { 
+        background: rgba(255,255,255,0.2);
+    }
+    .cat-name { 
+        font-size: 11px; 
+        font-weight: 600; 
+        color: var(--text-muted); 
+        text-align: center; 
+    }
+    .cat-item.active .cat-name { 
+        color: white; 
+    }
+    .cat-all i { color: var(--text-muted); } 
+    .cat-fastfood i { color: #FFC107; } 
+    .cat-noodle i { color: #FF5722; } 
+    .cat-drink i { color: #00BCD4; } 
+    .cat-bread i { color: #795548; } 
+    .cat-pizza i { color: #F44336; }
+    
+    .menu-card { 
+        background: var(--bg-card); 
+        border-radius: 20px; 
+        overflow: visible; 
+        border: 1px solid rgba(255,255,255,0.05);
+        box-shadow: 8px 8px 16px #120708, -8px -8px 16px #32191a;
+        transition: 0.3s; 
+        height: 100%; 
+        position: relative; 
+    }
+    .menu-card:hover { 
+        transform: translateY(-5px); 
+        box-shadow: 12px 12px 24px #120708, -12px -12px 24px #32191a, 0 0 20px rgba(239, 57, 66, 0.2);
+    }
+    
+    /* QUICK ADD BUTTON */
+    .btn-add-menu { 
+        width: 40px; 
+        height: 40px; 
+        border-radius: 12px; 
+        background: var(--primary); 
+        color: white; 
+        border: none; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        transition: 0.2s; 
+        box-shadow: 0 0 15px rgba(239, 57, 66, 0.5), 4px 4px 8px rgba(0,0,0,0.3);
+    }
     .btn-add-menu:active { transform: scale(0.9); }
+    .btn-add-menu:hover { 
+        background: #cc3138; 
+        box-shadow: 0 0 20px rgba(239, 57, 66, 0.6);
+    }
+    
+    /* BADGE */
+    .product-badge {
+        position: absolute; 
+        top: 10px; 
+        left: 10px;
+        background: linear-gradient(135deg, var(--primary), #ff414c);
+        color: white; 
+        padding: 5px 12px; 
+        border-radius: 20px;
+        font-size: 10px; 
+        font-weight: 700; 
+        z-index: 10;
+        box-shadow: 0 0 10px rgba(239, 57, 66, 0.5);
+    }
+    .product-badge.hot { background: linear-gradient(135deg, #FF5722, #FFC107); }
+    .product-badge.new { background: linear-gradient(135deg, #4CAF50, #8BC34A); }
 </style>
 
 <div class="d-none d-lg-block mb-3">
@@ -56,22 +165,47 @@
         {% for pid, p in products.items() %}
         <div class="col">
             <div class="menu-card d-flex flex-column h-100">
-                <div style="height: 180px; overflow: hidden; position: relative;">
-                    {% if p.image %}
-                    <img loading="lazy" src="{{ p.image }}" class="w-100 h-100" style="object-fit: cover;">
+                <!-- BADGE -->
+                {% set badge_class = '' %}
+                {% if p.isHot or p.hot %}
+                {% set badge_class = 'hot' %}
+                {% elif p.isNew or p.new %}
+                {% set badge_class = 'new' %}
+                {% endif %}
+                {% if p.isHot or p.hot or p.isNew or p.new %}
+                <div class="product-badge {{ badge_class }}">
+                    {% if p.isHot or p.hot %}HOT{% else %}MỚI{% endif %}
+                </div>
+                {% endif %}
+                
+                <!-- MAIN IMAGE -->
+                <div style="height: 180px; overflow: hidden; position: relative; cursor: pointer;" onclick="showProductDetail('{{ pid }}')">
+                    {% if p.image and p.image.strip() %}
+                    <img loading="lazy" src="{{ p.image }}" class="w-100 h-100" style="object-fit: cover;" onerror="this.style.opacity='0'; this.nextElementSibling.style.opacity='1';">
+                    <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center position-absolute" style="top: 0; left: 0; opacity: 0; transition: opacity 0.3s;"><i class="fas fa-image text-muted fa-2x"></i></div>
                     {% else %}
                     <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center"><i class="fas fa-image text-muted fa-2x"></i></div>
                     {% endif %}
+                    
+                    <!-- MOBILE: Show quick actions overlay -->
+                    <div class="d-lg-none position-absolute w-100" style="bottom: 0; background: linear-gradient(transparent, rgba(0,0,0,0.6)); padding: 30px 10px 10px;">
+                        <div class="d-flex gap-2">
+                            <button class="flex-fill btn btn-sm" style="background: white; color: #D32F2F; font-weight: 600;" onclick="event.stopPropagation(); quickAddToCart('{{ pid }}')">
+                                <i class="fas fa-cart-plus"></i> Mua nhanh
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- CARD CONTENT -->
                 <div class="p-3 d-flex flex-column flex-grow-1 justify-content-between">
                     <div>
-                        <h6 class="fw-bold text-dark mb-1">{{ p.name }}</h6>
+                        <h6 class="fw-bold text-white mb-1" style="cursor: pointer;" onclick="showProductDetail('{{ pid }}')">{{ p.name }}</h6>
                         <p class="small text-muted mb-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 11px; height: 32px;">
                             {{ p.description if p.description else p.category }}
                         </p>
                     </div>
-                    
+
                     <div class="d-flex justify-content-between align-items-center mt-2">
                         <div>
                             {% if p.originalPrice and p.originalPrice > (p.price or 0) %}
@@ -79,10 +213,10 @@
                             {% endif %}
                             <span class="text-danger fw-bold fs-5">{{ "{:,.0f}".format(p.price or 0) }}đ</span>
                         </div>
-                        
-                        <a href="{{ url_for('customer.add_to_cart', pid=pid) }}" class="btn-add-menu shadow-sm text-decoration-none">
+
+                        <button onclick="quickAddToCart('{{ pid }}')" class="btn-add-menu shadow-sm">
                             <i class="fas fa-plus"></i>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -96,6 +230,115 @@
         </div>
     {% endif %}
 </div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal fade" id="productDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="border-radius: 20px; overflow: hidden;">
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="row g-0">
+                <div class="col-md-6">
+                    <img id="modalProductImage" src="" class="w-100 h-100 position-absolute" style="object-fit: cover; min-height: 300px; opacity: 0; transition: opacity 0.3s;" onerror="this.style.opacity='0'; this.nextElementSibling.style.opacity='1';">
+                    <div id="modalProductImageFallback" class="w-100 h-100 bg-light d-flex align-items-center justify-content-center" style="min-height: 300px; opacity: 1; transition: opacity 0.3s;"><i class="fas fa-image text-muted fa-4x"></i></div>
+                </div>
+                <div class="col-md-6 p-4">
+                    <h4 id="modalProductName" class="fw-bold mb-2"></h4>
+                    <p id="modalProductDesc" class="text-muted small mb-3"></p>
+                    <div class="mb-3">
+                        <span id="modalProductPrice" class="text-danger fw-bold fs-3"></span>
+                        <span id="modalProductOriginal" class="text-muted text-decoration-line-through ms-2"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Số lượng</label>
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="btn btn-outline-secondary" onclick="updateModalQuantity(-1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" id="modalQuantity" value="1" min="1" class="form-control text-center" style="width: 60px;">
+                            <button class="btn btn-outline-secondary" onclick="updateModalQuantity(1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button id="modalAddToCart" class="btn btn-danger w-100 py-3 fw-bold">
+                        <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ hàng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Product data for modal - escape special characters for JS
+const productData = {
+    {% for pid, p in products.items() %}
+    "{{ pid }}": {
+        name: {{ p.name|tojson }},
+        description: {{ (p.description if p.description else '')|tojson }},
+        price: {{ p.price or 0 }},
+        originalPrice: {{ p.originalPrice if p.originalPrice else 0 }},
+        image: {{ (p.image if p.image else '')|tojson }}
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+};
+
+function quickAddToCart(pid) {
+    fetch(`/add-to-cart/${pid}`, { method: 'POST' })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            updateCartCount(data.cart_count);
+            showToast('Đã thêm vào giỏ hàng!', 'success');
+        } else {
+            showToast(data.message || 'Có lỗi xảy ra', 'error');
+        }
+    })
+    .catch(() => showToast('Có lỗi xảy ra', 'error'));
+}
+
+function showProductDetail(pid) {
+    // Navigate to product detail page
+    window.location.href = '/product/' + pid;
+}
+
+function updateModalQuantity(delta) {
+    const input = document.getElementById('modalQuantity');
+    let val = parseInt(input.value) + delta;
+    if (val < 1) val = 1;
+    input.value = val;
+}
+
+function addMultipleToCart(pid, qty) {
+    fetch(`/add-to-cart/${pid}`, { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: qty })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            updateCartCount(data.cart_count);
+            bootstrap.Modal.getInstance(document.getElementById('productDetailModal')).hide();
+            showToast('Đã thêm ' + qty + ' món vào giỏ hàng!', 'success');
+        }
+    });
+}
+
+function updateCartCount(count) {
+    const badge = document.querySelector('.cart-badge');
+    if (badge) badge.textContent = count;
+}
+
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `position-fixed bottom-0 start-50 translate-middle-x mb-5 px-4 py-3 rounded-pill shadow-lg`;
+    toast.style.cssText = `z-index: 9999; background: ${type === 'success' ? '#4CAF50' : '#f44336'}; color: white; font-weight: 600; animation: fadeIn 0.3s;`;
+    toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>${message}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
+}
+</script>
 
 <div style="height: 30px;"></div> 
 {% endblock %}
