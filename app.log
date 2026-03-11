@@ -2444,3 +2444,8 @@ jinja2.exceptions.UndefinedError: 'order_count' is undefined
  * Running on http://127.0.0.1:5001
  * Running on http://192.168.69.111:5001
 2026-03-11 23:10:32,351 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-11 23:45:42,170 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.69.111:5001
+2026-03-11 23:45:42,170 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
