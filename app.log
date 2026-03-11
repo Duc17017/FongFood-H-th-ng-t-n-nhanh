@@ -2449,3 +2449,31 @@ jinja2.exceptions.UndefinedError: 'order_count' is undefined
  * Running on http://127.0.0.1:5001
  * Running on http://192.168.69.111:5001
 2026-03-11 23:45:42,170 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 01:00:10,390 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.69.111:5000
+2026-03-12 01:00:10,390 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 01:00:25,936 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:25] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 01:00:25,974 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:25] "GET /login HTTP/1.1" 200 -
+2026-03-12 01:00:26,177 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:26] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-12 01:00:28,372 - INFO - routes.auth - Admin admin logged in (hard-coded)
+2026-03-12 01:00:28,373 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:28] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-03-12 01:00:30,060 - INFO - services.analytics_service - === ANALYTICS: time_filter=week, orders=4, revenue=1500000.0, revenue_data=[{'label': '06/03', 'value': 0.0}, {'label': '07/03', 'value': 0.0}, {'label': '08/03', 'value': 0.0}, {'label': '09/03', 'value': 0.0}, {'label': '10/03', 'value': 0.0}, {'label': '11/03', 'value': 0.0}, {'label': '12/03', 'value': 0.0}] ===
+2026-03-12 01:00:30,563 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:30] "GET /admin/dashboard HTTP/1.1" 200 -
+2026-03-12 01:00:32,618 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:32] "[32mGET /logout HTTP/1.1[0m" 302 -
+2026-03-12 01:00:32,621 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:32] "GET /login HTTP/1.1" 200 -
+2026-03-12 01:00:36,384 - INFO - routes.auth - User 0364426628 logged in with role customer
+2026-03-12 01:00:36,385 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:36] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-03-12 01:00:38,980 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:38] "GET /home HTTP/1.1" 200 -
+2026-03-12 01:00:39,368 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:39] "GET /static/douong.png HTTP/1.1" 200 -
+2026-03-12 01:00:39,377 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:39] "GET /static/doannhanh.jpg HTTP/1.1" 200 -
+2026-03-12 01:00:39,380 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:39] "GET /static/pizza.png HTTP/1.1" 200 -
+2026-03-12 01:00:39,384 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:39] "GET /static/bánh%20mì.png HTTP/1.1" 200 -
+2026-03-12 01:00:39,388 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:39] "GET /static/bun.jpg HTTP/1.1" 200 -
+2026-03-12 01:00:40,517 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:40] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 01:00:42,892 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:42] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 01:00:45,138 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:45] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 01:00:46,266 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:46] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 01:00:46,527 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:46] "GET /cart HTTP/1.1" 200 -
+2026-03-12 01:00:46,932 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:46] "GET /check-session-status HTTP/1.1" 200 -
