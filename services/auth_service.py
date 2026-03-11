@@ -60,22 +60,17 @@ def hash_password(password: str) -> str:
 
 
 def verify_password(stored_password: str, provided_password: str) -> bool:
-    """
-    So sánh mật khẩu:
-    - Nếu stored_password là hash -> dùng check_password_hash.
-    - Nếu là plain text cũ -> so sánh trực tiếp để không làm hỏng dữ liệu cũ.
-    """
     if not stored_password:
         return False
-
-    # Thử coi như hash (werkzeug hỗ trợ nhiều loại: pbkdf2, scrypt, argon2)
-    try:
-        if ":" in stored_password and not stored_password.startswith("pbkdf2:sha256"):
-            # scrypt, argon2, pbkdf2:sha256 variants
+    
+    # Nếu là hash (werkzeug) thì dùng check_password_hash
+    if stored_password.startswith("pbkdf2:") or stored_password.startswith("scrypt:"):
+        try:
             return check_password_hash(stored_password, provided_password)
-    except Exception as exc:
-        logger.warning("Lỗi verify password hash: %s", exc)
-
-    # Fallback hỗ trợ dữ liệu cũ lưu plain text
+        except Exception as exc:
+            logger.warning("Lỗi verify password hash: %s", exc)
+            return False
+    
+    # Fallback: dữ liệu cũ lưu plain text
     return stored_password == provided_password
 
