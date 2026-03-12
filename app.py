@@ -56,6 +56,16 @@ def index():
     return redirect(url_for("auth.login"))
 
 
+@app.route("/version")
+def version():
+    """Kiểm tra phiên bản app - dùng để test deploy"""
+    return {
+        "version": "2.0",
+        "status": "running",
+        "deploy_time": datetime.now().isoformat()
+    }
+
+
 
 def get_user_from_db(username):
     data = db_get("users") or {}
