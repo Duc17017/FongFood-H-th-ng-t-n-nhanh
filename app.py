@@ -56,16 +56,6 @@ def index():
     return redirect(url_for("auth.login"))
 
 
-@app.route("/version")
-def version():
-    """Kiểm tra phiên bản app - dùng để test deploy"""
-    return {
-        "version": "2.0",
-        "status": "running",
-        "deploy_time": datetime.now().isoformat()
-    }
-
-
 
 def get_user_from_db(username):
     data = db_get("users") or {}
@@ -166,9 +156,6 @@ def server_error(e):
 
 
 if __name__ == "__main__":
-    # Get port from environment (for Render deployment)
-    port = int(os.environ.get("PORT", 5001))
-    
     # Get local IP
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -181,8 +168,8 @@ if __name__ == "__main__":
     print("\n" + "="*50)
     print("FONG FOOD APP STARTED!")
     print("="*50)
-    print(f"Local:    http://127.0.0.1:{port}")
-    print(f"Network:  http://{local_ip}:{port}")
-    print(f"Admin:    http://{local_ip}:{port}/admin")
+    print(f"Local:    http://127.0.0.1:5001")
+    print(f"Network:  http://{local_ip}:5001")
+    print(f"Admin:    http://{local_ip}:5001/admin")
     print("="*50 + "\n")
-    app.run(debug=False, host="0.0.0.0", port=port)
+    app.run(debug=False, host="0.0.0.0", port=5001)
