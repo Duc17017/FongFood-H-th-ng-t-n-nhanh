@@ -52,7 +52,7 @@ app.register_blueprint(ai_bp, url_prefix="/api/v1/ai")
 
 @app.route("/")
 def index():
-    """Trang chủ mặc định - chuyển hướng đến login"""
+    """Trang chủ mặc định - hiển thị trang đăng nhập"""
     return redirect(url_for("auth.login"))
 
 
@@ -168,8 +168,9 @@ if __name__ == "__main__":
     print("\n" + "="*50)
     print("FONG FOOD APP STARTED!")
     print("="*50)
-    print(f"Local:    http://127.0.0.1:5001")
-    print(f"Network:  http://{local_ip}:5001")
-    print(f"Admin:    http://{local_ip}:5001/admin")
+    port = int(os.getenv("PORT", "5001"))
+    print(f"Local:    http://127.0.0.1:{port}")
+    print(f"Network:  http://{local_ip}:{port}")
+    print(f"Admin:    http://{local_ip}:{port}/admin")
     print("="*50 + "\n")
-    app.run(debug=False, host="0.0.0.0", port=5001)
+    app.run(debug=False, host="0.0.0.0", port=port)

@@ -4,6 +4,7 @@ import logging
 import time
 import uuid
 from datetime import datetime
+import unicodedata
 
 from flask import Blueprint, render_template, session, redirect, url_for, request, flash, jsonify
 
@@ -36,6 +37,15 @@ def get_user_db(username):
         for u in data:
             if isinstance(u, dict) and u.get('username') == username: return u
     return None
+
+
+def _normalize_text(s: str) -> str:
+    if not s:
+        return ""
+    s = str(s).strip().lower()
+    s = unicodedata.normalize("NFKD", s)
+    s = "".join(ch for ch in s if not unicodedata.combining(ch))
+    return " ".join(s.split())
 
 # --- AI GỢI Ý MÓN ĂN ---
 def get_ai_recommendations(username, products):
@@ -177,8 +187,23 @@ def home():
 @customer_bp.route("/menu")
 @login_required(role="customer")
 def menu():
-    cat = request.args.get("category") or request.args.get("q") or "all"
-    search = request.args.get("search", "").lower()
+    known_categories = {"all", "fastfood", "noodle", "drink", "bread", "pizza"}
+
+    category = (request.args.get("category") or "").strip().lower()
+    q = (request.args.get("q") or "").strip()
+    search = (request.args.get("search") or "").strip()
+
+    if not category:
+        if q and q.strip().lower() in known_categories:
+            category = q.strip().lower()
+        elif q and not search:
+            search = q
+
+    cat = category or "all"
+
+    # Tìm kiếm với cả text gốc và text đã normalize
+    search_norm = _normalize_text(search)
+    search_original = search.strip().lower() if search else ""
 
     raw_products = db_get("products") or {}
     products = normalize_data(raw_products, "id")
@@ -187,8 +212,32 @@ def menu():
     for pid, p in products.items():
         if cat != "all" and p.get("category") != cat:
             continue
-        if search and search not in p.get("name", "").lower():
-            continue
+        if search_norm or search_original:
+            name = p.get("name", "")
+            description = p.get("description", "")
+            category_name = p.get("category", "")
+            
+            name_norm = _normalize_text(name)
+            name_original = str(name).strip().lower()
+            desc_norm = _normalize_text(description)
+            desc_original = str(description).strip().lower() if description else ""
+            category_norm = _normalize_text(category_name)
+            
+            # Kiểm tra với cả text gốc và text đã normalize
+            # Tìm kiếm cả trong tên, mô tả và category
+            match_norm = (search_norm and (
+                search_norm in name_norm or 
+                (desc_norm and search_norm in desc_norm) or
+                search_norm in category_norm
+            ))
+            match_orig = (search_original and (
+                search_original in name_original or 
+                search_original in desc_original or
+                search_original in category_name.lower()
+            ))
+
+            if not match_norm and not match_orig:
+                continue
         filtered_products[pid] = p
     return render_template("customer/menu.html", products=filtered_products)
 
@@ -389,8 +438,136 @@ def cart():
         if pid in all_products:
             display_cart[pid]["image"] = all_products[pid].get("image", "")
 
-    user_info = get_user_db(user)
-    return render_template("customer/cart.html", cart=display_cart, user=user_info)
+    user_info = get_user_db(user) or {}
+
+    # Map default address from addresses[] -> user.address for template compatibility
+    default_address_text = ""
+    addresses = user_info.get("addresses", []) if isinstance(user_info, dict) else []
+    if isinstance(addresses, list) and addresses:
+        default_addr = None
+        for a in addresses:
+            if isinstance(a, dict) and a.get("is_default"):
+                default_addr = a
+                break
+        if not default_addr:
+            default_addr = addresses[0] if isinstance(addresses[0], dict) else None
+
+        if default_addr:
+            default_address_text = (
+                default_addr.get("full_address")
+                or default_addr.get("detail")
+                or ""
+            )
+
+    user_info_for_cart = dict(user_info) if isinstance(user_info, dict) else {}
+    user_info_for_cart["address"] = default_address_text
+
+    # Available vouchers for dropdown (user-specific + all)
+    raw_vouchers = db_get("vouchers") or {}
+    vouchers_obj = normalize_data(raw_vouchers, "code") if isinstance(raw_vouchers, (list, dict)) else {}
+    available_vouchers = []
+    now = datetime.now()
+    for code, v in vouchers_obj.items():
+        if not isinstance(v, dict):
+            continue
+        v_code = (v.get("code") or code or "").strip().upper()
+        if not v_code:
+            continue
+        target_user = (v.get("user") or "all").strip()
+        if target_user not in ("all", user):
+            continue
+        valid_until = v.get("valid_until")
+        if valid_until:
+            try:
+                if datetime.fromisoformat(valid_until) < now:
+                    continue
+            except Exception:
+                pass
+        vv = dict(v)
+        vv["code"] = v_code
+        available_vouchers.append(vv)
+
+    return render_template(
+        "customer/cart.html",
+        cart=display_cart,
+        user=user_info_for_cart,
+        available_vouchers=available_vouchers,
+    )
+
+
+@customer_bp.route("/voucher/check", methods=["POST"])
+@login_required(role="customer")
+def check_voucher():
+    """
+    Validate voucher for cart/checkout via AJAX.
+    Expected JSON: { code: "ABC", order_total: 123000 }
+    Returns: { success, message, discount_amount }
+    """
+    data = request.get_json(silent=True) or {}
+    code = (data.get("code") or "").strip().upper()
+    order_total = float(data.get("order_total") or 0)
+    user = session["user"]
+
+    if not code:
+        return jsonify({"success": False, "message": "Vui lòng nhập mã voucher."}), 400
+    if order_total <= 0:
+        return jsonify({"success": False, "message": "Tổng đơn hàng không hợp lệ."}), 400
+
+    raw_vouchers = db_get("vouchers") or {}
+    vouchers_obj = normalize_data(raw_vouchers, "code") if isinstance(raw_vouchers, (list, dict)) else {}
+
+    voucher = None
+    # Support dict keyed by code, or list of vouchers
+    if isinstance(raw_vouchers, dict):
+        voucher = raw_vouchers.get(code)
+    if not voucher:
+        for _, v in vouchers_obj.items():
+            if isinstance(v, dict) and (v.get("code") or "").strip().upper() == code:
+                voucher = v
+                break
+
+    if not isinstance(voucher, dict):
+        return jsonify({"success": False, "message": "Mã voucher không tồn tại."}), 404
+
+    target_user = (voucher.get("user") or "all").strip()
+    if target_user not in ("all", user):
+        return jsonify({"success": False, "message": "Voucher không áp dụng cho tài khoản này."}), 400
+
+    valid_until = voucher.get("valid_until")
+    if valid_until:
+        try:
+            if datetime.fromisoformat(valid_until) < datetime.now():
+                return jsonify({"success": False, "message": "Voucher đã hết hạn."}), 400
+        except Exception:
+            pass
+
+    min_order = float(voucher.get("min_order", 0) or 0)
+    if order_total < min_order:
+        return jsonify(
+            {
+                "success": False,
+                "message": f"Đơn tối thiểu {min_order:,.0f}đ mới áp dụng được voucher.",
+            }
+        ), 400
+
+    v_type = (voucher.get("type") or "percent").strip().lower()
+    v_discount = float(voucher.get("discount", voucher.get("discount_percent", 0)) or 0)
+    if v_discount <= 0:
+        return jsonify({"success": False, "message": "Voucher không hợp lệ."}), 400
+
+    if v_type == "percent":
+        discount_amount = order_total * v_discount / 100.0
+    else:
+        discount_amount = v_discount
+
+    discount_amount = max(0.0, min(discount_amount, order_total))
+    return jsonify(
+        {
+            "success": True,
+            "message": f"Áp dụng voucher {code} thành công!",
+            "discount_amount": discount_amount,
+        }
+    )
 
 
 @customer_bp.route("/update_cart/<pid>/<action>")
@@ -620,6 +797,23 @@ def address():
 def address_add():
     return render_template("customer/address_add.html")
 
+
+@customer_bp.route("/address/edit/<addr_id>")
+@login_required(role="customer")
+def address_edit(addr_id):
+    username = session["user"]
+    user_data = get_user_db(username) or {}
+    addresses = user_data.get("addresses", [])
+    edit_address = None
+    for a in addresses:
+        if str(a.get("id")) == str(addr_id):
+            edit_address = a
+            break
+    if not edit_address:
+        flash("Không tìm thấy địa chỉ cần sửa.", "danger")
+        return redirect(url_for("customer.address"))
+    return render_template("customer/address_add.html", edit_address=edit_address)
+
 # --- 3. XỬ LÝ LƯU ĐỊA CHỈ ---
 @customer_bp.route("/save_address", methods=["POST"])
 @login_required(role="customer")
@@ -665,6 +859,58 @@ def save_address():
     db_patch(f"users/{username}", {"addresses": current_addresses})
 
     flash("Thêm địa chỉ thành công!", "success")
+    return redirect(url_for("customer.address"))
+
+
+@customer_bp.route("/update_address/<addr_id>", methods=["POST"])
+@login_required(role="customer")
+def update_address(addr_id):
+    username = session["user"]
+    user_data = get_user_db(username)
+    if not user_data:
+        flash("Không tìm thấy tài khoản.", "danger")
+        return redirect(url_for("customer.address"))
+
+    current_addresses = user_data.get("addresses", [])
+    target = None
+    for addr in current_addresses:
+        if str(addr.get("id")) == str(addr_id):
+            target = addr
+            break
+
+    if not target:
+        flash("Không tìm thấy địa chỉ cần cập nhật.", "danger")
+        return redirect(url_for("customer.address"))
+
+    fullname = request.form.get("fullname")
+    phone = request.form.get("phone")
+    city = request.form.get("city")
+    district = request.form.get("district")
+    ward = request.form.get("ward")
+    detail = request.form.get("detail")
+    desc = request.form.get("desc")
+    is_default = request.form.get("is_default") == "on"
+
+    if is_default:
+        for a in current_addresses:
+            a["is_default"] = False
+
+    target.update(
+        {
+            "fullname": fullname,
+            "phone": phone,
+            "city": city,
+            "district": district,
+            "ward": ward,
+            "detail": detail,
+            "desc": desc,
+            "full_address": f"{detail}, {ward}, {district}, {city}",
+            "is_default": is_default,
+        }
+    )
+
+    db_patch(f"users/{username}", {"addresses": current_addresses})
+    flash("Cập nhật địa chỉ thành công!", "success")
     return redirect(url_for("customer.address"))
 
 # --- 4. ĐẶT LÀM MẶC ĐỊNH ---

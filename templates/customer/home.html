@@ -100,6 +100,19 @@
         height: 180px;
     }
 
+    /* PC: Banner vừa phải, chuyên nghiệp */
+    @media (min-width: 992px) {
+        .hero-banner .carousel-item {
+            height: 320px;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .hero-banner .carousel-item {
+            height: 360px;
+        }
+    }
+
     .hero-banner .carousel-item img {
         height: 100%;
         object-fit: cover;
@@ -510,7 +523,10 @@
     }
 
     @media (max-width: 575px) {
-        .product-grid { grid-template-columns: 1fr; }
+        /* Mobile: "Đang giảm giá" hiển thị 1 món / hàng - đẹp hơn */
+        .product-grid { grid-template-columns: repeat(1, 1fr); }
+        .product-info { padding: 12px; }
+        .product-price { font-size: 14px; }
     }
 
     .product-card {
@@ -637,7 +653,7 @@
     .product-name {
         font-size: 14px;
         font-weight: 700;
-        color: var(--text-dark);
+        color: var(--text-light);
         margin-bottom: 5px;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -724,7 +740,7 @@
     .marketing-title {
         font-size: 22px;
         font-weight: 800;
-        color: var(--text-dark);
+        color: var(--text-light);
         margin-bottom: 10px;
         position: relative;
     }
@@ -905,7 +921,7 @@
     .trust-title {
         font-size: 13px;
         font-weight: 700;
-        color: var(--text-dark);
+        color: var(--text-light);
         margin-bottom: 4px;
     }
 
@@ -965,7 +981,7 @@
     .toast-content h6 {
         font-size: 14px;
         font-weight: 700;
-        color: var(--text-dark);
+        color: var(--text-light);
         margin-bottom: 2px;
     }
 
@@ -1213,7 +1229,7 @@
             <div class="product-card ai-scale-in" style="animation-delay: {{ loop.index * 0.05 }}s; cursor: pointer;" onclick="window.location.href='/product/{{ pid }}'">
                 <div class="product-image-wrapper">
                     {% if p.image %}
-                    <img loading="lazy" src="{{ p.image }}" alt="{{ p.name }}">
+                    <img loading="lazy" src="{{ p.image }}" alt="{{ p.name }}" class="zoom-hover zoom-tap">
                     {% else %}
                     <div class="skeleton w-100 h-100"></div>
                     {% endif %}
@@ -1222,7 +1238,7 @@
                         <a href="/product/{{ pid }}" class="action-btn quick-view" title="Xem chi tiết">
                             <i class="fas fa-eye"></i>
                         </a>
-                        <a href="#" onclick="event.preventDefault(); quickAddToCart('{{ pid }}')" class="action-btn add-cart" title="Thêm vào giỏ">
+                        <a href="#" onclick="event.preventDefault(); quickAddToCart('{{ pid }}', event)" class="action-btn add-cart" title="Thêm vào giỏ">
                             <i class="fas fa-plus"></i>
                         </a>
                     </div>
@@ -1245,7 +1261,7 @@
                 <div class="product-card ai-scale-in" style="animation-delay: {{ loop.index * 0.1 }}s; cursor: pointer;" onclick="window.location.href='/product/{{ pid }}'">
                     <div class="product-image-wrapper">
                         {% if p.image %}
-                        <img loading="lazy" src="{{ p.image }}" alt="{{ p.name }}">
+                        <img loading="lazy" src="{{ p.image }}" alt="{{ p.name }}" class="zoom-hover zoom-tap">
                         {% else %}
                         <div class="skeleton w-100 h-100"></div>
                         {% endif %}
@@ -1254,7 +1270,7 @@
                             <a href="/product/{{ pid }}" class="action-btn quick-view" title="Xem chi tiết">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="#" onclick="event.preventDefault(); quickAddToCart('{{ pid }}')" class="action-btn add-cart" title="Thêm vào giỏ">
+                            <a href="#" onclick="event.preventDefault(); quickAddToCart('{{ pid }}', event)" class="action-btn add-cart" title="Thêm vào giỏ">
                                 <i class="fas fa-plus"></i>
                             </a>
                         </div>
@@ -1689,8 +1705,15 @@
     // ============================================
     // 4. AI TOAST NOTIFICATION
     // ============================================
-    function quickAddToCart(pid) {
-        fetch(`/add-to-cart/${pid}`, {
+    function quickAddToCart(pid, e) {
+        try {
+            if (e && window.flyToCart) {
+                const src = e.target && e.target.closest ? (e.target.closest('.product-card') || e.target.closest('.product-image-wrapper')) : null;
+                window.flyToCart(src || e.target);
+            }
+        } catch (_) {}
+
+        fetch(`/add_to_cart/${pid}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ quantity: 1 })

@@ -8,11 +8,11 @@
         --primary-dark: #B71C1C;
         --accent-color: #FFD700;
         --success-color: #00B14F;
-        --text-dark: #1a1a1a;
-        --text-muted: #6c757d;
+        --text-dark: #f8f6f6;
+        --text-muted: #9ca3af;
         --text-light: #f8f9fa;
-        --bg-light: #f5f7fa;
-        --bg-white: #ffffff;
+        --bg-light: #1a0b0c;
+        --bg-white: #221011;
         --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
         --shadow-md: 0 4px 20px rgba(0,0,0,0.12);
         --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
@@ -54,8 +54,10 @@
 
     .profile-header {
         position: relative;
-        text-align: center;
-        padding: 25px 20px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 25px 60px 100px;
         background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
         color: white;
     }
@@ -87,20 +89,34 @@
         font-weight: 700;
         font-size: 18px;
         margin: 0;
+        flex: 1;
+        text-align: center;
     }
 
-    /* Avatar */
+    .profile-header-spacer {
+        width: 40px;
+        flex-shrink: 0;
+    }
+
+    /* Avatar - căn giữa chắc chắn */
     .avatar-section {
-        text-align: center;
-        margin-top: -70px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: -65px;
         padding-bottom: 25px;
         position: relative;
         z-index: 10;
+        width: 100%;
     }
 
     .avatar-wrapper {
         position: relative;
-        display: inline-block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
     }
 
     .avatar-preview {
@@ -169,6 +185,11 @@
         padding: 25px;
     }
 
+    /* Make header leave space for avatar */
+    .profile-header {
+        padding-bottom: 100px;
+    }
+
     .form-group {
         margin-bottom: 20px;
     }
@@ -177,7 +198,7 @@
         font-weight: 600;
         font-size: 13px;
         margin-bottom: 8px;
-        color: var(--text-dark);
+        color: var(--text-light);
         display: flex;
         align-items: center;
         gap: 8px;
@@ -190,11 +211,12 @@
 
     .form-control-custom {
         border-radius: var(--border-radius-md);
-        border: 2px solid #e9ecef;
+        border: 2px solid rgba(255,255,255,0.1);
         padding: 12px 15px;
         font-size: 14px;
         transition: all var(--transition-fast);
-        background: var(--bg-white);
+        background: rgba(0,0,0,0.3);
+        color: var(--text-light);
     }
 
     .form-control-custom:focus {
@@ -321,6 +343,22 @@
         .profile-form {
             padding: 20px 15px;
         }
+        .profile-header {
+            padding: 20px 15px 100px;
+        }
+        .avatar-section {
+            margin-top: -65px;
+        }
+        .avatar-preview {
+            width: 110px;
+            height: 110px;
+        }
+        .avatar-edit-btn {
+            width: 36px;
+            height: 36px;
+            bottom: 5px;
+            right: 5px;
+        }
     }
 
     /* Menu Cards */
@@ -329,26 +367,39 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        background: white;
+        background: var(--bg-white);
         border-radius: 12px;
         padding: 20px 10px;
         text-decoration: none;
-        color: #1e293b;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        color: var(--text-light);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         transition: all 0.2s;
     }
     .menu-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     }
     .menu-card i {
         font-size: 24px;
-        color: #d32f2f;
+        color: #ff5252;
         margin-bottom: 8px;
     }
     .menu-card span {
         font-size: 12px;
         font-weight: 600;
+    }
+    
+    /* Success Message */
+    .success-message {
+        background: rgba(0, 177, 79, 0.15);
+        color: var(--success-color);
+        padding: 12px 20px;
+        border-radius: var(--border-radius-md);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: aiSlideUp 0.3s ease;
     }
 </style>
 
@@ -400,6 +451,7 @@
                 <i class="fas fa-arrow-left"></i>
             </a>
             <h5><i class="fas fa-user-circle me-2"></i>THÔNG TIN TÀI KHOẢN</h5>
+            <span class="profile-header-spacer"></span>
         </div>
 
         <form action="/update_profile" method="POST" enctype="multipart/form-data" class="ai-fade-in">

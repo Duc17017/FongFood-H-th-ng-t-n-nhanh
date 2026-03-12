@@ -8,14 +8,14 @@
         --primary-dark: #B71C1C;
         --accent-color: #FFD700;
         --success-color: #00B14F;
-        --text-dark: #1a1a1a;
-        --text-muted: #6c757d;
+        --text-dark: #f8f6f6;
+        --text-muted: #9ca3af;
         --text-light: #f8f9fa;
-        --bg-light: #f5f7fa;
-        --bg-white: #ffffff;
-        --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
-        --shadow-md: 0 4px 20px rgba(0,0,0,0.12);
-        --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
+        --bg-light: #1a0b0c;
+        --bg-white: #221011;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+        --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+        --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
         --gradient-primary: linear-gradient(135deg, #D32F2F 0%, #FF5252 100%);
         --gradient-account: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         --border-radius-sm: 8px;
@@ -118,10 +118,10 @@
         display: flex;
         align-items: center;
         padding: 16px 20px;
-        background: white;
-        border-bottom: 1px solid #f0f0f0;
+        background: var(--bg-white);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
         text-decoration: none;
-        color: var(--text-dark);
+        color: var(--text-light);
         transition: all var(--transition-fast);
         position: relative;
     }
@@ -131,7 +131,7 @@
     }
 
     .account-menu-item:hover {
-        background: #fafafa;
+        background: rgba(239, 57, 66, 0.1);
         padding-left: 25px;
     }
 
@@ -151,13 +151,13 @@
         transition: all var(--transition-normal);
     }
 
-    .menu-icon.profile { background: #E3F2FD; color: #1976D2; }
-    .menu-icon.orders { background: #FFF3E0; color: #FF9800; }
-    .menu-icon.address { background: #E8F5E9; color: var(--success-color); }
-    .menu-icon.settings { background: #F3E5F5; color: #9C27B0; }
-    .menu-icon.support { background: #FFEBEE; color: var(--primary-color); }
-    .menu-icon.payment { background: #E0F7FA; color: #00ACC1; }
-    .menu-icon.favorite { background: #FCE4EC; color: #E91E63; }
+    .menu-icon.profile { background: rgba(25, 118, 210, 0.2); color: #64b5f6; }
+    .menu-icon.orders { background: rgba(255, 152, 0, 0.2); color: #ffb74d; }
+    .menu-icon.address { background: rgba(0, 177, 79, 0.2); color: #81c784; }
+    .menu-icon.settings { background: rgba(156, 39, 176, 0.2); color: #ba68c8; }
+    .menu-icon.support { background: rgba(239, 57, 66, 0.2); color: #ef5350; }
+    .menu-icon.payment { background: rgba(0, 172, 193, 0.2); color: #4dd0e1; }
+    .menu-icon.favorite { background: rgba(233, 30, 99, 0.2); color: #f06292; }
 
     .menu-text {
         flex-grow: 1;
@@ -176,7 +176,7 @@
     }
 
     .menu-arrow {
-        color: #ccc;
+        color: var(--text-muted);
         font-size: 14px;
         transition: all var(--transition-fast);
     }
@@ -195,7 +195,7 @@
         display: flex;
         align-items: center;
         padding: 16px 20px;
-        background: white;
+        background: var(--bg-white);
         border-radius: var(--border-radius-lg);
         text-decoration: none;
         color: var(--primary-color);
@@ -274,16 +274,16 @@
                 <i class="fas fa-chevron-right menu-arrow"></i>
             </a>
 
-            <a href="/my-vouchers" class="account-menu-item">
-                <div class="menu-icon" style="background: #FFF8E1; color: #FF8F00;">
+            <a href="/my_vouchers" class="account-menu-item">
+                <div class="menu-icon" style="background: rgba(255, 215, 0, 0.2); color: #FFD700;">
                     <i class="fas fa-ticket-alt"></i>
                 </div>
-                <div class="menu-text"> voucher của tôi</div>
+                <div class="menu-text">Voucher của tôi</div>
                 <i class="fas fa-chevron-right menu-arrow"></i>
             </a>
 
             <a href="/qr-scan" class="account-menu-item">
-                <div class="menu-icon" style="background: #E8F5E9; color: #00B14F;">
+                <div class="menu-icon" style="background: rgba(0, 177, 79, 0.2); color: #81c784;">
                     <i class="fas fa-qrcode"></i>
                 </div>
                 <div class="menu-text">Quét mã QR đơn hàng</div>
@@ -291,7 +291,7 @@
             </a>
 
             <a href="/notifications" class="account-menu-item">
-                <div class="menu-icon" style="background: #E3F2FD; color: #1976D2;">
+                <div class="menu-icon" style="background: rgba(25, 118, 210, 0.2); color: #64b5f6;">
                     <i class="fas fa-bell"></i>
                 </div>
                 <div class="menu-text">Thông báo đẩy</div>

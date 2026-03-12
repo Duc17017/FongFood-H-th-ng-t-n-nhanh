@@ -160,7 +160,24 @@
     </a>
 </div>
 
-<div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4">
+<!-- Skeleton loading (shows briefly on load) -->
+<div id="menuSkeleton" class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4" style="display:none;">
+    {% for i in range(8) %}
+    <div class="col">
+        <div class="menu-card p-3" style="overflow: hidden;">
+            <div class="skeleton" style="height: 180px; border-radius: 16px;"></div>
+            <div class="mt-3 skeleton" style="height: 14px; border-radius: 8px; width: 85%;"></div>
+            <div class="mt-2 skeleton" style="height: 12px; border-radius: 8px; width: 60%; opacity: 0.9;"></div>
+            <div class="mt-3 d-flex justify-content-between align-items-center">
+                <div class="skeleton" style="height: 18px; border-radius: 8px; width: 40%;"></div>
+                <div class="skeleton" style="height: 40px; width: 40px; border-radius: 12px;"></div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div id="menuContent" class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4">
     {% if products %}
         {% for pid, p in products.items() %}
         <div class="col">
@@ -181,7 +198,7 @@
                 <!-- MAIN IMAGE -->
                 <div style="height: 180px; overflow: hidden; position: relative; cursor: pointer;" onclick="showProductDetail('{{ pid }}')">
                     {% if p.image and p.image.strip() %}
-                    <img loading="lazy" src="{{ p.image }}" class="w-100 h-100" style="object-fit: cover;" onerror="this.style.opacity='0'; this.nextElementSibling.style.opacity='1';">
+                    <img loading="lazy" src="{{ p.image }}" class="w-100 h-100 zoom-hover zoom-tap" style="object-fit: cover;" onerror="this.style.opacity='0'; this.nextElementSibling.style.opacity='1';">
                     <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center position-absolute" style="top: 0; left: 0; opacity: 0; transition: opacity 0.3s;"><i class="fas fa-image text-muted fa-2x"></i></div>
                     {% else %}
                     <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center"><i class="fas fa-image text-muted fa-2x"></i></div>
@@ -190,7 +207,7 @@
                     <!-- MOBILE: Show quick actions overlay -->
                     <div class="d-lg-none position-absolute w-100" style="bottom: 0; background: linear-gradient(transparent, rgba(0,0,0,0.6)); padding: 30px 10px 10px;">
                         <div class="d-flex gap-2">
-                            <button class="flex-fill btn btn-sm" style="background: white; color: #D32F2F; font-weight: 600;" onclick="event.stopPropagation(); quickAddToCart('{{ pid }}')">
+                            <button class="flex-fill btn btn-sm" style="background: white; color: #D32F2F; font-weight: 600;" onclick="event.stopPropagation(); quickAddToCart('{{ pid }}', event)">
                                 <i class="fas fa-cart-plus"></i> Mua nhanh
                             </button>
                         </div>
@@ -214,7 +231,7 @@
                             <span class="text-danger fw-bold fs-5">{{ "{:,.0f}".format(p.price or 0) }}đ</span>
                         </div>
 
-                        <button onclick="quickAddToCart('{{ pid }}')" class="btn-add-menu shadow-sm">
+                        <button onclick="quickAddToCart('{{ pid }}', event)" class="btn-add-menu shadow-sm">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
@@ -223,10 +240,14 @@
         </div>
         {% endfor %}
     {% else %}
-        <div class="col-12 text-center py-5">
-            <i class="fas fa-search fa-3x text-muted mb-3"></i>
-            <p class="text-muted">Không tìm thấy món ăn nào phù hợp.</p>
-            <a href="/menu" class="btn btn-outline-danger btn-sm">Xem tất cả</a>
+        <div class="col-12">
+            <div class="d-flex flex-column align-items-center justify-content-center text-center py-5" style="min-height: 45vh;">
+                <div class="mb-3 p-4 rounded-circle" style="background: rgba(239, 57, 66, 0.1);">
+                    <i class="fas fa-search fa-3x" style="color: var(--primary);"></i>
+                </div>
+                <p class="mb-3" style="font-weight: 600; font-size: 16px; color: var(--text-light);">Không tìm thấy món ăn nào phù hợp</p>
+                <a href="/menu" class="btn btn-outline-danger btn-sm">Xem tất cả món</a>
+            </div>
         </div>
     {% endif %}
 </div>
@@ -283,8 +304,19 @@ const productData = {
     {% endfor %}
 };
 
-function quickAddToCart(pid) {
-    fetch(`/add-to-cart/${pid}`, { method: 'POST' })
+function quickAddToCart(pid, e) {
+    try {
+        if (e && window.flyToCart) {
+            const src = e.target && e.target.closest ? (e.target.closest('.menu-card') || e.target.closest('.col')) : null;
+            window.flyToCart(src || e.target);
+        }
+    } catch (_) {}
+
+    fetch(`/add_to_cart/${pid}`, { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: 1 })
+    })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
@@ -310,7 +342,7 @@ function updateModalQuantity(delta) {
 }
 
 function addMultipleToCart(pid, qty) {
-    fetch(`/add-to-cart/${pid}`, { 
+    fetch(`/add_to_cart/${pid}`, { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ quantity: qty })
@@ -338,6 +370,64 @@ function showToast(message, type) {
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2500);
 }
+</script>
+
+<script>
+// ===== Skeleton loading =====
+document.addEventListener('DOMContentLoaded', function() {
+    const sk = document.getElementById('menuSkeleton');
+    const content = document.getElementById('menuContent');
+    if (sk && content) {
+        sk.style.display = '';
+        content.style.display = 'none';
+        setTimeout(() => {
+            sk.style.display = 'none';
+            content.style.display = '';
+        }, 350);
+    }
+});
+
+// ===== Pull-to-refresh (mobile) =====
+(function initPullToRefresh() {
+    let startY = 0;
+    let pulling = false;
+    const threshold = 70;
+    const indicator = document.getElementById('ptrIndicator');
+
+    function showIndicator() {
+        if (indicator) indicator.style.display = 'flex';
+    }
+    function hideIndicator() {
+        if (indicator) indicator.style.display = 'none';
+    }
+
+    document.addEventListener('touchstart', function(e) {
+        if (window.scrollY > 0) return;
+        startY = e.touches && e.touches[0] ? e.touches[0].clientY : 0;
+        pulling = true;
+    }, { passive: true });
+
+    document.addEventListener('touchmove', function(e) {
+        if (!pulling) return;
+        if (window.scrollY > 0) { pulling = false; hideIndicator(); return; }
+        const y = e.touches && e.touches[0] ? e.touches[0].clientY : 0;
+        const delta = y - startY;
+        if (delta > 20) showIndicator();
+        if (delta > threshold) {
+            pulling = false;
+            if (indicator) indicator.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i><span>Đang làm mới...</span>';
+            setTimeout(() => window.location.reload(), 150);
+        }
+    }, { passive: true });
+
+    document.addEventListener('touchend', function() {
+        pulling = false;
+        if (indicator) {
+            indicator.innerHTML = '<i class="fas fa-arrow-down"></i><span>Kéo xuống để làm mới</span>';
+        }
+        hideIndicator();
+    }, { passive: true });
+})();
 </script>
 
 <div style="height: 30px;"></div> 

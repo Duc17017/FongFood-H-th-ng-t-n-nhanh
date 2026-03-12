@@ -34,7 +34,7 @@
     input:checked + .slider:before { transform: translateX(20px); }
 </style>
 
-<form action="/save_address" method="POST">
+<form action="{{ '/update_address/' ~ edit_address.id if edit_address else '/save_address' }}" method="POST">
     
     <div id="map-container"></div>
     <div class="bg-white p-2 text-center text-muted small shadow-sm mb-2 border-bottom">
@@ -43,39 +43,39 @@
 
     <div class="form-group-custom">
         <div class="text-muted small fw-bold mb-2 text-uppercase">Liên hệ</div>
-        <input type="text" class="input-line" name="fullname" placeholder="Họ và tên" value="{{ session.get('name', '') }}" required>
-        <input type="tel" class="input-line" name="phone" placeholder="Số điện thoại" required>
+        <input type="text" class="input-line" name="fullname" placeholder="Họ và tên" value="{{ edit_address.fullname if edit_address else session.get('name', '') }}" required>
+        <input type="tel" class="input-line" name="phone" placeholder="Số điện thoại" value="{{ edit_address.phone if edit_address else '' }}" required>
     </div>
 
     <div class="form-group-custom">
         <div class="text-muted small fw-bold mb-3 text-uppercase">Địa chỉ</div>
         
         <label class="small text-muted mb-1">Tỉnh / Thành phố</label>
-        <select class="form-control select2-box" id="city" name="city" required>
+        <select class="form-control select2-box" id="city" name="city" required data-selected="{{ edit_address.city if edit_address else '' }}">
             <option value="">Chọn Tỉnh/Thành phố</option>
         </select>
         
         <label class="small text-muted mb-1 mt-2">Quận / Huyện</label>
-        <select class="form-control select2-box" id="district" name="district" required disabled>
+        <select class="form-control select2-box" id="district" name="district" required disabled data-selected="{{ edit_address.district if edit_address else '' }}">
             <option value="">Chọn Quận/Huyện</option>
         </select>
         
         <label class="small text-muted mb-1 mt-2">Phường / Xã</label>
-        <select class="form-control select2-box" id="ward" name="ward" required disabled>
+        <select class="form-control select2-box" id="ward" name="ward" required disabled data-selected="{{ edit_address.ward if edit_address else '' }}">
             <option value="">Chọn Phường/Xã</option>
         </select>
         
-        <input type="text" class="input-line mt-3" id="detail" name="detail" placeholder="Số nhà, tên đường cụ thể" required>
+        <input type="text" class="input-line mt-3" id="detail" name="detail" placeholder="Số nhà, tên đường cụ thể" value="{{ edit_address.detail if edit_address else '' }}" required>
     </div>
 
     <div class="form-group-custom">
         <div class="text-muted small fw-bold mb-2 text-uppercase">Cài đặt</div>
-        <input type="text" class="input-line" name="desc" placeholder="Ghi chú (Ví dụ: Cổng màu xanh...)">
+        <input type="text" class="input-line" name="desc" placeholder="Ghi chú (Ví dụ: Cổng màu xanh...)" value="{{ edit_address.desc if edit_address else '' }}">
         
         <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
             <span class="small fw-bold">Đặt làm mặc định</span>
             <label class="switch">
-                <input type="checkbox" name="is_default">
+                <input type="checkbox" name="is_default" {% if edit_address and edit_address.is_default %}checked{% endif %}>
                 <span class="slider"></span>
             </label>
         </div>
@@ -83,7 +83,7 @@
 
     <div class="p-3 pb-5">
         <button type="submit" class="btn btn-danger w-100 py-3 fw-bold text-uppercase shadow-sm">
-            Lưu địa chỉ
+            {{ 'Cập nhật địa chỉ' if edit_address else 'Lưu địa chỉ' }}
         </button>
     </div>
 
@@ -123,6 +123,15 @@ $(document).ready(function() {
         for (const x of data) {
             $(citis).append(new Option(x.Name, x.Name, false, false));
         }
+
+        // Preselect values (edit mode)
+        const selectedCity = $(citis).data('selected') || '';
+        const selectedDistrict = $(districts).data('selected') || '';
+        const selectedWard = $(wards).data('selected') || '';
+        if (selectedCity) {
+            $(citis).val(selectedCity).trigger('change');
+            $(districts).prop('disabled', false);
+        }
         
         $(citis).on('change', function () {
             $(districts).empty().append('<option value="">Chọn Quận/Huyện</option>').prop('disabled', false);
@@ -134,6 +143,10 @@ $(document).ready(function() {
                 if(result){
                     for (const k of result.Districts) {
                         $(districts).append(new Option(k.Name, k.Name));
+                    }
+                    if (selectedDistrict) {
+                        $(districts).val(selectedDistrict).trigger('change');
+                        $(wards).prop('disabled', false);
                     }
                 }
             }
@@ -150,6 +163,9 @@ $(document).ready(function() {
                 if(distData){
                     for (const w of distData.Wards) {
                         $(wards).append(new Option(w.Name, w.Name));
+                    }
+                    if (selectedWard) {
+                        $(wards).val(selectedWard).trigger('change');
                     }
                 }
             }

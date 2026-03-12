@@ -1,30 +1,228 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="bg-white border-bottom p-3 sticky-top d-flex justify-content-between align-items-center">
-    <h5 class="m-0 fw-bold">THÔNG BÁO</h5>
-    <a href="/mark_all_read" class="text-danger small text-decoration-none">Đọc tất cả</a>
+<style>
+    :root {
+        --primary-color: #D32F2F;
+        --primary-light: #FF5252;
+        --text-dark: #f8f6f6;
+        --text-muted: #9ca3af;
+        --text-light: #f8f9fa;
+        --bg-light: #1a0b0c;
+        --bg-white: #221011;
+    }
+
+    .notif-header {
+        background: var(--bg-white);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding: 15px;
+    }
+
+    .notif-title {
+        color: var(--text-light);
+        font-weight: 700;
+    }
+
+    .mark-read-btn {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+    .mark-read-btn:hover {
+        text-decoration: underline;
+    }
+
+    /* Filter Tabs */
+    .filter-tabs {
+        display: flex;
+        gap: 10px;
+        padding: 15px;
+        background: var(--bg-white);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        overflow-x: auto;
+    }
+
+    .filter-tab {
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--text-muted);
+        background: rgba(255,255,255,0.1);
+        white-space: nowrap;
+        transition: all 0.2s;
+    }
+
+    .filter-tab:hover {
+        color: var(--text-light);
+    }
+
+    .filter-tab.active {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .notif-item {
+        display: block;
+        text-decoration: none;
+        padding: 15px;
+        background: var(--bg-white);
+        margin-bottom: 10px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.05);
+        transition: all 0.2s;
+    }
+
+    .notif-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .notif-item.unread {
+        border-left: 4px solid var(--primary-color);
+        background: rgba(239, 57, 66, 0.05);
+    }
+
+    .notif-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        margin-right: 12px;
+    }
+
+    .notif-icon.order { background: rgba(255, 152, 0, 0.2); color: #ffb74d; }
+    .notif-icon.voucher { background: rgba(255, 215, 0, 0.2); color: #FFD700; }
+    .notif-icon.promotion { background: rgba(239, 57, 66, 0.2); color: #ef5350; }
+    .notif-icon.system { background: rgba(25, 118, 210, 0.2); color: #64b5f6; }
+
+    .notif-content {
+        flex: 1;
+    }
+
+    .notif-title-text {
+        color: var(--text-light);
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .notif-item.unread .notif-title-text {
+        color: var(--primary-color);
+    }
+
+    .notif-message {
+        color: var(--text-muted);
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .notif-time {
+        color: var(--text-muted);
+        font-size: 11px;
+        margin-top: 6px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty-icon {
+        font-size: 60px;
+        color: var(--text-muted);
+        opacity: 0.5;
+        margin-bottom: 20px;
+    }
+
+    .empty-text {
+        color: var(--text-muted);
+        font-size: 15px;
+    }
+</style>
+
+<!-- Header -->
+<div class="notif-header sticky-top">
+    <div class="d-flex justify-content-between align-items-center">
+        <h5 class="notif-title m-0"><i class="fas fa-bell me-2" style="color: var(--primary-color);"></i>THÔNG BÁO</h5>
+        <a href="/mark_all_read" class="mark-read-btn">Đọc tất cả</a>
+    </div>
 </div>
 
-<div class="container py-2 pb-5">
-    {% if notifications %}
-        {% for notif in notifications %}
-        <a href="{{ notif.link }}" class="text-decoration-none text-dark">
-            <div class="bg-white p-3 mb-2 rounded shadow-sm position-relative {{ 'border-start border-5 border-danger' if not notif.is_read else '' }}">
-                <div class="d-flex align-items-center mb-1">
-                    <i class="fas fa-bell text-danger me-2"></i>
-                    <span class="fw-bold {{ 'text-danger' if not notif.is_read else '' }}">{{ notif.title }}</span>
-                    <small class="ms-auto text-muted" style="font-size: 11px;">{{ notif.time }}</small>
+<!-- Filter Tabs -->
+<div class="filter-tabs">
+    <a href="?filter=all" class="filter-tab active" data-filter="all">
+        <i class="fas fa-list me-1"></i> Tất cả
+    </a>
+    <a href="?filter=order" class="filter-tab" data-filter="order">
+        <i class="fas fa-shopping-bag me-1"></i> Đơn hàng
+    </a>
+    <a href="?filter=voucher" class="filter-tab" data-filter="voucher">
+        <i class="fas fa-ticket-alt me-1"></i> Voucher
+    </a>
+    <a href="?filter=promotion" class="filter-tab" data-filter="promotion">
+        <i class="fas fa-gift me-1"></i> Khuyến mãi
+    </a>
+</div>
+
+<div class="container py-3 pb-5">
+    {% set filter_type = request.args.get('filter', 'all') %}
+    
+    {% set filtered_notifications = [] %}
+    {% for notif in notifications %}
+        {% set notif_type = notif.get('type', 'system') %}
+        {% if filter_type == 'all' or filter_type == notif_type %}
+            {% set filtered_notifications = filtered_notifications + [notif] %}
+        {% endif %}
+    {% endfor %}
+
+    {% if filtered_notifications %}
+        {% for notif in filtered_notifications %}
+        {% set notif_type = notif.get('type', 'system') %}
+        <a href="{{ notif.link }}" class="notif-item {{ 'unread' if not notif.is_read else '' }}">
+            <div class="d-flex align-items-start">
+                <div class="notif-icon 
+                    {% if notif_type == 'order' %}order
+                    {% elif notif_type == 'voucher' %}voucher
+                    {% elif notif_type == 'promotion' %}promotion
+                    {% else %}system{% endif %}">
+                    {% if notif_type == 'order' %}<i class="fas fa-shopping-bag"></i>
+                    {% elif notif_type == 'voucher' %}<i class="fas fa-ticket-alt"></i>
+                    {% elif notif_type == 'promotion' %}<i class="fas fa-gift"></i>
+                    {% else %}<i class="fas fa-bell"></i>{% endif %}
                 </div>
-                <div class="small text-secondary ps-4">
-                    {{ notif.message }}
+                <div class="notif-content">
+                    <div class="notif-title-text">{{ notif.title }}</div>
+                    <div class="notif-message">{{ notif.message }}</div>
+                    <div class="notif-time"><i class="far fa-clock me-1"></i>{{ notif.time }}</div>
                 </div>
+                {% if not notif.is_read %}
+                <div style="width: 10px; height: 10px; background: var(--primary-color); border-radius: 50%; flex-shrink: 0; margin-top: 5px;"></div>
+                {% endif %}
             </div>
         </a>
         {% endfor %}
     {% else %}
-        <div class="text-center py-5 text-muted">
-            <p>Không có thông báo mới</p>
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-bell-slash"></i></div>
+            <div class="empty-text">Không có thông báo nào</div>
         </div>
     {% endif %}
 </div>
+
+<script>
+    // Active tab based on URL
+    const currentFilter = new URLSearchParams(window.location.search).get('filter') || 'all';
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+        if (tab.dataset.filter === currentFilter) {
+            tab.classList.add('active');
+        } else {
+            tab.classList.remove('active');
+        }
+    });
+</script>
 {% endblock %}

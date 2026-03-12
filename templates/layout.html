@@ -247,9 +247,69 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* ============================================
+           IMAGE ZOOM (PC hover, Mobile tap)
+        ============================================ */
+        .zoom-hover {
+            transition: transform 0.25s ease, filter 0.25s ease;
+            will-change: transform;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .zoom-hover:hover {
+                transform: scale(1.08);
+                filter: saturate(1.05) contrast(1.03);
+            }
+        }
+        .zoom-tap.is-tapped {
+            transform: scale(1.08);
+            filter: saturate(1.05) contrast(1.03);
+        }
+
+        /* ============================================
+           SMOOTH PAGE TRANSITION OVERLAY
+        ============================================ */
+        .page-transition-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 0%, rgba(239,57,66,0.18), transparent 55%),
+                        linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.65));
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2000;
+            transition: opacity 0.22s ease;
+        }
+        .page-transition-overlay.show {
+            opacity: 1;
+        }
+
+        /* Pull-to-refresh hint */
+        .ptr-indicator {
+            position: fixed;
+            top: 56px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.45);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: var(--text-light);
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            z-index: 1500;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+        }
     </style>
 </head>
 <body>
+
+    <div class="page-transition-overlay" id="pageTransitionOverlay"></div>
+    <div class="ptr-indicator" id="ptrIndicator">
+        <i class="fas fa-arrow-down"></i>
+        <span>Kéo xuống để làm mới</span>
+    </div>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-red-custom shadow-sm sticky-top desktop-navbar">
         <div class="container">
@@ -260,7 +320,7 @@
                         <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/home' else '' }}" href="/home">Trang chủ</a></li>
                         <li class="nav-item"><a class="nav-link {{ 'active' if request.path.startswith('/menu') else '' }}" href="/menu">Thực đơn</a></li>
                         <li class="nav-item position-relative mx-2">
-                            <a class="nav-link {{ 'active' if request.path == '/cart' else '' }}" href="/cart">
+                            <a id="cartLink" class="nav-link {{ 'active' if request.path == '/cart' else '' }}" href="/cart">
                                 <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
                                 {% if total_cart_items > 0 %} <span class="position-absolute top-0 start-100 translate-middle cart-badge">{{ total_cart_items }}</span> {% endif %}
                             </a>
@@ -275,8 +335,8 @@
 </li>
                         <li class="nav-item dropdown ms-3">
                             <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" data-bs-toggle="dropdown">
-                                {% if g.user_avatar %}
-                                    <img src="{{ g.user_avatar }}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
+                                {% if g.user_avatar and g.user_avatar|trim %}
+                                    <img src="{{ g.user_avatar }}" onerror="this.onerror=null;this.src='/static/icons/icon-192x192.png';" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
                                 {% else %}
                                     <i class="fas fa-user-circle" style="font-size: 28px;"></i>
                                 {% endif %}
@@ -383,8 +443,8 @@
     <div class="mobile-header d-lg-none">
         <div style="font-weight: bold; color: #D32F2F; font-size: 18px;"><i class="fas fa-utensils"></i> FONG FOOD</div>
         <a href="/profile" class="text-decoration-none">
-            {% if g.user_avatar %}
-                <img src="{{ g.user_avatar }}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #eee;">
+            {% if g.user_avatar and g.user_avatar|trim %}
+                <img src="{{ g.user_avatar }}" onerror="this.onerror=null;this.src='/static/icons/icon-192x192.png';" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #eee;">
             {% else %}
                 <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #666;">
                     <i class="fas fa-user"></i>
@@ -440,7 +500,7 @@
             <span>Thực đơn</span>
         </a>
         
-        <a href="/cart" class="nav-item-mobile {{ 'active' if request.path == '/cart' else '' }}" style="position: relative;">
+        <a id="cartLinkMobile" href="/cart" class="nav-item-mobile {{ 'active' if request.path == '/cart' else '' }}" style="position: relative;">
             <i class="fas fa-shopping-cart"></i>
             {% if total_cart_items > 0 %}
             <span class="mobile-cart-badge">{{ total_cart_items }}</span>
@@ -954,6 +1014,77 @@
     {% endif %}
 
     <script>
+        // ====== IMAGE TAP ZOOM (mobile) ======
+        (function initTapZoom() {
+            let lastTapped = null;
+            document.addEventListener('touchstart', function(e) {
+                const el = e.target && e.target.closest ? e.target.closest('.zoom-tap') : null;
+                if (!el) return;
+                if (lastTapped && lastTapped !== el) lastTapped.classList.remove('is-tapped');
+                el.classList.add('is-tapped');
+                lastTapped = el;
+                setTimeout(() => {
+                    if (el) el.classList.remove('is-tapped');
+                }, 650);
+            }, { passive: true });
+        })();
+
+        // ====== SMOOTH PAGE TRANSITION ======
+        window.smoothPageTransition = function(url) {
+            const overlay = document.getElementById('pageTransitionOverlay');
+            if (!overlay) { window.location.href = url; return; }
+            overlay.classList.add('show');
+            setTimeout(() => { window.location.href = url; }, 120);
+        };
+        document.addEventListener('click', function(e) {
+            const a = e.target && e.target.closest ? e.target.closest('a') : null;
+            if (!a) return;
+            const href = a.getAttribute('href') || '';
+            if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+            if (a.target && a.target !== '_self') return;
+            if (href.startsWith('http') && !href.startsWith(window.location.origin)) return;
+            if (href.startsWith('mailto:') || href.startsWith('tel:')) return;
+            // allow Bootstrap dropdown toggles
+            if (a.getAttribute('data-bs-toggle')) return;
+            e.preventDefault();
+            window.smoothPageTransition(href);
+        });
+
+        // ====== ADD TO CART FLY ANIMATION ======
+        window.flyToCart = function(sourceEl) {
+            const cart = document.getElementById('cartLink') || document.getElementById('cartLinkMobile');
+            if (!cart || !sourceEl) return;
+            const img = sourceEl.tagName === 'IMG' ? sourceEl : (sourceEl.querySelector && sourceEl.querySelector('img')) || null;
+            if (!img) return;
+
+            const imgRect = img.getBoundingClientRect();
+            const cartRect = cart.getBoundingClientRect();
+            const clone = img.cloneNode(true);
+            clone.style.position = 'fixed';
+            clone.style.left = imgRect.left + 'px';
+            clone.style.top = imgRect.top + 'px';
+            clone.style.width = imgRect.width + 'px';
+            clone.style.height = imgRect.height + 'px';
+            clone.style.borderRadius = '12px';
+            clone.style.objectFit = 'cover';
+            clone.style.zIndex = 2500;
+            clone.style.pointerEvents = 'none';
+            clone.style.transition = 'transform 0.65s cubic-bezier(.2,.9,.2,1), opacity 0.65s ease';
+
+            document.body.appendChild(clone);
+
+            const dx = (cartRect.left + cartRect.width / 2) - (imgRect.left + imgRect.width / 2);
+            const dy = (cartRect.top + cartRect.height / 2) - (imgRect.top + imgRect.height / 2);
+            requestAnimationFrame(() => {
+                clone.style.transform = `translate(${dx}px, ${dy}px) scale(0.15)`;
+                clone.style.opacity = '0.15';
+            });
+            setTimeout(() => {
+                clone.remove();
+                cart.animate?.([{ transform: 'scale(1)' }, { transform: 'scale(1.08)' }, { transform: 'scale(1)' }], { duration: 300, easing: 'ease-out' });
+            }, 680);
+        };
+
         // ====== LƯU GIỎ HÀNG VÀO LOCALSTORAGE ======
         const CART_STORAGE_KEY = 'fongfood_cart';
 
@@ -995,8 +1126,10 @@
                 syncCartToServer();
             }
         });
+    </script>
 
-        {% if session.get('user') %}
+    {% if session.get('user') %}
+    <script>
         // Kiểm tra session định kỳ
         setInterval(function() {
             fetch('/check-session-status')

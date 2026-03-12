@@ -1,10 +1,368 @@
-2026-03-12 10:21:02,284 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+2026-03-12 18:17:46,635 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on all addresses (0.0.0.0)
  * Running on http://127.0.0.1:5001
  * Running on http://192.168.69.111:5001
-2026-03-12 10:21:02,284 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
-2026-03-12 10:49:20,901 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+2026-03-12 18:17:46,636 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 21:11:24,849 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on all addresses (0.0.0.0)
  * Running on http://127.0.0.1:5001
  * Running on http://192.168.69.111:5001
-2026-03-12 10:49:20,901 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 21:11:24,849 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 21:33:05,697 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.69.111:5001
+2026-03-12 21:33:05,697 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 21:33:53,306 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.69.111:5001
+2026-03-12 21:33:53,306 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 21:33:57,424 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:33:57] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 21:33:59,069 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:33:59] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:33:59,580 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:33:59] "GET /home HTTP/1.1" 200 -
+2026-03-12 21:33:59,899 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:33:59] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:33:59,957 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:33:59] "GET /static/doannhanh.jpg HTTP/1.1" 200 -
+2026-03-12 21:33:59,986 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:33:59] "GET /static/douong.png HTTP/1.1" 200 -
+2026-03-12 21:33:59,990 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:33:59] "GET /static/bun.jpg HTTP/1.1" 200 -
+2026-03-12 21:33:59,992 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:33:59] "GET /static/pizza.png HTTP/1.1" 200 -
+2026-03-12 21:33:59,994 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:33:59] "GET /static/bánh%20mì.png HTTP/1.1" 200 -
+2026-03-12 21:34:00,971 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:00] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:34:03,686 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:03] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:06,386 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:06] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:06,448 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:06] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:34:07,184 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:07] "GET /menu HTTP/1.1" 200 -
+2026-03-12 21:34:07,922 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:07] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:34:10,895 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:10] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:11,199 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:11] "POST /add_to_cart/p97866 HTTP/1.1" 200 -
+2026-03-12 21:34:13,274 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:13] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:34:13,952 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:13] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:16,447 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:16] "GET /cart HTTP/1.1" 200 -
+2026-03-12 21:34:16,777 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:16] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:20,145 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:20] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:22,439 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:22] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:34:23,169 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:23] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:26,190 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:26] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:27,462 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:27] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:34:29,203 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:29] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:32,732 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:32] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:32,783 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:32] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:34:35,385 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:35] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:35,904 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:35] "GET /home HTTP/1.1" 200 -
+2026-03-12 21:34:35,984 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:35] "[36mGET /static/doannhanh.jpg HTTP/1.1[0m" 304 -
+2026-03-12 21:34:35,991 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:35] "[36mGET /static/bun.jpg HTTP/1.1[0m" 304 -
+2026-03-12 21:34:36,005 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:36] "[36mGET /static/bánh%20mì.png HTTP/1.1[0m" 304 -
+2026-03-12 21:34:36,010 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:36] "[36mGET /static/douong.png HTTP/1.1[0m" 304 -
+2026-03-12 21:34:36,014 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:36] "[36mGET /static/pizza.png HTTP/1.1[0m" 304 -
+2026-03-12 21:34:36,830 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:36] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:34:39,538 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:39] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:42,011 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:42] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:34:42,731 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:42] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:43,067 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:43] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:34:43,147 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:43] "GET /profile HTTP/1.1" 200 -
+2026-03-12 21:34:46,799 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:46] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:49,044 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:49] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:34:49,805 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:49] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:52,779 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:52] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:54,034 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:54] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:34:55,786 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:55] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:59,106 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:59] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:34:59,607 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:34:59] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:35:01,977 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:01] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:04,311 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:04] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:35:05,697 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:05] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:08,370 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:08] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:09,578 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:09] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:35:11,292 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:11] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:14,542 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:14] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:14,843 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:14] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:35:17,382 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:17] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:19,561 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:19] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:35:20,377 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:20] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:23,430 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:23] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:24,696 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:24] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:35:26,363 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:26] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:29,878 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:29] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:30,122 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:30] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:35:32,438 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:32] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:34,592 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:34] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:35:35,449 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:35] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:38,380 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:38] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:39,750 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:39] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:35:41,478 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:41] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:44,989 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:44] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:45,056 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:45] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:35:48,026 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:48] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:49,976 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:49] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:35:50,595 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:50] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:53,456 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:53] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:35:54,925 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:54] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:35:56,385 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:35:56] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:36:00,009 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:36:00] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:36:00,094 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:36:00] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:36:02,493 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:36:02] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:36:58,788 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:36:58] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:36:59,168 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:36:59] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:37:36,355 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:37:36] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:37:36,427 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:37:36] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:37:38,540 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:37:38] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:37:39,772 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:37:39] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:37:40,144 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:37:40] "GET /profile HTTP/1.1" 200 -
+2026-03-12 21:37:43,878 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:37:43] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:38:03,907 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.69.111:5001
+2026-03-12 21:38:03,907 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 21:38:10,877 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:10] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 21:38:13,566 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:13] "GET /home HTTP/1.1" 200 -
+2026-03-12 21:38:13,954 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:13] "[36mGET /static/douong.png HTTP/1.1[0m" 304 -
+2026-03-12 21:38:13,966 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:13] "[36mGET /static/doannhanh.jpg HTTP/1.1[0m" 304 -
+2026-03-12 21:38:13,977 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:13] "[36mGET /static/pizza.png HTTP/1.1[0m" 304 -
+2026-03-12 21:38:13,978 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:13] "[36mGET /static/bun.jpg HTTP/1.1[0m" 304 -
+2026-03-12 21:38:13,983 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:13] "[36mGET /static/bánh%20mì.png HTTP/1.1[0m" 304 -
+2026-03-12 21:38:14,597 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:14] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:38:18,626 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:18] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:38:19,474 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:19] "GET /cart HTTP/1.1" 200 -
+2026-03-12 21:38:19,568 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:19] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:38:20,637 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:20] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:38:23,588 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:23] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:38:25,557 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:25] "GET /profile HTTP/1.1" 200 -
+2026-03-12 21:38:25,558 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:25] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:38:29,241 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:29] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:38:31,479 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:31] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:38:32,209 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:32] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:38:35,190 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:35] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:38:36,388 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:36] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:38:36,692 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:36] "GET /qr-scan HTTP/1.1" 200 -
+2026-03-12 21:38:39,571 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:39] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 21:38:41,571 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:41] "GET /home HTTP/1.1" 200 -
+2026-03-12 21:38:41,637 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:41] "[36mGET /static/doannhanh.jpg HTTP/1.1[0m" 304 -
+2026-03-12 21:38:41,638 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:41] "[36mGET /static/bun.jpg HTTP/1.1[0m" 304 -
+2026-03-12 21:38:41,641 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:41] "[36mGET /static/douong.png HTTP/1.1[0m" 304 -
+2026-03-12 21:38:41,646 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:41] "[36mGET /static/pizza.png HTTP/1.1[0m" 304 -
+2026-03-12 21:38:41,654 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:41] "[36mGET /static/bánh%20mì.png HTTP/1.1[0m" 304 -
+2026-03-12 21:38:42,581 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:42] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:38:45,441 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:45] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:38:47,795 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:47] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:38:48,576 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:48] "GET /cart HTTP/1.1" 200 -
+2026-03-12 21:38:49,667 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:49] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:38:49,840 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:49] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:38:52,286 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:52] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:38:54,550 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:54] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:38:55,220 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:55] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:38:58,646 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:58] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:38:59,469 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:38:59] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:39:01,202 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:01] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:04,638 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:04] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:04,729 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:04] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:39:07,188 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:07] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:09,645 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:09] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:39:10,328 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:10] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:13,567 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:13] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:14,654 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:14] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:39:16,473 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:16] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:20,110 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:20] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:20,184 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:20] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:39:22,500 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:22] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:24,564 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:24] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:39:25,410 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:25] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:28,376 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:28] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:29,598 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:29] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:39:31,736 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:31] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:34,680 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:34] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:39:34,974 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:34] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:37,648 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:37] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:39,931 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:39] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:39:40,414 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:40] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:43,687 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:43] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:44,635 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:44] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:39:46,521 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:46] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:49,818 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:49] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:50,056 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:50] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:39:52,479 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:52] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:54,616 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:54] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:39:55,397 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:55] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:58,393 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:58] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:39:59,597 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:39:59] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:40:01,411 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:40:01] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:40:04,761 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:40:04] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:40:04,996 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:40:04] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:40:07,653 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:40:07] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:40:58,918 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:40:58] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:40:59,064 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:40:59] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:41:13,172 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:13] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:41:13,215 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:13] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:41:14,239 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:14] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:41:15,961 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:15] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:41:16,361 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:16] "GET /cart HTTP/1.1" 200 -
+2026-03-12 21:41:16,550 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:16] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:41:20,259 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:20] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:41:22,512 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:22] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:41:23,136 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:23] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:41:40,802 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.69.111:5001
+2026-03-12 21:41:40,802 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 21:41:42,864 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:42] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:41:43,659 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:43] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:41:44,838 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:44] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:41:45,103 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:45] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 21:41:47,267 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:47] "GET /home HTTP/1.1" 200 -
+2026-03-12 21:41:47,583 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:47] "[36mGET /static/doannhanh.jpg HTTP/1.1[0m" 304 -
+2026-03-12 21:41:47,589 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:47] "[36mGET /static/bun.jpg HTTP/1.1[0m" 304 -
+2026-03-12 21:41:47,590 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:47] "[36mGET /static/douong.png HTTP/1.1[0m" 304 -
+2026-03-12 21:41:47,746 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:47] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:41:48,078 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:48] "[36mGET /static/bánh%20mì.png HTTP/1.1[0m" 304 -
+2026-03-12 21:41:48,080 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:48] "[36mGET /static/pizza.png HTTP/1.1[0m" 304 -
+2026-03-12 21:41:48,590 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:48] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:41:48,919 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:48] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:41:51,027 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:51] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:41:53,105 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:53] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:41:53,441 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:53] "GET /cart HTTP/1.1" 200 -
+2026-03-12 21:41:54,011 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:54] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:41:54,169 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:54] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:41:57,236 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:57] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:41:59,504 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:41:59] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:42:00,270 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:00] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:03,211 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:03] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:04,431 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:04] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:42:06,158 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:06] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:09,595 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:09] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:09,743 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:09] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:42:12,074 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:12] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:14,306 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:14] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:42:15,098 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:15] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:18,245 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:18] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:19,278 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:19] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:42:21,107 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:21] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:24,434 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:24] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:42:24,473 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:24] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:27,434 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:27] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:29,698 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:29] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:42:30,176 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:30] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:33,157 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:33] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:34,386 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:34] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:42:36,290 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:36] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:39,424 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:39] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:42:39,812 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:39] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:42,278 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:42] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:44,372 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:44] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:42:45,294 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:45] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:48,061 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:48] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:49,341 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:49] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:42:51,124 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:51] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:54,305 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:54] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:54,597 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:54] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:42:57,183 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:57] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:42:59,485 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:42:59] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:00,131 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:00] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:02,941 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:02] "GET /home HTTP/1.1" 200 -
+2026-03-12 21:43:03,008 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:03] "[36mGET /static/doannhanh.jpg HTTP/1.1[0m" 304 -
+2026-03-12 21:43:03,011 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:03] "[36mGET /static/bun.jpg HTTP/1.1[0m" 304 -
+2026-03-12 21:43:03,019 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:03] "[36mGET /static/douong.png HTTP/1.1[0m" 304 -
+2026-03-12 21:43:03,028 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:03] "[36mGET /static/bánh%20mì.png HTTP/1.1[0m" 304 -
+2026-03-12 21:43:03,030 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:03] "[36mGET /static/pizza.png HTTP/1.1[0m" 304 -
+2026-03-12 21:43:03,151 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:03] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:03,858 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:03] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:06,596 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:06] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:08,812 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:08] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:09,746 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:09] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:09,797 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:09] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:12,913 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:12] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:14,345 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:14] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:15,428 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:15] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:15,619 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:15] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:19,146 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:19] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:19,170 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:19] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:20,173 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:20] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:21,625 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:21] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:23,808 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:23] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:25,017 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:25] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:25,118 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:25] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:27,849 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:27] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:29,181 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:29] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:30,251 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:30] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:30,701 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:30] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:34,077 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:34] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:34,130 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:34] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:35,122 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:35] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:36,632 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:36] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:38,997 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:38] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:39,214 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:39] "GET /menu HTTP/1.1" 200 -
+2026-03-12 21:43:39,644 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:39] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:40,970 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:40] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:42,925 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:42] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:45,202 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:45] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:45,947 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:45] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:49,209 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:49] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:50,222 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:50] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:51,878 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:51] "GET /cart HTTP/1.1" 200 -
+2026-03-12 21:43:51,880 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:51] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:55,862 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:55] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:43:57,968 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:57] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:43:58,747 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:43:58] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:01,675 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:01] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:02,084 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:02] "GET /notifications HTTP/1.1" 200 -
+2026-03-12 21:44:02,913 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:02] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:44:05,907 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:05] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:08,003 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:08] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:44:08,807 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:08] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:11,881 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:11] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:13,107 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:13] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:44:15,649 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:15] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:18,613 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:18] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:19,146 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:19] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:44:21,667 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:21] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:23,905 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:23] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:44:24,423 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:24] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:27,437 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:27] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:28,691 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:28] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:44:30,670 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:30] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:33,799 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:33] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:33,999 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:33] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:44:36,445 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:36] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:38,819 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:38] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:44:39,430 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:39] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:42,351 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:42] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:43,722 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:43] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:44:45,594 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:45] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:48,744 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:48] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:44:48,867 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:48] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:51,600 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:51] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:53,551 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:53] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:44:54,317 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:54] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:57,317 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:57] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:44:58,509 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:44:58] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:45:00,328 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:45:00] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:49:02,299 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.69.111:5001
+2026-03-12 21:49:02,299 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 21:49:05,549 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:05] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:49:06,214 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:06] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:49:07,184 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:07] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 21:49:07,252 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:07] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:49:07,647 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:07] "GET /login HTTP/1.1" 200 -
+2026-03-12 21:49:09,006 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:09] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:49:09,795 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:09] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:49:12,841 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:12] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:49:13,485 - INFO - routes.auth - User 0962143873 logged in with role customer
+2026-03-12 21:49:13,486 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:13] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-03-12 21:49:13,978 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:13] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:49:15,620 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:15] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:49:16,018 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:16] "GET /home HTTP/1.1" 200 -
+2026-03-12 21:49:16,426 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:16] "[36mGET /static/douong.png HTTP/1.1[0m" 304 -
+2026-03-12 21:49:16,428 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:16] "[36mGET /static/doannhanh.jpg HTTP/1.1[0m" 304 -
+2026-03-12 21:49:16,482 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:16] "[36mGET /static/bánh%20mì.png HTTP/1.1[0m" 304 -
+2026-03-12 21:49:16,485 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:16] "[36mGET /static/bun.jpg HTTP/1.1[0m" 304 -
+2026-03-12 21:49:16,493 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:16] "[36mGET /static/pizza.png HTTP/1.1[0m" 304 -
+2026-03-12 21:49:17,069 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:17] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:49:18,898 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:18] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:49:19,326 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:19] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:49:19,913 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:19] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:49:21,032 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:21] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 21:49:23,021 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:23] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 21:49:23,794 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 21:49:23] "GET /check-session-status HTTP/1.1" 200 -
