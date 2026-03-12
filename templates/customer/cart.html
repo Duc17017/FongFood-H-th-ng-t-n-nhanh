@@ -12,78 +12,21 @@
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
 <style>
-  :root {
-    --primary-color: #ef3942;
-    --primary-light: #ff414c;
-    --primary-dark: #cc3138;
-    --accent-color: #ffd700;
-    --success-color: #00b14f;
-    --text-dark: #f8f6f6;
-    --text-muted: #9ca3af;
-    --text-light: #f8f6f6;
-    --bg-light: #1a0b0c;
-    --bg-white: #221011;
-    --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
-    --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
-    --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
-    --gradient-primary: linear-gradient(135deg, #ef3942 0%, #ff414c 100%);
-    --border-radius-sm: 8px;
-    --border-radius-md: 12px;
-    --border-radius-lg: 16px;
-    --border-radius-xl: 24px;
-    --transition-fast: 0.2s ease;
-    --transition-normal: 0.3s ease;
-    --neu-shadow: 8px 8px 16px #120708, -8px -8px 16px #2e1516;
-    --neu-shadow-inset: inset 4px 4px 8px #120708, inset -4px -4px 8px #2e1516;
-  }
-
-  body {
-    background-color: var(--bg-light) !important;
-    color: var(--text-dark);
-  }
-
-  .ai-fade-in {
-    animation: aiFadeIn 0.5s ease forwards;
-  }
-  .ai-slide-up {
-    animation: aiSlideUp 0.5s ease forwards;
-  }
-
-  @keyframes aiFadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes aiSlideUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Page Header */
+  /* ============================================
+     CART PAGE - Dark Neon Theme
+     ============================================ */
+  
   .page-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 3px solid var(--primary-color);
+    margin-bottom: 20px;
   }
 
   .page-title {
     font-weight: 800;
     font-size: 22px;
     color: var(--text-light);
-    text-shadow: 0 0 10px rgba(239, 57, 66, 0.3);
   }
 
   .page-title i {
@@ -101,7 +44,7 @@
 
   /* Cart Card */
   .cart-card {
-    background: var(--bg-white);
+    background: var(--bg-card);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-sm);
     overflow: hidden;
@@ -113,21 +56,17 @@
   }
 
   .cart-table th {
-    background: var(--bg-light);
+    background: rgba(0,0,0,0.3);
     padding: 15px;
     font-weight: 600;
     font-size: 13px;
     color: var(--text-muted);
     text-transform: uppercase;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
   }
 
   .cart-item {
-    border-bottom: 1px solid #f0f0f0;
-    transition: all var(--transition-fast);
-  }
-
-  .cart-item:hover {
-    background: #fafafa;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
   }
 
   .cart-item td {
@@ -140,13 +79,14 @@
     height: 60px;
     border-radius: var(--border-radius-md);
     object-fit: cover;
-    background: var(--bg-light);
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.1);
   }
 
   .product-name {
     font-weight: 600;
     font-size: 14px;
-    color: var(--text-dark);
+    color: var(--text-light);
   }
 
   .product-price {
@@ -166,13 +106,13 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    border: 2px solid #e9ecef;
-    background: white;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    color: var(--text-dark);
+    color: var(--text-light);
     transition: all var(--transition-fast);
   }
 
@@ -199,7 +139,7 @@
 
   /* Payment Section */
   .payment-card {
-    background: var(--bg-white);
+    background: var(--bg-card);
     border-radius: var(--border-radius-lg);
     padding: 25px;
     box-shadow: var(--shadow-sm);
@@ -208,7 +148,7 @@
   .payment-title {
     font-weight: 700;
     font-size: 16px;
-    color: var(--text-dark);
+    color: var(--text-light);
     margin-bottom: 20px;
     display: flex;
     align-items: center;
@@ -216,22 +156,37 @@
   }
 
   .payment-option {
-    border: 2px solid #e9ecef;
+    border: 2px solid rgba(255,255,255,0.1);
     border-radius: var(--border-radius-md);
     padding: 20px;
     cursor: pointer;
-    transition: all var(--transition-normal);
+    transition: all 0.2s;
     text-align: center;
   }
 
   .payment-option:hover {
-    border-color: var(--primary-light);
+    border-color: var(--primary-color);
     transform: translateY(-3px);
+    box-shadow: var(--neu-glow);
   }
 
   .payment-option.active {
     border-color: var(--primary-color);
-    background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%);
+    background: rgba(239, 57, 66, 0.1);
+  }
+
+  .payment-option.active .payment-icon {
+    animation: pulse 1s infinite;
+  }
+
+  #btn-cash.active .payment-icon {
+    color: var(--success-color) !important;
+    animation: pulse 1s infinite;
+  }
+
+  #btn-qr.active .payment-icon {
+    color: #64b5f6 !important;
+    animation: pulse 1s infinite;
   }
 
   .payment-icon {
@@ -239,33 +194,24 @@
     margin-bottom: 10px;
   }
 
-  .payment-option.active .payment-icon {
-    animation: aiPulse 1s infinite;
-  }
-
-  @keyframes aiPulse {
-    0%,
-    100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.1);
-    }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
   }
 
   .payment-name {
     font-weight: 600;
     font-size: 14px;
+    color: var(--text-light);
   }
 
   /* QR Section */
   .qr-section {
     margin-top: 20px;
     padding: 20px;
-    background: linear-gradient(135deg, #f0f7ff 0%, #e8f4ff 100%);
+    background: rgba(33, 150, 243, 0.1);
     border-radius: var(--border-radius-md);
     border: 2px solid #2196f3;
-    animation: aiSlideUp 0.3s ease;
   }
 
   .qr-content {
@@ -278,13 +224,18 @@
     width: 100px;
     border-radius: var(--border-radius-sm);
     border: 2px solid white;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
 
   .qr-info h6 {
-    color: #1976d2;
+    color: #64b5f6;
     font-weight: 700;
     margin-bottom: 5px;
+  }
+
+  .qr-info p {
+    color: var(--text-muted);
+    font-size: 13px;
   }
 
   .payment-proof-input {
@@ -305,7 +256,7 @@
 
   /* Order Summary Card */
   .summary-card {
-    background: var(--bg-white);
+    background: var(--bg-card);
     border-radius: var(--border-radius-lg);
     padding: 25px;
     box-shadow: var(--shadow-md);
@@ -316,10 +267,10 @@
   .summary-title {
     font-weight: 700;
     font-size: 18px;
-    color: var(--text-dark);
+    color: var(--text-light);
     margin-bottom: 20px;
     padding-bottom: 15px;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
   }
 
   .summary-row {
@@ -335,7 +286,7 @@
 
   .summary-value {
     font-weight: 600;
-    color: var(--text-dark);
+    color: var(--text-light);
   }
 
   .summary-total {
@@ -343,7 +294,7 @@
     justify-content: space-between;
     padding-top: 15px;
     margin-top: 15px;
-    border-top: 2px dashed #e9ecef;
+    border-top: 1px dashed rgba(255,255,255,0.2);
   }
 
   .total-label {
@@ -369,13 +320,13 @@
     border-radius: var(--border-radius-md);
     margin-top: 20px;
     font-size: 15px;
-    transition: all var(--transition-normal);
-    box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+    transition: all 0.2s;
+    box-shadow: 0 4px 15px rgba(239, 57, 66, 0.4);
   }
 
   .checkout-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(211, 47, 47, 0.5);
+    box-shadow: var(--neu-glow-strong);
   }
 
   /* Map */
@@ -384,27 +335,40 @@
     width: 100%;
     border-radius: var(--border-radius-md);
     margin-top: 15px;
-    border: 1px solid #e9ecef;
+    border: 1px solid rgba(255,255,255,0.1);
     z-index: 0;
   }
 
   /* Address Options */
   .address-option {
     padding: 15px;
-    border: 2px solid #e9ecef;
+    border: 2px solid rgba(255,255,255,0.1);
     border-radius: var(--border-radius-md);
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: all 0.2s;
     margin-bottom: 10px;
   }
 
   .address-option:hover {
-    border-color: var(--primary-light);
+    border-color: var(--primary-color);
+    box-shadow: var(--neu-glow);
   }
 
   .address-option.active {
     border-color: var(--primary-color);
-    background: #fff5f5;
+    background: rgba(239, 57, 66, 0.1);
+  }
+
+  .address-option i {
+    color: var(--text-muted);
+  }
+
+  .address-option strong {
+    color: var(--text-light);
+  }
+
+  .address-option p {
+    color: var(--text-muted);
   }
 
   /* Empty Cart */
@@ -420,7 +384,7 @@
   }
 
   .empty-cart h5 {
-    color: var(--text-dark);
+    color: var(--text-light);
     font-weight: 600;
     margin-bottom: 10px;
   }
@@ -437,23 +401,61 @@
     border-radius: 25px;
     text-decoration: none;
     font-weight: 600;
-    transition: all var(--transition-normal);
+    transition: all 0.2s;
+    display: inline-block;
   }
 
   .shop-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 5px 20px rgba(211, 47, 47, 0.4);
+    box-shadow: 0 5px 20px rgba(239, 57, 66, 0.4);
     color: white;
+  }
+
+  /* Form Controls */
+  .form-label {
+    color: var(--text-light);
+    font-weight: 600;
+  }
+
+  .form-control {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-light);
+    border-radius: var(--border-radius-md);
+    padding: 12px 15px;
+  }
+
+  .form-control:focus {
+    background: rgba(0,0,0,0.4);
+    border-color: var(--primary-color);
+    color: var(--text-light);
+    box-shadow: var(--neu-glow);
+  }
+
+  .form-control::placeholder {
+    color-muted);
+ : var(--text }
+
+  textarea.form-control {
+    resize: none;
+  }
+
+  /* Input Group */
+  .input-group .btn {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+  }
+
+  .input-group .btn:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
   }
 
   /* Responsive */
   @media (max-width: 768px) {
     .page-title {
       font-size: 18px;
-    }
-    .cart-table th:nth-child(2),
-    .cart-table td:nth-child(2) {
-      display: none;
     }
     .qr-content {
       flex-direction: column;
@@ -463,7 +465,7 @@
 </style>
 
 <div class="container py-4">
-  <div class="page-header ai-slide-up">
+  <div class="page-header">
     <h4 class="page-title"><i class="fas fa-shopping-cart"></i> Giỏ hàng</h4>
     {% if cart and cart|length > 0 %}
     <span class="cart-count">{{ cart|length }} món</span>
@@ -480,7 +482,7 @@
     <div class="row">
       <div class="col-lg-7 mb-4">
         <!-- Cart Items -->
-        <div class="cart-card ai-fade-in">
+        <div class="cart-card">
           <table class="cart-table">
             <thead>
               <tr>
@@ -546,7 +548,7 @@
         </div>
 
         <!-- Payment Options -->
-        <div class="payment-card ai-slide-up delay-1">
+        <div class="payment-card">
           <h6 class="payment-title">
             <i
               class="fas fa-credit-card"
@@ -572,7 +574,7 @@
             </div>
             <div class="col-6">
               <div class="payment-option w-100 text-center p-3 border rounded-3" id="btn-qr" onclick="handlePayment('qr')">
-                <div class="payment-icon" style="color: #1976d2">
+                <div class="payment-icon" style="color: #64b5f6">
                   <i class="fas fa-qrcode fa-2x d-block mb-2"></i>
                 </div>
                 <div class="payment-name">QR Code</div>
@@ -589,48 +591,27 @@
             document.getElementById('btn-cash').classList.remove('active');
             document.getElementById('btn-qr').classList.remove('active');
             document.getElementById('btn-' + method).classList.add('active');
-
-            // Show/hide QR section
-            const qr = document.getElementById("qrSection");
-            if (method === "qr") {
-              qr.classList.remove("d-none");
-              updatePaymentInfo();
-            } else {
-              qr.classList.add("d-none");
-            }
           }
           </script>
 
-          <!-- QR Section -->
-          <div id="qrSection" class="qr-section d-none">
-            <div class="alert alert-info mb-3">
-                <div class="fw-bold"><i class="fas fa-university me-2"></i>THÔNG TIN CHUYỂN KHOẢN</div>
-                <div class="small mt-2">
-                    <div>Ngân hàng: <strong>MB Bank</strong></div>
-                    <div>Số tài khoản: <strong>0865054042</strong></div>
-                    <div>Chủ tài khoản: <strong>NGUYEN MINH DUC</strong></div>
-                    <div class="text-danger fw-bold mt-2">Nội dung: <span id="transferContent">FONGFOOD{{ session['user'] }}</span></div>
-                    <div class="text-danger fw-bold">Số tiền: <span id="transferAmount">{{ "{:,.0f}".format(ns.total) }}đ</span></div>
-                </div>
-            </div>
-            <div class="qr-content">
+          <!-- QR Code Section -->
+          <div id="qrSection" class="qr-section mt-3" style="display: none;">
+            <div class="qr-content text-center p-4">
               <img
-                src="https://img.freepik.com/free-vector/scan-me-qr-code_78370-2915.jpg"
-                class="qr-image"
+                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=FONGFOOD"
                 alt="QR Code"
+                class="qr-image"
+                style="width: 200px; height: 200px;"
               />
               <div class="qr-info">
-                <h6><i class="fas fa-qrcode me-2"></i>Quét mã thanh toán</h6>
-                <p class="mb-1 text-muted small">
-                  Nội dung: <strong id="qrContentDisplay">FONGFOOD {{ session['user'] }}</strong>
+                <h6><i class="fas fa-qrcode me-2"></i>Quét mã để thanh toán</h6>
+                <p class="mb-2 small text-muted">
+                  Sử dụng app ngân hàng để quét mã QR
                 </p>
-                <span class="ai-badge"
-                  ><i class="fas fa-robot"></i> AI tự động duyệt đơn</span
-                >
               </div>
             </div>
             <div class="payment-proof-input">
-              <label class="form-label small fw-bold">Tải ảnh thanh toán</label>
+              <label class="form-label fw-bold">Tải lên ảnh thanh toán</label>
               <input
                 type="file"
                 name="payment_proof"
@@ -639,409 +620,373 @@
               />
             </div>
           </div>
+
+          <script>
+          // Show/hide QR section based on payment method
+          document.getElementById('paymentInput').addEventListener('change', function() {
+            const qrSection = document.getElementById('qrSection');
+            if (this.value === 'qr') {
+              qrSection.style.display = 'block';
+            } else {
+              qrSection.style.display = 'none';
+            }
+          });
+          </script>
+        </div>
+
+        <!-- Delivery Address -->
+        <div class="payment-card mt-3">
+          <h6 class="payment-title">
+            <i class="fas fa-map-marker-alt" style="color: var(--primary-color)"></i>
+            Địa chỉ giao hàng
+          </h6>
+
+          {% if user.address %}
+          <div class="address-option active mb-3">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-home me-3"></i>
+              <div>
+                <strong>Địa chỉ mặc định</strong>
+                <p class="mb-0">{{ user.address }}</p>
+              </div>
+            </div>
+            <input type="hidden" name="default_address_val" value="{{ user.address }}">
+          </div>
+          {% endif %}
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">Hoặc nhập địa chỉ mới</label>
+            <textarea
+              name="new_address"
+              class="form-control"
+              rows="2"
+              placeholder="Nhập địa chỉ giao hàng..."
+            ></textarea>
+          </div>
+
+          <div id="map"></div>
+        </div>
+
+        <!-- Customer Info -->
+        <div class="payment-card mt-3">
+          <h6 class="payment-title">
+            <i class="fas fa-user" style="color: var(--primary-color)"></i>
+            Thông tin liên hệ
+          </h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold">Họ và tên</label>
+              <input
+                type="text"
+                name="name"
+                class="form-control"
+                value="{{ user.name if user else '' }}"
+                required
+              />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold">Số điện thoại</label>
+              <input
+                type="tel"
+                name="phone"
+                class="form-control"
+                value="{{ user.username if user else '' }}"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Note -->
+        <div class="payment-card mt-3">
+          <label class="form-label fw-bold">Ghi chú đơn hàng</label>
+          <textarea
+            name="note"
+            class="form-control"
+            rows="2"
+            placeholder="Ví dụ: Giao hàng lúc 19h00, không hành..."
+          ></textarea>
         </div>
       </div>
 
       <!-- Order Summary -->
       <div class="col-lg-5">
-        <div class="summary-card ai-slide-up delay-2">
+        <div class="summary-card">
           <h5 class="summary-title">
-            <i
-              class="fas fa-receipt me-2"
-              style="color: var(--primary-color)"
-            ></i>
+            <i class="fas fa-receipt me-2" style="color: var(--primary-color)"></i>
             Tóm tắt đơn hàng
           </h5>
 
-          <!-- Delivery Address -->
-          <div class="mb-4">
-            <label class="form-label small fw-bold text-muted"
-              >Địa chỉ giao hàng</label
-            >
-
-            <div class="address-option active" onclick="toggleMap(false)">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="address_option"
-                id="addrDefault"
-                value="default"
-                checked
-                style="display: none"
-              />
-              <div class="d-flex align-items-center">
-                <i
-                  class="fas fa-home me-3"
-                  style="color: var(--primary-color)"
-                ></i>
-                <div>
-                  <strong>Mặc định:</strong>
-                  <p class="mb-0 text-muted small">
-                    {{ user.get('address', 'Chưa có địa chỉ') }}
-                  </p>
-                </div>
-              </div>
-              <input
-                type="hidden"
-                name="default_address_val"
-                value="{{ user.get('address', '') }}"
-              />
-            </div>
-
-            <div class="address-option" onclick="toggleMap(true)">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="address_option"
-                id="addrNew"
-                value="new"
-                style="display: none"
-              />
-              <div class="d-flex align-items-center">
-                <i
-                  class="fas fa-map-marker-alt me-3"
-                  style="color: #1976d2"
-                ></i>
-                <strong class="text-primary">Chọn trên bản đồ</strong>
-              </div>
-            </div>
-
-            <div id="newAddressBox" class="mt-3 d-none">
-              <div class="input-group mb-2">
-                <span
-                  class="input-group-text bg-white"
-                  style="color: var(--primary-color)"
-                >
-                  <i class="fas fa-map-marker-alt"></i>
-                </span>
-                <input
-                  type="text"
-                  name="new_address"
-                  id="addressInput"
-                  class="form-control fw-bold"
-                  placeholder="Click vào bản đồ để chọn..."
-                  readonly
-                />
-              </div>
-              <small class="text-muted fst-italic" style="font-size: 11px"
-                >* Click vào bản đồ để chọn vị trí giao hàng</small
-              >
-              <div id="map"></div>
-            </div>
-          </div>
-
-          <!-- Contact Info -->
-          <div class="mb-3">
-            <div class="row g-2">
-              <div class="col-6">
-                <label class="form-label small fw-bold text-muted"
-                  >Người nhận</label
-                >
-                <input
-                  type="text"
-                  name="name"
-                  class="form-control"
-                  value="{{ user.get('name', '') }}"
-                  required
-                />
-              </div>
-              <div class="col-6">
-                <label class="form-label small fw-bold text-muted"
-                  >Số điện thoại</label
-                >
-                <input
-                  type="text"
-                  name="phone"
-                  class="form-control"
-                  value="{{ user.get('username', '') }}"
-                  required
-                />
-              </div>
-            </div>
-          </div>
-
-          <hr />
-
-          <!-- Voucher input -->
-          <div class="mb-3">
-            <label class="summary-label mb-1">Mã giảm giá / Voucher</label>
-
-            {% if available_vouchers %}
-            <select class="form-select mb-2" id="voucherSelect" onchange="selectVoucherFromDropdown()">
-              <option value="">-- Chọn voucher --</option>
-              {% for v in available_vouchers %}
-              <option value="{{ v.code }}" data-discount="{{ v.discount }}" data-min="{{ v.min_order }}">
-                {{ v.code }} - Giảm {{ v.discount }}% (Tối thiểu {{ "{:,.0f}".format(v.min_order) }}đ)
-              </option>
-              {% endfor %}
-            </select>
-            {% endif %}
-
-            <div class="input-group">
-              <span class="input-group-text bg-white"
-                ><i class="fas fa-ticket-alt text-muted"></i
-              ></span>
-              <input
-                type="text"
-                name="voucher_code"
-                id="voucherInput"
-                class="form-control"
-                placeholder="Nhập mã voucher nếu có"
-                style="text-transform: uppercase"
-              />
-              <button type="button" class="btn btn-outline-danger" onclick="applyVoucher()">Áp dụng</button>
-            </div>
-            <small id="voucherMessage" class="text-muted"></small>
-          </div>
-
-          <!-- Summary -->
           <div class="summary-row">
-            <span class="summary-label">Tạm tính</span>
-            <span class="summary-value" id="subtotalValue" data-value="{{ ns.total }}">{{ "{:,.0f}".format(ns.total) }}đ</span>
+            <span class="summary-label">Tạm tính ({{ cart|length }} món)</span>
+            <span class="summary-value">{{ "{:,.0f}".format(ns.total) }}đ</span>
           </div>
+
+          <!-- Voucher -->
+          <div class="summary-row">
+            <span class="summary-label">Voucher giảm giá</span>
+            <span class="summary-value" id="discountAmount" style="color: var(--success-color)">-0đ</span>
+          </div>
+
           <div class="summary-row">
             <span class="summary-label">Phí giao hàng</span>
-            <span class="summary-value" style="color: var(--success-color)"
-              >Miễn phí</span
-            >
-          </div>
-          <div class="summary-row">
-            <span class="summary-label">Giảm giá</span>
-            <span class="summary-value" style="color: var(--success-color)" id="discountValue">-{{ "{:,.0f}".format(discount_amount if discount_amount is defined else 0) }}đ</span>
+            <span class="summary-value">15.000đ</span>
           </div>
 
           <div class="summary-total">
             <span class="total-label">Tổng cộng</span>
-            <span class="total-value" id="totalValue">{{ "{:,.0f}".format(ns.total) }}đ</span>
+            <span class="total-value" id="totalAmount">{{ "{:,.0f}".format(ns.total + 15000) }}đ</span>
+          </div>
+
+          <!-- Voucher chọn - Dropdown -->
+          {% if available_vouchers %}
+          <div class="mt-3">
+            <label class="form-label fw-bold">Chọn voucher</label>
+            
+            <!-- Nút bấm hiển thị voucher -->
+            <div class="voucher-toggle" 
+                 onclick="toggleVoucherList()"
+                 style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+              <span id="voucherToggleText" style="color: var(--text-light); font-weight: 500;">
+                <i class="fas fa-ticket-alt me-2" style="color: #FFD700;"></i>
+                Chọn voucher giảm giá
+              </span>
+              <i class="fas fa-chevron-down" id="voucherChevron" style="color: var(--text-muted); transition: transform 0.3s;"></i>
+            </div>
+
+            <!-- Danh sách voucher ẩn hiện -->
+            <div id="voucherDropdown" class="voucher-list" style="display: none; margin-top: 10px; max-height: 250px; overflow-y: auto;">
+              {% for v in available_vouchers[:10] %}
+              <div class="voucher-card-select" 
+                   style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 12px; padding: 15px; color: white; position: relative; overflow: hidden; margin-bottom: 10px; cursor: pointer;"
+                   onclick="selectVoucher('{{ v.code }}', '{{ v.get('discount', v.get('discount_percent', 0)) }}')">
+                <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: repeating-linear-gradient(to bottom, white, white 5px, transparent 5px, transparent 10px);"></div>
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <div style="font-size: 24px; font-weight: bold;">
+                      {{ v.get('discount', v.get('discount_percent', 0)) }}%
+                    </div>
+                    <div style="font-size: 12px; opacity: 0.9;">
+                      Đơn tối thiểu {{ "{:,.0f}".format(v.get('min_order', 0)) }}đ
+                    </div>
+                  </div>
+                  <div class="text-end">
+                    <div style="background: rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; font-family: monospace; font-size: 13px;">
+                      {{ v.code }}
+                    </div>
+                    {% if v.valid_until %}
+                    <small style="opacity: 0.8; font-size: 11px;">Hết hạn: {{ v.valid_until[:10] if v.valid_until else 'Không giới hạn' }}</small>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Voucher Input -->
+          <div class="mt-3">
+            <label class="form-label fw-bold">Hoặc nhập mã voucher</label>
+            <div class="input-group">
+              <input
+                type="text"
+                name="voucher_code"
+                class="form-control"
+                placeholder="Nhập mã..."
+                id="voucherInput"
+              />
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                onclick="applyVoucher()"
+              >
+                Áp dụng
+              </button>
+            </div>
+            <small class="text-muted" id="voucherMessage"></small>
           </div>
 
           <button type="submit" class="checkout-btn">
-            <i class="fas fa-check-circle me-2"></i> XÁC NHẬN ĐẶT HÀNG
+            <i class="fas fa-check-circle me-2"></i>XÁC NHẬN ĐẶT HÀNG
           </button>
+
+          <p class="text-center text-muted mt-3 mb-0 small">
+            <i class="fas fa-shield-alt me-1"></i>
+            Bạn sẽ thanh toán sau khi nhận được hàng
+          </p>
         </div>
       </div>
     </div>
   </form>
+
   {% else %}
   <!-- Empty Cart -->
-  <div class="cart-card empty-cart ai-slide-up">
+  <div class="empty-cart">
     <img
       src="https://cdn-icons-png.flaticon.com/512/11329/11329060.png"
       alt="Empty cart"
     />
     <h5>Giỏ hàng trống</h5>
-    <p>Hãy thêm món ngon vào giỏ hàng nào!</p>
+    <p>Hãy thêm món ăn yêu thích của bạn vào giỏ hàng nhé!</p>
     <a href="/menu" class="shop-btn">
-      <i class="fas fa-utensils me-2"></i> Đi chợ ngay
+      <i class="fas fa-utensils me-2"></i>Khám phá thực đơn
     </a>
   </div>
   {% endif %}
 </div>
 
 <script>
-  // Global discount variable
-  let appliedDiscount = 0;
-  let appliedCode = '';
-  let currentTotal = 0;
-  const CART_STORAGE_KEY = 'fongfood_cart';
+let cartTotal = {{ ns.total }};
+let selectedVoucherCode = null;
+let map, marker;
 
-  // Lưu giỏ hàng vào localStorage
-  function saveCartToLocal() {
-    const cartItems = [];
-    {% for pid, item in cart.items() %}
-    cartItems.push({
-      id: "{{ pid }}",
-      name: "{{ item.name }}",
-      price: {{ item.price or 0 }},
-      qty: {{ item.qty or 1 }}
-    });
-    {% endfor %}
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+function toggleVoucherList() {
+  const dropdown = document.getElementById('voucherDropdown');
+  const chevron = document.getElementById('voucherChevron');
+  if (dropdown.style.display === 'none') {
+    dropdown.style.display = 'block';
+    chevron.style.transform = 'rotate(180deg)';
+  } else {
+    dropdown.style.display = 'none';
+    chevron.style.transform = 'rotate(0deg)';
   }
+}
 
-  // Gọi khi trang load
-  document.addEventListener('DOMContentLoaded', function() {
-    saveCartToLocal();
-  });
+function selectVoucher(code, discount) {
+  selectedVoucherCode = code;
+  document.getElementById('voucherInput').value = code;
+  
+  // Update button text
+  document.getElementById('voucherToggleText').innerHTML = '<i class="fas fa-check-circle me-2" style="color: #4CAF50;"></i>' + discount + '% giảm';
+  
+  // Close dropdown
+  document.getElementById('voucherDropdown').style.display = 'none';
+  document.getElementById('voucherChevron').style.transform = 'rotate(0deg)';
+  
+  applyVoucher();
+}
 
-  function updatePaymentInfo() {
-    // Get current total
-    const totalEl = document.getElementById('totalValue');
-    const totalText = totalEl.textContent.replace(/[^\d]/g, '');
-    currentTotal = parseInt(totalText) || 0;
+function applyVoucher() {
+  const code = document.getElementById('voucherInput').value.trim();
+  if (!code) return;
 
-    // Update transfer info
-    const transferContent = document.getElementById('transferContent');
-    const transferAmount = document.getElementById('transferAmount');
-    const qrContentDisplay = document.getElementById('qrContentDisplay');
+  fetch('/voucher/check', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code: code, order_total: cartTotal })
+  })
+  .then(res => res.json())
+  .then(data => {
+    const messageEl = document.getElementById('voucherMessage');
+    const discountEl = document.getElementById('discountAmount');
+    const totalEl = document.getElementById('totalAmount');
 
-    const username = "{{ session['user'] }}";
-    if (transferContent) transferContent.textContent = 'FONGFOOD' + username;
-    if (transferAmount) transferAmount.textContent = currentTotal.toLocaleString('vi-VN') + 'đ';
-    if (qrContentDisplay) qrContentDisplay.textContent = 'FONGFOOD ' + username;
-  }
-
-  function selectVoucherFromDropdown() {
-    const select = document.getElementById('voucherSelect');
-    if (!select) return;
-
-    const code = select.value;
-    const discount = select.options[select.selectedIndex]?.dataset?.discount || 0;
-
-    if (code) {
-      document.getElementById('voucherInput').value = code;
-      applyVoucher();
-    }
-  }
-
-  function applyVoucher() {
-    console.log('=== applyVoucher function called ===');
-    const code = document.getElementById('voucherInput').value.trim().toUpperCase();
-    const msgEl = document.getElementById('voucherMessage');
-    const subtotalEl = document.getElementById('subtotalValue');
-
-    if (!msgEl) {
-      console.error('voucherMessage element not found!');
-      return;
-    }
-
-    const subtotal = subtotalEl ? parseFloat(subtotalEl.dataset.value || 0) : 0;
-
-    console.log('Applying voucher:', code, 'subtotal:', subtotal);
-
-    if (!code) {
-      msgEl.innerHTML = '<span class="text-danger">Vui lòng nhập mã voucher</span>';
-      return;
-    }
-
-    msgEl.innerHTML = '<span class="text-info">Đang kiểm tra...</span>';
-
-    fetch('/api/v1/voucher/check', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: code, order_total: subtotal })
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log('Voucher response:', data);
-      if (data.success) {
-        msgEl.innerHTML = '<span class="text-success"><i class="fas fa-check-circle"></i> ' + data.message + '</span>';
-        appliedDiscount = data.discount_amount || 0;
-        appliedCode = code;
-        console.log('Applied discount:', appliedDiscount);
-        updateTotalWithDiscount();
-      } else {
-        msgEl.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle"></i> ' + data.message + '</span>';
-        appliedDiscount = 0;
-        appliedCode = '';
-        updateTotalWithDiscount();
-      }
-    })
-    .catch(err => {
-      console.error('Voucher error:', err);
-      msgEl.innerHTML = '<span class="text-danger">Lỗi kết nối server</span>';
-    });
-  }
-
-  function updateTotalWithDiscount() {
-    const subtotalEl = document.getElementById('subtotalValue');
-    const discountEl = document.getElementById('discountValue');
-    const totalEl = document.getElementById('totalValue');
-
-    const subtotal = subtotalEl ? parseFloat(subtotalEl.dataset.value || 0) : 0;
-    const discount = appliedDiscount;
-    const total = Math.max(0, subtotal - discount);
-
-    console.log('Updating total: subtotal=', subtotal, 'discount=', discount, 'total=', total);
-
-    if (discountEl) discountEl.textContent = '-' + discount.toLocaleString('vi-VN') + 'đ';
-    if (totalEl) totalEl.textContent = total.toLocaleString('vi-VN') + 'đ';
-
-    // Update payment info if QR is selected
-    const qrSection = document.getElementById('qrSection');
-    if (qrSection && !qrSection.classList.contains('d-none')) {
-      updatePaymentInfo();
-    }
-  }
-
-  let map, marker;
-
-  function toggleMap(show) {
-    const box = document.getElementById("newAddressBox");
-    const radioNew = document.getElementById("addrNew");
-    const radioDef = document.getElementById("addrDefault");
-    const optionNew = radioNew.closest(".address-option");
-    const optionDef = radioDef.closest(".address-option");
-
-    if (show) {
-      radioNew.checked = true;
-      optionNew.classList.add("active");
-      optionDef.classList.remove("active");
-      box.classList.remove("d-none");
-
-      setTimeout(() => {
-        if (!map) {
-          initMap();
-        } else {
-          map.invalidateSize();
-        }
-      }, 200);
+    if (data.success) {
+      messageEl.innerHTML = '<span class="text-success"><i class="fas fa-check-circle"></i> ' + data.message + '</span>';
+      const discount = data.discount_amount || 0;
+      discountEl.textContent = '-' + discount.toLocaleString() + 'đ';
+      const newTotal = cartTotal + 15000 - discount;
+      totalEl.textContent = newTotal.toLocaleString() + 'đ';
     } else {
-      radioDef.checked = true;
-      optionDef.classList.add("active");
-      optionNew.classList.remove("active");
-      box.classList.add("d-none");
+      messageEl.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle"></i> ' + data.message + '</span>';
     }
-  }
+  })
+  .catch(err => {
+    console.error('Voucher error:', err);
+  });
+}
 
-  function initMap() {
-    const defaultLat = 21.0285;
-    const defaultLng = 105.8542;
+// Initialize map
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize map regardless of address
+  if (document.getElementById('map')) {
+    // Default to Ho Chi Minh City
+    var defaultLat = 10.8231;
+    var defaultLng = 106.6297;
+    
+    map = L.map('map').setView([defaultLat, defaultLng], 13);
 
-    map = L.map("map").setView([defaultLat, defaultLng], 15);
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "FongFood Map",
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    const geocoder = L.Control.geocoder({
-      defaultMarkGeocode: false,
-      placeholder: "Tìm tên đường, phường...",
-    })
-      .on("markgeocode", function (e) {
-        const latlng = e.geocode.center;
-        const name = e.geocode.name;
-        map.setView(latlng, 16);
-        updateMarker(latlng, name);
-      })
-      .addTo(map);
+    marker = L.marker([defaultLat, defaultLng], {draggable: true}).addTo(map);
 
-    map.on("click", function (e) {
-      document.getElementById("addressInput").value = "Đang lấy địa chỉ...";
+    // Update address when marker is dragged
+    marker.on('dragend', function(event) {
+      var position = marker.getLatLng();
+      console.log('Marker position:', position);
+      reverseGeocode(position.lat, position.lng);
+    });
 
-      fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${e.latlng.lat}&lon=${e.latlng.lng}`,
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          let addressName = data.display_name;
-          updateMarker(e.latlng, addressName);
-        })
-        .catch(() => {
-          document.getElementById("addressInput").value =
-            "Không tìm thấy tên đường.";
-        });
+  // Update address when map is clicked
+  map.on('click', function(event) {
+    var lat = event.latlng.lat;
+    var lng = event.latlng.lng;
+    marker.setLatLng([lat, lng]);
+    reverseGeocode(lat, lng);
+  });
+  
+  // Try to get user's current location
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var lat = position.coords.latitude;
+      var lng = position.coords.longitude;
+      map.setView([lat, lng], 15);
+      marker.setLatLng([lat, lng]);
+      reverseGeocode(lat, lng);
+    }, function() {
+      console.log('Could not get user location');
     });
   }
-
-  function updateMarker(latlng, addressText) {
-    if (marker) map.removeLayer(marker);
-    marker = L.marker(latlng)
-      .addTo(map)
-      .bindPopup(`<b style="color:#d32f2f">Giao tới:</b><br>${addressText}`)
-      .openPopup();
-
-    document.getElementById("addressInput").value = addressText;
   }
+  
+  // Listen for address input changes
+  const addressInput = document.querySelector('textarea[name="new_address"]');
+  if (addressInput) {
+    let debounceTimer;
+    addressInput.addEventListener('input', function() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        const address = this.value.trim();
+        if (address.length > 5) {
+          geocodeAddress(address);
+        }
+      }, 1000);
+    });
+  }
+});
+
+// Geocode address to coordinates
+function geocodeAddress(address) {
+  fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address))
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.length > 0) {
+        var lat = parseFloat(data[0].lat);
+        var lon = parseFloat(data[0].lon);
+        map.setView([lat, lon], 15);
+        marker.setLatLng([lat, lon]);
+      }
+    })
+    .catch(err => console.error('Geocoding error:', err));
+}
+
+// Reverse geocode coordinates to address
+function reverseGeocode(lat, lng) {
+  fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng)
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.display_name) {
+        const addressInput = document.querySelector('textarea[name="new_address"]');
+        if (addressInput) {
+          addressInput.value = data.display_name;
+        }
+      }
+    })
+    .catch(err => console.error('Reverse geocoding error:', err));
+}
 </script>
+
 {% endblock %}
