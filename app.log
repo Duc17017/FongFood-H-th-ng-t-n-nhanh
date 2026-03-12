@@ -2477,3 +2477,129 @@ jinja2.exceptions.UndefinedError: 'order_count' is undefined
 2026-03-12 01:00:46,266 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:46] "GET /api/get-chat-updates HTTP/1.1" 200 -
 2026-03-12 01:00:46,527 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:46] "GET /cart HTTP/1.1" 200 -
 2026-03-12 01:00:46,932 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:00:46] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 01:01:40,810 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5005
+ * Running on http://192.168.69.111:5005
+2026-03-12 01:01:40,810 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 01:01:46,074 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:01:46] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 01:01:46,568 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:01:46] "GET /login HTTP/1.1" 200 -
+2026-03-12 01:01:48,153 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:01:48] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-12 01:01:59,194 - INFO - routes.auth - User 0962143873 logged in with role customer
+2026-03-12 01:01:59,195 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:01:59] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-03-12 01:02:01,764 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:01] "GET /home HTTP/1.1" 200 -
+2026-03-12 01:02:02,162 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:02] "GET /static/bánh%20mì.png HTTP/1.1" 200 -
+2026-03-12 01:02:02,169 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:02] "GET /static/bun.jpg HTTP/1.1" 200 -
+2026-03-12 01:02:02,173 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:02] "GET /static/douong.png HTTP/1.1" 200 -
+2026-03-12 01:02:02,179 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:02] "GET /static/doannhanh.jpg HTTP/1.1" 200 -
+2026-03-12 01:02:02,186 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:02] "GET /static/pizza.png HTTP/1.1" 200 -
+2026-03-12 01:02:02,882 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:02] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 01:02:05,427 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:05] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 01:02:07,741 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:07] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 01:02:08,598 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:08] "GET /home HTTP/1.1" 200 -
+2026-03-12 01:02:08,647 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:08] "GET /static/douong.png HTTP/1.1" 200 -
+2026-03-12 01:02:08,650 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:08] "GET /static/doannhanh.jpg HTTP/1.1" 200 -
+2026-03-12 01:02:08,654 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:08] "GET /static/bun.jpg HTTP/1.1" 200 -
+2026-03-12 01:02:08,689 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:08] "GET /static/bánh%20mì.png HTTP/1.1" 200 -
+2026-03-12 01:02:08,708 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:08] "GET /static/pizza.png HTTP/1.1" 200 -
+2026-03-12 01:02:08,743 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:08] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 01:02:09,971 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:09] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 01:02:09,973 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:09] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 01:02:10,285 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:10] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-12 01:02:19,469 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:19] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 01:02:20,196 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:20] "GET /login HTTP/1.1" 200 -
+2026-03-12 01:02:26,556 - ERROR - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:26] code 400, message Bad request version ("×UªÔYºËÐ\x16\x7f\x8a0]A\x87'3\x9a£T\x8e9D+±Æ\x11\x12\x89RÞPm`\x14H\x11ÌÀ¢àKw\x115\x8ciWá\x13AÅ\x08D?ÁÌ\x9a$3K+\xad\x84üVí`\x86âGº]8uciÃ$Å\xadÞ\x199ÙÚ6ÇÛ\x8aÐkª\x8e«\x93¾÷q$")
+2026-03-12 01:02:26,556 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:26] "[31m[1m\x16\x03\x01\x06À\x01\x00\x06¼\x03\x03õ\x82¦ÍWObKÜGm¾\x8c\x0dglÌÌVÉ\x81ò®\x8bªOAþ\x02\x1bP\x1c <JÚ¼âLÐ·Ð\x96\x04/<@(á>\x0c¶*r^`Tc\x0cû7ºá¹\x0b\x00 ÚÚ\x13\x01\x13\x02\x13\x03À+À/À,À0Ì©Ì¨À\x13À\x14\x00\x9c\x00\x9d\x00/\x005\x01\x00\x06Sªª\x00\x00\x00\x05\x00\x05\x01\x00\x00\x00\x00\x00\x1b\x00\x03\x02\x00\x02\x00\x0b\x00\x02\x01\x00DÍ\x00\x05\x00\x03\x02h2\x00\x10\x00\x0e\x00\x0c\x02h2\x08http/1.1\x00\x17\x00\x00\x003\x04ï\x04íªª\x00\x01\x00\x11ì\x04Àð±\x1eÒÂQ\x1bDP\x964\x95Q\x07\x88\x04r^YÊU\x12\x04$&¶rã@¨8VUo\x1bËõ8*5\x97_\x16J¼\x94"8`õ\x1fWÂ­ì|ªPÐ§aS¡²J7±\x1b.\x19ö\x81×\x02ª\x88ó!\x83y\x92¬ú®\x03\x1c/zên\x8bô\x129+(ì\x03ÆaqEÿj\x82z:\x08\x1dÛp¨\x81T-ùÆ\x1báx\x97ø&@p(&Ø5â¸@Â\x8a/Î\x97^}\x91\x15Èg\x85tÒ\x0cTùSw\x81¹\x19\x96ÈF\x07Q\x10!\x1c×UªÔYºËÐ\x16\x7f\x8a0]A\x87'3\x9a£T\x8e9D+±Æ\x11\x12\x89RÞPm`\x14H\x11ÌÀ¢àKw\x115\x8ciWá\x13AÅ\x08D?ÁÌ\x9a$3K+­\x84üVí`\x86âGº]8uciÃ$Å­Þ\x199ÙÚ6ÇÛ\x8aÐkª\x8e«\x93¾÷q$[0m" 400 -
+2026-03-12 01:02:26,558 - ERROR - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:26] code 400, message Bad request version ('\x01wCK\x12?½')
+2026-03-12 01:02:26,559 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:26] "[31m[1m\x16\x03\x01\x06À\x01\x00\x06¼\x03\x03&,\x99Æî\x09¿\x8a"\x13û]°Î%\x8c1¿ËR\x9føAo\x86þ\x84\x1c6Æp% \x05\x8d\x11©\x1cË\x00{\x0d\x04g¦äª\x17q$uZº`\x7f´Â\x10m5\x88Ü\x1aª\x1a\x00 zz\x13\x01\x13\x02\x13\x03À+À/À,À0Ì©Ì¨À\x13À\x14\x00\x9c\x00\x9d\x00/\x005\x01\x00\x06S\x9a\x9a\x00\x00\x003\x04ï\x04í\x9a\x9a\x00\x01\x00\x11ì\x04ÀEpG|Ì!ýÙ²\x08ñÉ+\x97%êáOôª¸¼\x8a²Ð\x8a\x1d\x12ùK\x8e³/ðTwÅódÊÐ&\x9aqXñªF4V·ÃµPGèË\x00¼\x82P\x9a\x8c\x87ÆO_Hz\x04\x12Lnó\x91gk!0\x93_\x9e`l(Ð\x1cÄã¶e`\x05¤Ö\x0dÅ\x96®5¹jÌü¡\x98¨<!\x0bJlV²]\x90\x1c\x0fY±rz¬\x09Ö\x91f\x1a\x11\x04wVË\x19ASQ\x1c^S\x87l\x09n¼±\x1cEÉPz\x93\x1f\x1a\x10W\\\x12£\x81S\x0f\x0c\x1a gQ¿Æ\x11\x88V\x08\\/\\\x1c\x00ÚªÜ¸<¼\x0cÉ¨²\x1d\x01wCK\x12?½[0m" 400 -
+2026-03-12 01:02:30,449 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:30] "GET /login HTTP/1.1" 200 -
+2026-03-12 01:02:32,431 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:32] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-12 01:02:39,498 - INFO - routes.auth - User 0364426628 logged in with role customer
+2026-03-12 01:02:39,500 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:39] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-03-12 01:02:41,648 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:41] "GET /home HTTP/1.1" 200 -
+2026-03-12 01:02:41,685 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:41] "[33mGET /manifest.json HTTP/1.1[0m" 404 -
+2026-03-12 01:02:41,700 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:41] "GET /static/bun.jpg HTTP/1.1" 200 -
+2026-03-12 01:02:41,701 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:41] "GET /static/doannhanh.jpg HTTP/1.1" 200 -
+2026-03-12 01:02:41,707 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:41] "GET /static/douong.png HTTP/1.1" 200 -
+2026-03-12 01:02:41,708 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:41] "GET /static/bánh%20mì.png HTTP/1.1" 200 -
+2026-03-12 01:02:41,710 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:41] "GET /static/pizza.png HTTP/1.1" 200 -
+2026-03-12 01:02:42,836 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:42] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 01:02:45,544 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:45] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 01:02:47,769 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:47] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 01:02:48,966 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:48] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 01:02:49,253 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:49] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 01:02:52,580 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:02:52] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 01:03:23,652 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.69.111:5001
+2026-03-12 01:03:23,652 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 01:12:45,839 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.69.111:5001
+2026-03-12 01:12:45,839 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 01:12:51,070 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:12:51] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 01:12:51,544 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:12:51] "GET /login HTTP/1.1" 200 -
+2026-03-12 01:13:16,820 - INFO - routes.auth - User 0962143873 logged in with role customer
+2026-03-12 01:13:16,821 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:13:16] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-03-12 01:13:18,915 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:13:18] "GET /home HTTP/1.1" 200 -
+2026-03-12 01:13:19,296 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:13:19] "GET /static/doannhanh.jpg HTTP/1.1" 200 -
+2026-03-12 01:13:19,308 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:13:19] "GET /static/douong.png HTTP/1.1" 200 -
+2026-03-12 01:13:19,309 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:13:19] "GET /static/bun.jpg HTTP/1.1" 200 -
+2026-03-12 01:13:19,313 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:13:19] "GET /static/pizza.png HTTP/1.1" 200 -
+2026-03-12 01:13:19,316 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:13:19] "GET /static/bánh%20mì.png HTTP/1.1" 200 -
+2026-03-12 01:13:19,838 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:13:19] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 01:13:49,322 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.69.111:5000
+2026-03-12 01:13:49,322 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 01:13:54,294 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:13:54] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 01:13:54,769 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:13:54] "GET /login HTTP/1.1" 200 -
+2026-03-12 01:13:55,554 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:13:55] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-12 01:19:06,144 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:19:06] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 01:19:06,656 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:19:06] "GET /login HTTP/1.1" 200 -
+2026-03-12 01:19:08,285 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:19:08] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 01:19:08,774 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:19:08] "GET /login HTTP/1.1" 200 -
+2026-03-12 01:19:09,998 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:19:09] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-12 01:20:19,316 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.69.111:5001
+2026-03-12 01:20:19,316 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 01:20:23,611 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:20:23] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 01:20:24,099 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:20:24] "GET /login HTTP/1.1" 200 -
+2026-03-12 01:20:25,035 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 01:20:25] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-12 08:39:09,497 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.69.111:5001
+2026-03-12 08:39:09,498 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 08:39:13,982 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:13] "[32mGET / HTTP/1.1[0m" 302 -
+2026-03-12 08:39:14,029 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:14] "GET /login HTTP/1.1" 200 -
+2026-03-12 08:39:14,164 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:14] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-12 08:39:24,688 - INFO - routes.auth - User 0962143873 logged in with role customer
+2026-03-12 08:39:24,754 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:24] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-03-12 08:39:27,035 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:27] "GET /home HTTP/1.1" 200 -
+2026-03-12 08:39:27,910 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:27] "[36mGET /static/doannhanh.jpg HTTP/1.1[0m" 304 -
+2026-03-12 08:39:27,922 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:27] "[36mGET /static/bánh%20mì.png HTTP/1.1[0m" 304 -
+2026-03-12 08:39:27,926 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:27] "[36mGET /static/douong.png HTTP/1.1[0m" 304 -
+2026-03-12 08:39:27,942 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:27] "[36mGET /static/pizza.png HTTP/1.1[0m" 304 -
+2026-03-12 08:39:27,944 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:27] "[36mGET /static/bun.jpg HTTP/1.1[0m" 304 -
+2026-03-12 08:39:29,592 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:29] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 08:39:30,999 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:30] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 08:39:33,042 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:33] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 08:39:33,954 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:33] "GET /api/get-chat-updates HTTP/1.1" 200 -
+2026-03-12 08:39:34,859 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:34] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 08:39:36,735 - INFO - werkzeug - 192.168.69.111 - - [12/Mar/2026 08:39:36] "GET /check-session-status HTTP/1.1" 200 -
+2026-03-12 08:52:47,978 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.69.111:5001
+2026-03-12 08:52:47,978 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2026-03-12 08:55:52,990 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.69.111:5001
+2026-03-12 08:55:52,990 - INFO - werkzeug - [33mPress CTRL+C to quit[0m

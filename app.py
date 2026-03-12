@@ -156,6 +156,9 @@ def server_error(e):
 
 
 if __name__ == "__main__":
+    # Get port from environment (for Render deployment)
+    port = int(os.environ.get("PORT", 5001))
+    
     # Get local IP
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -168,8 +171,8 @@ if __name__ == "__main__":
     print("\n" + "="*50)
     print("FONG FOOD APP STARTED!")
     print("="*50)
-    print(f"Local:    http://127.0.0.1:5005")
-    print(f"Network:  http://{local_ip}:5005")
-    print(f"Admin:    http://{local_ip}:5005/admin")
+    print(f"Local:    http://127.0.0.1:{port}")
+    print(f"Network:  http://{local_ip}:{port}")
+    print(f"Admin:    http://{local_ip}:{port}/admin")
     print("="*50 + "\n")
-    app.run(debug=False, host="0.0.0.0", port=5005)
+    app.run(debug=False, host="0.0.0.0", port=port)
