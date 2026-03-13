@@ -523,10 +523,12 @@
     }
 
     @media (max-width: 575px) {
-        /* Mobile: "Đang giảm giá" hiển thị 1 món / hàng - đẹp hơn */
-        .product-grid { grid-template-columns: repeat(1, 1fr); }
-        .product-info { padding: 12px; }
-        .product-price { font-size: 14px; }
+        /* Mobile: "Đang giảm giá" hiển thị 2 món / hàng */
+        .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .product-info { padding: 8px; }
+        .product-price { font-size: 12px; }
+        .product-name { font-size: 12px; }
+        .product-card .badge { font-size: 10px; padding: 3px 6px; }
     }
 
     .product-card {
@@ -1533,25 +1535,51 @@
             lowerMessage.includes('hôm nay ăn') ||
             lowerMessage.includes('hom nay an')
         ) {
-            return `Hôm nay FongFood gợi ý cho bạn vài lựa chọn:\n
-            <br>• 🍗 Combo gà rán + khoai tây chiên cho bữa no bụng\n
-            <br>• 🍜 Bún/phở nóng nếu bạn thích món nước\n
-            <br>• 🥤 Trà đào hoặc trà sữa mát lạnh để giải khát\n
-            <br><br>Bạn có thể vào <a href="/menu" class="text-primary">thực đơn</a> và chọn danh mục bạn thích, FongFood sẽ giao tận nơi cho bạn nhé!`;
+            return `<div style="margin-bottom: 8px;"><b>🍽️ Gợi ý hôm nay từ FongFood</b></div>
+            <div>• <b>Combo Gà Rán Đặc Biệt</b> - Giòn tan, thơm ngon</div>
+            <div>• <b>Bún Phở Cao Cấp</b> - Nước dùng đậm đà</div>
+            <div>• <b>Trà Đào Mát Lạnh</b> - Giải khát hoàn hảo</div>
+            <div style="margin-top: 10px;">👉 <a href="/menu" class="text-primary fw-bold">Xem thực đơn ngay</a></div>`;
         }
 
         if (lowerMessage.includes('menu') || lowerMessage.includes('thực đơn') || lowerMessage.includes('mon an') || lowerMessage.includes('món ăn')) {
-            return 'Bạn có thể xem thực đơn tại <a href="/menu" class="text-primary">đây</a>. Chúng tôi có rất nhiều món ngon như: Bún phở, đồ ăn nhanh, pizza, đồ uống... Bạn thích món gì nhất?';
+            return `<div style="margin-bottom: 8px;"><b>📋 Thực đơn FongFood</b></div>
+            <div>Chúng tôi phục vụ đa dạng món ăn:</div>
+            <div>• 🍜 Bún, Phở, Mì</div>
+            <div>• 🍗 Đồ ăn nhanh</div>
+            <div>• 🍕 Pizza &amp; Bánh</div>
+            <div>• 🥤 Đồ uống</div>
+            <div style="margin-top: 10px;">👉 <a href="/menu" class="text-primary fw-bold">Xem chi tiết</a></div>`;
         } else if (lowerMessage.includes('giá') || lowerMessage.includes('gia ') || lowerMessage.includes('price') || lowerMessage.includes('tiền')) {
-            return 'Giá món ăn tại FongFood rất hợp lý! Từ 25.000đ đến 150.000đ tùy món. Nhiều ưu đãi giảm giá đang chờ bạn khám phá!';
+            return `<div style="margin-bottom: 8px;"><b>💰 Bảng giá FongFood</b></div>
+            <div>Món ăn từ <b>25.000đ - 150.000đ</b></div>
+            <div>• Miễn phí giao hàng đơn từ 100.000đ</div>
+            <div>• Nhiều ưu đãi giảm 10-30% mỗi ngày</div>
+            <div>• Thành viên VIP giảm thêm 5%</div>`;
         } else if (lowerMessage.includes('giao') || lowerMessage.includes('ship') || lowerMessage.includes('delivery')) {
-            return 'FongFood giao hàng siêu tốc chỉ trong khoảng 30 phút! Miễn phí giao hàng cho đơn từ 100.000đ. 🚀';
-        } else if (lowerMessage.includes('xin chào') || lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-            return 'Xin chào! Rất vui được hỗ trợ bạn! Bạn đang thèm món gì hôm nay?';
+            return `<div style="margin-bottom: 8px;"><b>🚚 Dịch vụ giao hàng</b></div>
+            <div>• Giao hàng nhanh 30 phút</div>
+            <div>• Miễn phí đơn từ 100.000đ</div>
+            <div>• Theo dõi đơn hàng real-time</div>
+            <div>• Đóng gói cẩn thận, nóng hổi</div>`;
+        } else if (lowerMessage.includes('xin chào') || lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('chào')) {
+            return `<div style="margin-bottom: 8px;"><b>👋 Chào bạn!</b></div>
+            <div>Rất vui được hỗ trợ bạn tại FongFood</div>
+            <div>Bạn cần giúp gì hôm nay?</div>
+            <div style="margin-top: 8px; font-size: 12px; color: #888;">Gõ "menu" để xem món ăn, "giao" để xem phí ship</div>`;
         } else if (lowerMessage.includes('cảm ơn') || lowerMessage.includes('cam on') || lowerMessage.includes('thank')) {
-            return 'Không có gì! Rất hân hạnh được hỗ trợ bạn. Nếu cần gì khác, đừng ngần ngại hỏi nhé!';
+            return `<div style="margin-bottom: 8px;"><b>❤️ Cảm ơn bạn!</b></div>
+            <div>Rất hân hạnh được phục vụ bạn</div>
+            <div>Chúc bạn ngon miệng!</div>
+            <div style="margin-top: 8px;">Lần sau ghé lại FongFood nhé 🍽️</div>`;
         } else {
-            return 'Cảm ơn bạn đã nhắn tin! Tôi sẽ chuyển yêu cầu đến đội ngũ hỗ trợ. Bạn có thể xem thêm tại <a href="/menu" class="text-primary">thực đơn</a> hoặc <a href="/support" class="text-primary">liên hệ hỗ trợ</a> nếu cần giúp đỡ thêm nhé!';
+            return `<div style="margin-bottom: 8px;"><b>📞 Hỗ trợ FongFood</b></div>
+            <div>Cảm ơn bạn đã nhắn tin!</div>
+            <div>Đội ngũ hỗ trợ sẽ phản hồi sớm nhất</div>
+            <div style="margin-top: 10px;">
+                <a href="/menu" class="text-primary fw-bold">📋 Xem thực đơn</a> |
+                <a href="/support" class="text-primary fw-bold">📱 Liên hệ</a>
+            </div>`;
         }
     }
 

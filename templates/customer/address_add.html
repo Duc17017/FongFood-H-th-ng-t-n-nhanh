@@ -6,17 +6,63 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 <style>
+    .page-header {
+        background: var(--bg-white);
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .page-title {
+        font-weight: 700;
+        font-size: 18px;
+        color: var(--text-light);
+        flex: 1;
+        text-align: center;
+    }
+
+    .page-header-spacer {
+        width: 40px;
+        flex-shrink: 0;
+    }
+
+    .back-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--bg-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-light);
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .back-btn:hover {
+        background: var(--primary-color);
+        color: white;
+    }
+
     #map-container {
         height: 250px; width: 100%; background: #eee; z-index: 1;
     }
     .form-group-custom {
-        background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px;
+        background: var(--bg-white); padding: 15px; margin-bottom: 10px; border-radius: 8px;
     }
     .input-line {
-        border: none; border-bottom: 1px solid #eee; width: 100%; padding: 10px 0;
-        outline: none; font-size: 14px;
+        border: none; border-bottom: 1px solid rgba(255,255,255,0.1); width: 100%; padding: 10px 0;
+        outline: none; font-size: 14px; background: transparent; color: var(--text-light);
     }
+    .input-line::placeholder { color: var(--text-muted); }
     .input-line:focus { border-bottom-color: #D32F2F; }
+
+    .form-group-custom label { color: var(--text-muted); }
     
     /* Select2 Custom */
     .select2-container { width: 100% !important; margin-bottom: 10px; }
@@ -33,6 +79,16 @@
     input:checked + .slider { background-color: #D32F2F; }
     input:checked + .slider:before { transform: translateX(20px); }
 </style>
+
+<div class="page-header">
+    <a href="/address" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <div class="page-title">
+        <i class="fas fa-map-marker-alt me-2"></i>{{ 'Sửa địa chỉ' if edit_address else 'Thêm địa chỉ' }}
+    </div>
+    <span style="width: 40px;"></span>
+</div>
 
 <form action="{{ '/update_address/' ~ edit_address.id if edit_address else '/save_address' }}" method="POST">
     
