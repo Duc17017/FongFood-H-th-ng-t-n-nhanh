@@ -336,6 +336,24 @@
     }
 
     /* Responsive */
+    @media (min-width: 992px) {
+        .profile-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .profile-menu-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+        }
+        .profile-main-content {
+            flex: 1;
+            min-width: 0;
+        }
+    }
+    
     @media (max-width: 576px) {
         .profile-container {
             padding: 10px;
@@ -405,8 +423,39 @@
 
 <div class="profile-container ai-slide-up">
     
-    <!-- Menu Items -->
-    <div class="row g-2 mb-3">
+    <!-- Menu Sidebar for PC -->
+    <div class="profile-menu-sidebar d-none d-lg-block">
+        <div class="menu-card text-center" style="background: var(--bg-white);">
+            <a href="/history" class="d-block p-3 text-decoration-none text-dark">
+                <i class="fas fa-shopping-bag mb-2" style="font-size: 24px; color: #D32F2F;"></i>
+                <span class="d-block">Đơn hàng</span>
+            </a>
+        </div>
+        <div class="menu-card text-center mt-2" style="background: var(--bg-white);">
+            <a href="/address" class="d-block p-3 text-decoration-none text-dark">
+                <i class="fas fa-map-marker-alt mb-2" style="font-size: 24px; color: #4CAF50;"></i>
+                <span class="d-block">Địa chỉ</span>
+            </a>
+        </div>
+        <div class="menu-card text-center mt-2" style="background: var(--bg-white);">
+            <a href="/settings" class="d-block p-3 text-decoration-none text-dark">
+                <i class="fas fa-cog mb-2" style="font-size: 24px; color: #9E9E9E;"></i>
+                <span class="d-block">Cài đặt</span>
+            </a>
+        </div>
+        <div class="menu-card text-center mt-2" style="background: var(--bg-white);">
+            <a href="/support" class="d-block p-3 text-decoration-none text-dark">
+                <i class="fas fa-headset mb-2" style="font-size: 24px; color: #2196F3;"></i>
+                <span class="d-block">Hỗ trợ</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="profile-main-content">
+    
+    <!-- Mobile Menu Items (only show on mobile) -->
+    <div class="row g-2 mb-3 d-lg-none">
         <div class="col-6">
             <a href="/history" class="menu-card text-center">
                 <i class="fas fa-shopping-bag"></i>
@@ -556,6 +605,7 @@
                 </button>
             </div>
         </form>
+    </div>
     </div>
 </div>
 

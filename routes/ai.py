@@ -1633,9 +1633,14 @@ def chat_process():
                     )
                     reply_text = response.text if hasattr(response, 'text') else str(response)
                 except Exception as e:
+                    error_msg = str(e)
                     logger.exception("Gemini chat error")
-                    fallback = get_ai_chatbot_response(user_message, user)
-                    reply_text = fallback.get("message") or "Dạ bạn cho Fong Food xin câu hỏi cụ thể hơn ạ!"
+                    # Kiểm tra lỗi quota
+                    if "429" in error_msg or "quota" in error_msg.lower() or "RESOURCE_EXHAUSTED" in error_msg:
+                        reply_text = "Dạ hiện tại Fong Food đang hết quota AI, hệ thống đã chuyển sang chế độ trả lời tự động. Anh/chị vui lòng thử lại sau nhé!"
+                    else:
+                        fallback = get_ai_chatbot_response(user_message, user)
+                        reply_text = fallback.get("message") or "Dạ bạn cho Fong Food xin câu hỏi cụ thể hơn ạ!"
             else:
                 # Sử dụng google.generativeai client cũ
                 try:
@@ -1643,9 +1648,13 @@ def chat_process():
                     response = model.generate_content(user_message)
                     reply_text = getattr(response, "text", None) or ""
                 except Exception as e:
+                    error_msg = str(e)
                     logger.exception("Gemini chat error")
-                    fallback = get_ai_chatbot_response(user_message, user)
-                    reply_text = fallback.get("message") or "Dạ bạn cho Fong Food xin câu hỏi cụ thể hơn ạ!"
+                    if "429" in error_msg or "quota" in error_msg.lower() or "RESOURCE_EXHAUSTED" in error_msg:
+                        reply_text = "Dạ hiện tại Fong Food đang hết quota AI, hệ thống đã chuyển sang chế độ trả lời tự động. Anh/chị vui lòng thử lại sau nhé!"
+                    else:
+                        fallback = get_ai_chatbot_response(user_message, user)
+                        reply_text = fallback.get("message") or "Dạ bạn cho Fong Food xin câu hỏi cụ thể hơn ạ!"
 
             reply_text = reply_text.replace("*", "").strip() or "Dạ bạn cho Fong Food xin câu hỏi cụ thể hơn ạ!"
         except Exception as e:

@@ -1,5 +1,6 @@
 import time
 import logging
+import os
 
 import requests
 import json
@@ -17,7 +18,7 @@ _cache: dict[str, dict] = {}
 def db_get(path: str, use_cache: bool = False):
     """
     Lấy dữ liệu từ Firebase.
-    use_cache=True: Nếu dữ liệu mới tải trong vòng 60s thì lấy từ RAM luôn, không hỏi Firebase.
+    use_cache=True: Nếu dữ liệu mới tải trong vòng 60s thì lấy từ RAM luôn.
     """
     global _cache
     current_time = time.time()
@@ -27,20 +28,26 @@ def db_get(path: str, use_cache: bool = False):
             return _cache[path]["data"]
 
     try:
-        r = session.get(f"{FIREBASE_URL}{path}.json")
+        r = session.get(f"{FIREBASE_URL}{path}.json", timeout=10)
         data = r.json() if r.status_code == 200 and r.text != "null" else {}
 
         if use_cache:
             _cache[path] = {"data": data, "time": current_time}
 
         return data
-    except Exception:
+    except Exception as e:
+        logger.warning(f"Firebase db_get {path}: {e}")
         return {}
 
 
 def db_put(path: str, data):
+    # Xóa cache khi cập nhật dữ liệu
+    global _cache
+    if path in _cache:
+        del _cache[path]
+    
     try:
-        r = session.put(f"{FIREBASE_URL}{path}.json", json=data)
+        r = session.put(f"{FIREBASE_URL}{path}.json", json=data, timeout=10)
         if r.status_code >= 400:
             logger.warning("Firebase db_put %s status %s", path, r.status_code)
             raise RuntimeError(f"Firebase put failed: {r.status_code}")
@@ -50,14 +57,25 @@ def db_put(path: str, data):
 
 
 def db_patch(path: str, data):
+    # Xóa cache khi cập nhật dữ liệu
+    global _cache
+    if path in _cache:
+        del _cache[path]
+    
     try:
-        r = session.patch(f"{FIREBASE_URL}{path}.json", json=data)
+        r = session.patch(f"{FIREBASE_URL}{path}.json", json=data, timeout=10)
         if r.status_code >= 400:
             logger.warning("Firebase db_patch %s status %s", path, r.status_code)
             raise RuntimeError(f"Firebase patch failed: {r.status_code}")
     except Exception as e:
         logger.exception("Firebase db_patch %s: %s", path, e)
         raise
+
+
+def clear_cache():
+    """Xóa toàn bộ cache"""
+    global _cache
+    _cache = {}
 
 def get_db_connection():
     return pymysql.connect(

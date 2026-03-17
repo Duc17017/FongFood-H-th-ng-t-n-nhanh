@@ -324,8 +324,27 @@ function buyNow() {
 }
 
 function updateCartCount(count) {
-    const badge = document.querySelector('.cart-badge');
-    if (badge) badge.textContent = count;
+    // Desktop badge
+    const badge = document.getElementById('cart-count');
+    if (badge) {
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'inline' : 'none';
+    }
+    // Mobile badge
+    const mobileBadge = document.getElementById('mobile-cart-count');
+    if (mobileBadge) {
+        mobileBadge.textContent = count;
+    } else if (count > 0) {
+        // Create mobile badge if doesn't exist
+        const mobileCartLink = document.getElementById('cartLinkMobile');
+        if (mobileCartLink) {
+            const newBadge = document.createElement('span');
+            newBadge.id = 'mobile-cart-count';
+            newBadge.className = 'mobile-cart-badge';
+            newBadge.textContent = count;
+            mobileCartLink.appendChild(newBadge);
+        }
+    }
 }
 
 function showToast(message, type) {

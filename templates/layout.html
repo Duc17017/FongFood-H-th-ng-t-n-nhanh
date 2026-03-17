@@ -164,6 +164,78 @@
         .footer-title { color: var(--primary); font-weight: bold; font-size: 16px; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 5px; }
         .footer-text { font-size: 14px; line-height: 1.8; color: #a0a0a0; margin-bottom: 10px; }
         
+        /* Collapsible Search for PC */
+        /* Collapsible Search Bar */
+        .search-collapsible {
+            margin-left: 10px;
+        }
+        .search-collapsible .search-wrapper {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            border-radius: 22px;
+        }
+        .search-collapsible .search-wrapper:hover,
+        .search-collapsible .search-wrapper.expanded {
+            width: 320px;
+        }
+        .search-collapsible .search-form {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.08);
+            border-radius: 22px;
+            padding: 0 12px;
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.3s ease;
+        }
+        .search-collapsible .search-wrapper:hover .search-form,
+        .search-collapsible .search-wrapper.expanded .search-form {
+            background: rgba(255,255,255,0.12);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(239,57,66,0.25);
+        }
+        .search-collapsible .search-icon {
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            min-width: 20px;
+        }
+        .search-collapsible .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 14px;
+            padding: 0 10px;
+            outline: none;
+            min-width: 0;
+        }
+        .search-collapsible .search-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        .search-collapsible .search-btn {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .search-collapsible .search-btn:hover {
+            transform: translateX(2px);
+        }
+        .search-collapsible .search-btn i {
+            font-size: 12px;
+        }
+
         /* RESPONSIVE */
         @media (min-width: 992px) {
             .mobile-header, .mobile-search-area, .mobile-bottom-nav { display: none !important; }
@@ -312,8 +384,21 @@
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-red-custom shadow-sm sticky-top desktop-navbar">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/home"><i class="fas fa-utensils me-2"></i>FONG FOOD</a>
+        <div class="container-fluid px-3">
+            <!-- Logo + Search inline -->
+            <a class="navbar-brand fw-bold me-2" href="/home"><i class="fas fa-utensils me-2"></i>FONG FOOD</a>
+
+            <!-- Collapsible Search Bar - auto expand on hover, click to toggle -->
+            <div class="search-collapsible d-none d-lg-flex align-items-center me-auto">
+                <div class="search-wrapper">
+                    <form action="/menu" method="GET" class="search-form">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" name="q" class="search-input" placeholder="Tìm món ngon..." value="{{ request.args.get('q', '') }}">
+                        <button type="submit" class="search-btn"><i class="fas fa-arrow-right"></i></button>
+                    </form>
+                </div>
+            </div>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     {% if session.get('role') == 'customer' %}
@@ -322,7 +407,7 @@
                         <li class="nav-item position-relative mx-2">
                             <a id="cartLink" class="nav-link {{ 'active' if request.path == '/cart' else '' }}" href="/cart">
                                 <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
-                                {% if total_cart_items > 0 %} <span class="position-absolute top-0 start-100 translate-middle cart-badge">{{ total_cart_items }}</span> {% endif %}
+                                {% if total_cart_items > 0 %} <span id="cart-count" class="position-absolute top-0 start-100 translate-middle cart-badge">{{ total_cart_items }}</span> {% endif %}
                             </a>
                         </li>
                         <li class="nav-item position-relative">
@@ -477,8 +562,8 @@
                 <div class="col-md-4 mb-4">
                     <div class="footer-title">FANPAGE FACEBOOK</div>
                     <div class="bg-white p-3 rounded text-dark d-flex align-items-center gap-3">
-                        <img src="https://img.freepik.com/free-vector/superhero-mascot-logo-design_105692-26.jpg" style="width: 50px; height: 50px;">
-                        <div><div class="fw-bold small">FONG FOOD </div><div class="small text-muted">25.507 người theo dõi</div></div>
+                        <img src="/static/images/ảnh4.png" style="width: 50px; height: 50px;">
+                        <div><div class="fw-bold small">FONG FOOD</div><div class="small text-muted">Hàng ngàn khách hàng tin dùng</div></div>
                     </div>
                 </div>
             </div>
@@ -503,14 +588,14 @@
         <a id="cartLinkMobile" href="/cart" class="nav-item-mobile {{ 'active' if request.path == '/cart' else '' }}" style="position: relative;">
             <i class="fas fa-shopping-cart"></i>
             {% if total_cart_items > 0 %}
-            <span class="mobile-cart-badge">{{ total_cart_items }}</span>
+            <span id="mobile-cart-count" class="mobile-cart-badge">{{ total_cart_items }}</span>
             {% endif %}
             <span>Giỏ hàng</span>
         </a>
 
-        <a href="/history" class="nav-item-mobile {{ 'active' if request.path == '/history' else '' }}">
-            <i class="fas fa-receipt"></i>
-            <span>Đơn hàng</span>
+        <a href="/notifications" class="nav-item-mobile {{ 'active' if request.path == '/notifications' else '' }}">
+            <i class="fas fa-bell"></i>
+            <span>Thông báo</span>
         </a>
 
         <a href="/profile" class="nav-item-mobile {{ 'active' if request.path == '/profile' else '' }}">
@@ -584,10 +669,49 @@
             background: white;
             border-radius: 16px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            z-index: 998;
+            z-index: 9998;
             display: none;
             flex-direction: column;
             overflow: hidden;
+        }
+        
+        /* Chat Overlay */
+        .chat-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 9997;
+            display: none;
+        }
+        .chat-overlay.show {
+            display: block;
+        }
+        
+        /* Quick Replies */
+        .chat-quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px;
+            border-top: 1px solid #eee;
+            background: #f9f9f9;
+        }
+        .chat-quick-reply {
+            background: #fff;
+            border: 1px solid #D32F2F;
+            color: #D32F2F;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chat-quick-reply:hover {
+            background: #D32F2F;
+            color: white;
         }
         @media (min-width: 992px) {
             .chat-widget-panel {
@@ -848,11 +972,16 @@
         </div>
     </div>
 
+    <!-- Chat Overlay for click outside to close -->
+    <div class="chat-overlay" id="chatOverlay" onclick="toggleChatWidget()"></div>
+
     <script>
         // Chat Widget Functions
         function toggleChatWidget() {
             const panel = document.getElementById('chatWidgetPanel');
+            const overlay = document.getElementById('chatOverlay');
             panel.classList.toggle('show');
+            overlay.classList.toggle('show');
             if (panel.classList.contains('show')) {
                 loadChatWidgetHistory();
                 document.getElementById('chatNewBadge').style.display = 'none';
@@ -1004,9 +1133,12 @@
                 .catch(err => console.error('loadChatHistory error:', err));
         }
 
-        // Poll for new messages from admin
+        // Poll for new messages from admin (30 giây 1 lần)
         setInterval(function() {
-            fetch('/api/get-chat-updates')
+            fetch('/api/get-chat-updates', {
+                cache: 'no-store',
+                headers: {'Cache-Control': 'no-cache'}
+            })
                 .then(res => res.json())
                 .then(data => {
                     if (data && Array.isArray(data.messages) && data.messages.length > 0) {
@@ -1020,7 +1152,7 @@
                     }
                 })
                 .catch(err => console.log('Chat polling error:', err));
-        }, 5000);
+        }, 30000);
     </script>
     {% endif %}
 
@@ -1141,9 +1273,12 @@
 
     {% if session.get('user') %}
     <script>
-        // Kiểm tra session định kỳ
+        // Kiểm tra session định kỳ (10 giây 1 lần thay vì 3 giây)
         setInterval(function() {
-            fetch('/check-session-status')
+            fetch('/check-session-status', {
+                cache: 'no-store',
+                headers: {'Cache-Control': 'no-cache'}
+            })
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'kick') {
@@ -1162,7 +1297,7 @@
                     }
                 })
                 .catch(err => console.log('Checking session...', err));
-        }, 3000);
+        }, 10000);
     </script>
     {% endif %}
 

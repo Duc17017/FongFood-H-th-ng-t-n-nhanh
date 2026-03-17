@@ -135,27 +135,27 @@
 
 <div class="category-scroll-container">
     <a href="/menu" class="cat-item {{ 'active' if not request.args.get('q') }}">
-        <div class="cat-box cat-all"><i class="fas fa-th-large"></i></div>
+        <div class="cat-box cat-all"><i class="fa-solid fa-utensils"></i></div>
         <span class="cat-name">Tất cả</span>
     </a>
     <a href="/menu?q=fastfood" class="cat-item {{ 'active' if request.args.get('q') == 'fastfood' }}">
-        <div class="cat-box cat-fastfood"><i class="fas fa-hamburger"></i></div>
+        <div class="cat-box cat-fastfood"><i class="fa-solid fa-burger"></i></div>
         <span class="cat-name">Đồ ăn nhanh</span>
     </a>
     <a href="/menu?q=noodle" class="cat-item {{ 'active' if request.args.get('q') == 'noodle' }}">
-        <div class="cat-box cat-noodle"><i class="fas fa-bowl-rice"></i></div>
+        <div class="cat-box cat-noodle"><i class="fa-solid fa-bowl-rice"></i></div>
         <span class="cat-name">Bún/Phở</span>
     </a>
     <a href="/menu?q=drink" class="cat-item {{ 'active' if request.args.get('q') == 'drink' }}">
-        <div class="cat-box cat-drink"><i class="fas fa-coffee"></i></div>
+        <div class="cat-box cat-drink"><i class="fa-solid fa-coffee"></i></div>
         <span class="cat-name">Đồ uống</span>
     </a>
     <a href="/menu?q=bread" class="cat-item {{ 'active' if request.args.get('q') == 'bread' }}">
-        <div class="cat-box cat-bread"><i class="fas fa-bread-slice"></i></div>
+        <div class="cat-box cat-bread"><i class="fa-solid fa-bread-slice"></i></div>
         <span class="cat-name">Bánh mì</span>
     </a>
     <a href="/menu?q=pizza" class="cat-item {{ 'active' if request.args.get('q') == 'pizza' }}">
-        <div class="cat-box cat-pizza"><i class="fas fa-pizza-slice"></i></div>
+        <div class="cat-box cat-pizza"><i class="fa-solid fa-pizza-slice"></i></div>
         <span class="cat-name">Pizza</span>
     </a>
 </div>
@@ -358,8 +358,27 @@ function addMultipleToCart(pid, qty) {
 }
 
 function updateCartCount(count) {
-    const badge = document.querySelector('.cart-badge');
-    if (badge) badge.textContent = count;
+    // Desktop badge
+    const badge = document.getElementById('cart-count');
+    if (badge) {
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'inline' : 'none';
+    }
+    // Mobile badge
+    const mobileBadge = document.getElementById('mobile-cart-count');
+    if (mobileBadge) {
+        mobileBadge.textContent = count;
+    } else if (count > 0) {
+        // Create mobile badge if doesn't exist
+        const mobileCartLink = document.getElementById('cartLinkMobile');
+        if (mobileCartLink) {
+            const newBadge = document.createElement('span');
+            newBadge.id = 'mobile-cart-count';
+            newBadge.className = 'mobile-cart-badge';
+            newBadge.textContent = count;
+            mobileCartLink.appendChild(newBadge);
+        }
+    }
 }
 
 function showToast(message, type) {

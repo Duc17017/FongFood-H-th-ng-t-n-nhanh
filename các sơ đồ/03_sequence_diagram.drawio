@@ -1,0 +1,230 @@
+<mxfile host="app.diagrams.net" modified="2026-03-17T00:00:00.000Z" agent="Claude" version="21.0.0">
+  <diagram name="03 - Sequence Diagram - Login/Register" id="sequence-03">
+    <mxGraphModel dx="2500" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="SEQUENCE DIAGRAM - ĐĂNG NHẬP / ĐĂNG KÝ" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;fontColor=#333333" vertex="1" parent="1">
+          <mxGeometry x="550" y="20" width="500" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Actors/Components -->
+        <mxCell id="actor_customer" value="Khách hàng" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="80" width="140" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="actor_browser" value="Browser" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="280" y="80" width="140" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="actor_auth" value="Auth Route&#xa;(routes/auth.py)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="480" y="80" width="160" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="actor_auth_service" value="Auth Service&#xa;(services/auth_service.py)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="700" y="80" width="180" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="actor_db" value="Firebase&#xa;(Database)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="940" y="80" width="140" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="actor_session" value="Session" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1140" y="80" width="140" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- Lifelines -->
+        <mxCell id="lifeline1" value="" style="endArrow=classic;html=1;dashPattern=1 1;strokeColor=#666666;strokeWidth=2" edge="1" parent="1" source="actor_customer" target="actor_browser">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Login Flow -->
+        <mxCell id="step1" value="1. Nhập username/password" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="90" y="170" width="200" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow1" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step1" target="step2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step2" value="2. Gửi POST /login" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="290" y="170" width="180" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step2" target="step3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step3" value="3. find_user(username)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="490" y="170" width="200" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step3" target="step4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step4" value="4. db_get('users')" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="710" y="170" width="180" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step4" target="step5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step5" value="5. Return user data" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="950" y="170" width="160" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow5" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2;startArrow=classic" edge="1" parent="1" source="step5" target="step3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step6" value="6. verify_password()" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="490" y="230" width="200" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow6" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step6" target="step7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step7" value="7. Password Match!" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="710" y="230" width="180" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow7" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2;startArrow=classic" edge="1" parent="1" source="step7" target="step6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step8" value="8. Generate login_token&#xa;(UUID)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="490" y="290" width="200" height="45" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step9" value="9. db_patch&#xa;('users/{username}',&#xa;{login_token})" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="710" y="290" width="180" height="55" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow9" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step8" target="step9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow9b" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2;startArrow=classic" edge="1" parent="1" source="step9" target="step8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step10" value="10. session['user'] = username&#xa;session['role'] = role&#xa;session['login_token'] = token" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="1150" y="290" width="220" height="55" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow10" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step9" target="step10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step11" value="11. Redirect to /home" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="290" y="370" width="180" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow11" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step10" target="step11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step12" value="12. Display Home Page" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="90" y="370" width="180" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow12" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step11" target="step12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Register Flow -->
+        <mxCell id="reg_title" value="--- ĐĂNG KÝ ---" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333" vertex="1" parent="1">
+          <mxGeometry x="680" y="440" width="140" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step_r1" value="1. Nhập phone, email, name, password" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="90" y="490" width="280" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step_r2" value="2. POST /register" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="290" y="490" width="180" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step_r3" value="3. validate_register_data()" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="490" y="490" width="220" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step_r4" value="4. Check OTP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="490" y="540" width="220" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step_r5" value="5. normalize_users()" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="490" y="590" width="220" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step_r6" value="6. db_get('users')" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="730" y="590" width="160" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step_r7" value="7. Check phone exists" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="730" y="640" width="160" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step_r8" value="8. hash_password()" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="490" y="690" width="220" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step_r9" value="9. db_put('users/{phone}',&#xa;new_user)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="730" y="690" width="200" height="45" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step_r10" value="10. Flash success &amp; Redirect /login" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="290" y="760" width="280" height="35" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="step_r11" value="11. Display Login Page" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="90" y="760" width="180" height="35" as="geometry" />
+        </mxCell>
+        
+        <!-- Connect Register Flow -->
+        <mxCell id="ar_r1" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step_r1" target="step_r2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ar_r2" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step_r2" target="step_r3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ar_r3" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step_r3" target="step_r4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ar_r4" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step_r4" target="step_r5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ar_r5" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step_r5" target="step_r6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ar_r6" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2;startArrow=classic" edge="1" parent="1" source="step_r6" target="step_r5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ar_r7" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step_r6" target="step_r7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ar_r8" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step_r7" target="step_r8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ar_r9" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step_r8" target="step_r9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ar_r10" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2;startArrow=classic" edge="1" parent="1" source="step_r9" target="step_r8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ar_r11" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step_r9" target="step_r10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ar_r12" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="step_r10" target="step_r11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

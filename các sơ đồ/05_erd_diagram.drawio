@@ -1,0 +1,238 @@
+<mxfile host="app.diagrams.net" modified="2026-03-17T00:00:00.000Z" agent="Claude" version="21.0.0">
+  <diagram name="05 - ERD Diagram" id="erd-05">
+    <mxGraphModel dx="2500" dy="1500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="ERD DIAGRAM - FONG FOOD APP (Firebase Realtime Database)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;fontColor=#333333" vertex="1" parent="1">
+          <mxGeometry x="450" y="20" width="700" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- users node -->
+        <mxCell id="users" value="users" style="swimlane;fontSize=14;fontStyle=1;fillColor=#dae8fc;strokeColor=#6c8ebf;horizontal=0;startSize=30" vertex="1" parent="1">
+          <mxGeometry x="80" y="100" width="300" height="260" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="users_pk" value="PK" style="text;fontSize=11;align=left;spacingLeft=0;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0;fontStyle=1" vertex="1" parent="users">
+          <mxGeometry x="4" y="34" width="30" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="users_username" value="username (String) - KEY" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="users">
+          <mxGeometry x="30" y="34" width="260" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="users_password" value="password (String)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="users">
+          <mxGeometry x="4" y="58" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="users_name" value="name (String)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="users">
+          <mxGeometry x="4" y="82" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="users_email" value="email (String)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="users">
+          <mxGeometry x="4" y="106" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="users_phone" value="phone (String)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="users">
+          <mxGeometry x="4" y="130" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="users_avatar" value="avatar (String - base64)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="users">
+          <mxGeometry x="4" y="154" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="users_role" value="role (String) - admin/customer" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="users">
+          <mxGeometry x="4" y="178" width="240" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="users_points" value="points (Integer)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="users">
+          <mxGeometry x="4" y="202" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="users_rank" value="rank (String) - Đồng/Bạc/Vàng/Kim Cương" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="users">
+          <mxGeometry x="4" y="226" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- addresses sub-node -->
+        <mxCell id="addresses" value="addresses[] (List)" style="swimlane;fontSize=12;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;horizontal=0;startSize=25" vertex="1" parent="users">
+          <mxGeometry x="10" y="248" width="280" height="150" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="addr_id" value="- id (UUID)" style="text;fontSize=10;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="addresses">
+          <mxGeometry x="4" y="28" width="140" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="addr_fullname" value="- fullname (String)" style="text;fontSize=10;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="addresses">
+          <mxGeometry x="4" y="46" width="140" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="addr_phone" value="- phone (String)" style="text;fontSize=10;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="addresses">
+          <mxGeometry x="4" y="64" width="140" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="addr_city" value="- city (String)" style="text;fontSize=10;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="addresses">
+          <mxGeometry x="4" y="82" width="140" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="addr_district" value="- district (String)" style="text;fontSize=10;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="addresses">
+          <mxGeometry x="4" y="100" width="140" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="addr_ward" value="- ward (String)" style="text;fontSize=10;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="addresses">
+          <mxGeometry x="4" y="118" width="140" height="18" as="geometry" />
+        </mxCell>
+        
+        <!-- products node -->
+        <mxCell id="products" value="products" style="swimlane;fontSize=14;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;horizontal=0;startSize=30" vertex="1" parent="1">
+          <mxGeometry x="440" y="100" width="280" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="products_pk" value="PK" style="text;fontSize=11;align=left;spacingLeft=0;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0;fontStyle=1" vertex="1" parent="products">
+          <mxGeometry x="4" y="34" width="30" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="products_id" value="id (String) - KEY" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="products">
+          <mxGeometry x="30" y="34" width="240" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="products_name" value="name (String)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="products">
+          <mxGeometry x="4" y="58" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="products_price" value="price (Float)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="products">
+          <mxGeometry x="4" y="82" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="products_category" value="category (String)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="products">
+          <mxGeometry x="4" y="106" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="products_image" value="image (String - base64)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="products">
+          <mxGeometry x="4" y="130" width="200" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- orders node -->
+        <mxCell id="orders" value="orders" style="swimlane;fontSize=14;fontStyle=1;fillColor=#e1d5e7;strokeColor=#9673a6;horizontal=0;startSize=30" vertex="1" parent="1">
+          <mxGeometry x="780" y="100" width="320" height="300" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="orders_pk" value="PK" style="text;fontSize=11;align=left;spacingLeft=0;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0;fontStyle=1" vertex="1" parent="orders">
+          <mxGeometry x="4" y="34" width="30" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="orders_id" value="id (String - UUID) - KEY" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="orders">
+          <mxGeometry x="30" y="34" width="280" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="orders_user" value="FK" style="text;fontSize=11;align=left;spacingLeft=0;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0;fontStyle=1" vertex="1" parent="orders">
+          <mxGeometry x="4" y="58" width="30" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="orders_user_ref" value="user (String) → users.username" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="orders">
+          <mxGeometry x="30" y="58" width="260" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="orders_name" value="customerName (String)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="orders">
+          <mxGeometry x="4" y="82" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="orders_phone" value="phone (String)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="orders">
+          <mxGeometry x="4" y="106" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="orders_address" value="address (String)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="orders">
+          <mxGeometry x="4" y="130" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="orders_total" value="total (Float)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="orders">
+          <mxGeometry x="4" y="154" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="orders_status" value="status (String) - pending/shipping/completed/cancelled" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="orders">
+          <mxGeometry x="4" y="178" width="300" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="orders_payment" value="paymentMethod (String) - cod/qr" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="orders">
+          <mxGeometry x="4" y="202" width="240" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="orders_paystatus" value="paymentStatus (String)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="orders">
+          <mxGeometry x="4" y="226" width="200" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- items sub-node -->
+        <mxCell id="order_items" value="items[] (List)" style="swimlane;fontSize=12;fontStyle=1;fillColor=#f5f5f5;strokeColor=#666666;horizontal=0;startSize=25" vertex="1" parent="orders">
+          <mxGeometry x="10" y="248" width="300" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="item_id" value="- id (String)" style="text;fontSize=10;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="order_items">
+          <mxGeometry x="4" y="28" width="140" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="item_name" value="- name (String)" style="text;fontSize=10;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="order_items">
+          <mxGeometry x="4" y="46" width="140" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="item_price" value="- price (Float)" style="text;fontSize=10;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="order_items">
+          <mxGeometry x="4" y="64" width="140" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="item_qty" value="- qty (Integer)" style="text;fontSize=10;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="order_items">
+          <mxGeometry x="4" y="82" width="140" height="18" as="geometry" />
+        </mxCell>
+        
+        <!-- carts node -->
+        <mxCell id="carts" value="carts/{username}" style="swimlane;fontSize=14;fontStyle=1;fillColor=#dae8fc;strokeColor=#6c8ebf;horizontal=0;startSize=30" vertex="1" parent="1">
+          <mxGeometry x="80" y="440" width="280" height="160" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="carts_key" value="KEY = username" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0;fontStyle=1" vertex="1" parent="carts">
+          <mxGeometry x="4" y="34" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="carts_items" value="items{} (Dict - product_id: {name, price, qty})" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="carts">
+          <mxGeometry x="4" y="60" width="260" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- vouchers node -->
+        <mxCell id="vouchers" value="vouchers" style="swimlane;fontSize=14;fontStyle=1;fillColor=#ffe6cc;strokeColor=#d79b00;horizontal=0;startSize=30" vertex="1" parent="1">
+          <mxGeometry x="440" y="340" width="280" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="vouchers_pk" value="PK" style="text;fontSize=11;align=left;spacingLeft=0;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0;fontStyle=1" vertex="1" parent="vouchers">
+          <mxGeometry x="4" y="34" width="30" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="vouchers_code" value="code (String) - KEY" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="vouchers">
+          <mxGeometry x="30" y="34" width="240" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="vouchers_discount" value="discount (Integer)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="vouchers">
+          <mxGeometry x="4" y="58" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="vouchers_type" value="type (String) - percent/shipping" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="vouchers">
+          <mxGeometry x="4" y="82" width="240" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="vouchers_min" value="min_order (Float)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="vouchers">
+          <mxGeometry x="4" y="106" width="200" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- notifications node -->
+        <mxCell id="notifications" value="notifications/{username}" style="swimlane;fontSize=14;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;horizontal=0;startSize=30" vertex="1" parent="1">
+          <mxGeometry x="780" y="460" width="320" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="notif_key" value="KEY = username" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0;fontStyle=1" vertex="1" parent="notifications">
+          <mxGeometry x="4" y="34" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="notif_items" value="[] (List of Notification objects)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="notifications">
+          <mxGeometry x="4" y="60" width="280" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="notif_id" value="  - id (UUID)" style="text;fontSize=10;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="notifications">
+          <mxGeometry x="4" y="84" width="140" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="notif_title" value="  - title (String)" style="text;fontSize=10;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="notifications">
+          <mxGeometry x="4" y="102" width="140" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="notif_msg" value="  - message (String)" style="text;fontSize=10;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="notifications">
+          <mxGeometry x="4" y="120" width="140" height="18" as="geometry" />
+        </mxCell>
+        
+        <!-- chats node -->
+        <mxCell id="chats" value="chats/{username}" style="swimlane;fontSize=14;fontStyle=1;fillColor=#e1d5e7;strokeColor=#9673a6;horizontal=0;startSize=30" vertex="1" parent="1">
+          <mxGeometry x="440" y="560" width="280" height="140" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="chats_key" value="KEY = username" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0;fontStyle=1" vertex="1" parent="chats">
+          <mxGeometry x="4" y="34" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="chats_messages" value="[] (List of ChatMessage objects)" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="chats">
+          <mxGeometry x="4" y="60" width="260" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- Relationships -->
+        <mxCell id="rel_u_o" value="1" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2" edge="1" parent="1" source="users" target="orders">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_u_o_m" value="*" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2" edge="1" parent="1" source="users" target="orders">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel_u_c" value="1" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2" edge="1" parent="1" source="users" target="carts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

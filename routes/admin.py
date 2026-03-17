@@ -23,7 +23,7 @@ def normalize_data(data, key_field='id'):
     return {}
 
 
-def _send_notification(username, title, message, link="/"):
+def _send_notification(username, title, message, link="/", notif_type="system"):
     """Hàm gửi thông báo cho user"""
     import uuid
     notif_id = str(uuid.uuid4())
@@ -34,10 +34,11 @@ def _send_notification(username, title, message, link="/"):
         "link": link,
         "time": datetime.now().strftime("%H:%M %d/%m"),
         "is_read": False,
+        "type": notif_type,
     }
 
-    # Lưu vào notifications/{username}
-    existing = db_get(f"notifications/{username}") or []
+    # Lưu vào notifications/{username} - KHÔNG dùng cache
+    existing = db_get(f"notifications/{username}", use_cache=False) or []
     if isinstance(existing, dict):
         existing[notif_id] = notif
     else:
@@ -594,7 +595,8 @@ def send_voucher():
                         user_key,
                         "🎁 Voucher mới!",
                         f"Bạn nhận được voucher giảm {discount}%! Mã: {code}. Đơn tối thiểu 50,000đ",
-                        "/my-vouchers"
+                        "/my-vouchers",
+                        "voucher"
                     )
             logger.info(f"=== SEND_VOUCHER: Đã gửi thông báo cho tất cả users ===")
         else:
@@ -603,7 +605,8 @@ def send_voucher():
                 username,
                 "🎁 Voucher mới!",
                 f"Bạn nhận được voucher giảm {discount}%! Mã: {code}. Đơn tối thiểu 50,000đ",
-                "/my-vouchers"
+                "/my-vouchers",
+                "voucher"
             )
             logger.info(f"=== SEND_VOUCHER: Đã gửi thông báo cho user {username} ===")
     except Exception as notify_err:

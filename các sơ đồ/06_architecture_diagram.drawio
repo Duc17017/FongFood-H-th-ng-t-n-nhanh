@@ -1,0 +1,160 @@
+<mxfile host="app.diagrams.net" modified="2026-03-17T00:00:00.000Z" agent="Claude" version="21.0.0">
+  <diagram name="06 - Architecture Diagram" id="arch-06">
+    <mxGraphModel dx="2500" dy="1500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="ARCHITECTURE DIAGRAM - FONG FOOD APP" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;fontColor=#333333" vertex="1" parent="1">
+          <mxGeometry x="500" y="20" width="600" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Client Layer -->
+        <mxCell id="client_title" value="CLIENT LAYER (Presentation)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#333333" vertex="1" parent="1">
+          <mxGeometry x="80" y="80" width="300" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="web_client" value="Web Browser&#xa;(HTML/CSS/JS/Jinja2)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="130" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="mobile_client" value="Mobile App&#xa;(React Native / Flutter)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="300" y="130" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pwa" value="PWA&#xa;(Progressive Web App)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="520" y="130" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- API Gateway -->
+        <mxCell id="api_gateway" value="API GATEWAY" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="360" y="230" width="160" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- Flask Application -->
+        <mxCell id="flask_title" value="FLASK APPLICATION (Business Logic)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#333333" vertex="1" parent="1">
+          <mxGeometry x="80" y="310" width="400" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- Routes -->
+        <mxCell id="routes_box" value="ROUTES (Blueprints)" style="swimlane;fontSize=12;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;horizontal=0;startSize=25" vertex="1" parent="1">
+          <mxGeometry x="80" y="350" width="280" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="auth_route" value="- auth.py - Login/Register/OTP" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="routes_box">
+          <mxGeometry x="4" y="28" width="260" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="user_route" value="- user.py - Customer routes" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="routes_box">
+          <mxGeometry x="4" y="50" width="260" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_route" value="- admin.py - Admin routes" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="routes_box">
+          <mxGeometry x="4" y="72" width="260" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="api_route" value="- api.py - REST API" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="routes_box">
+          <mxGeometry x="4" y="94" width="260" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="ai_route" value="- ai.py - AI Services" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="routes_box">
+          <mxGeometry x="4" y="116" width="260" height="18" as="geometry" />
+        </mxCell>
+        
+        <!-- Services -->
+        <mxCell id="services_box" value="SERVICES (Business Logic)" style="swimlane;fontSize=12;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;horizontal=0;startSize=25" vertex="1" parent="1">
+          <mxGeometry x="380" y="350" width="260" height="140" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="auth_service" value="- auth_service.py: validate, find_user,&#xa;  hash/verify password" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="services_box">
+          <mxGeometry x="4" y="28" width="240" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="analytics_service" value="- analytics_service.py:&#xa;  analyze_business_data()" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="services_box">
+          <mxGeometry x="4" y="82" width="240" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- Decorators -->
+        <mxCell id="decorators_box" value="DECORATORS" style="swimlane;fontSize=12;fontStyle=1;fillColor=#e1d5e7;strokeColor=#9673a6;horizontal=0;startSize=25" vertex="1" parent="1">
+          <mxGeometry x="80" y="570" width="280" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="login_required" value="- @login_required - Require login" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="decorators_box">
+          <mxGeometry x="4" y="28" width="260" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_required" value="- @admin_required - Require Admin" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="decorators_box">
+          <mxGeometry x="4" y="50" width="260" height="18" as="geometry" />
+        </mxCell>
+        
+        <!-- Utils -->
+        <mxCell id="utils_box" value="UTILS" style="swimlane;fontSize=12;fontStyle=1;fillColor=#ffe6cc;strokeColor=#d79b00;horizontal=0;startSize=25" vertex="1" parent="1">
+          <mxGeometry x="380" y="510" width="260" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="utils_func" value="- utils.py: db_get(), db_put(), db_patch()" style="text;fontSize=11;align=left;spacingLeft=4;verticalAlign=top;fillColor=none;strokeColor=none;rotatable=0" vertex="1" parent="utils_box">
+          <mxGeometry x="4" y="28" width="240" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- External Services -->
+        <mxCell id="external_title" value="EXTERNAL SERVICES" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#333333" vertex="1" parent="1">
+          <mxGeometry x="700" y="310" width="250" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="firebase" value="Firebase Realtime DB&#xa;(NoSQL Database)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="700" y="350" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="gemini" value="Google Gemini API&#xa;(AI Recommendations)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="700" y="430" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="openweather" value="OpenWeatherMap&#xa;(Weather API)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="700" y="510" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="payment" value="Payment Gateways&#xa;(VNPay/MoMo/ZaloPay)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="700" y="590" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrows -->
+        <mxCell id="arrow1" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="web_client" target="api_gateway">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow2" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="mobile_client" target="api_gateway">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow3" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="pwa" target="api_gateway">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow4" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="api_gateway" target="routes_box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow5" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="routes_box" target="services_box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow6" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="services_box" target="utils_box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow7" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2" edge="1" parent="1" source="utils_box" target="firebase">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow8" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2;dashed=1" edge="1" parent="1" source="services_box" target="gemini">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow9" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2;dashed=1" edge="1" parent="1" source="user_route" target="openweather">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow10" value="" style="endArrow=classic;html=1;strokeColor=#0066cc;strokeWidth=2;dashed=1" edge="1" parent="1" source="api_route" target="payment">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

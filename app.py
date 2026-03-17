@@ -97,9 +97,11 @@ def security_check():
             g.user_avatar = user_in_db.get("avatar", "")
             g.user_info = user_in_db
 
-            if session.get("role") == "customer":
+            # Chỉ kiểm tra token khi user đang có session hợp lệ
+            if session.get("role") == "customer" and session.get("login_token"):
                 token_session = session.get("login_token")
                 token_db = user_in_db.get("login_token")
+                # Chỉ kick nếu token trong DB khác với token trong session VÀ token trong DB không trống
                 if token_db and token_db != token_session:
                     logger.warning("Session token mismatch for user %s", username)
                     session.clear()
@@ -116,22 +118,22 @@ def inject_global_vars():
         user = session["user"]
 
         raw_cart = db_get(f"carts/{user}") or {}
-        cart_items = raw_cart if isinstance(raw_cart, list) else raw_cart.values()
+        cart_items = raw_cart if isinstance(raw_cart, list) else (raw_cart.values() if raw_cart else [])
 
         if cart_items:
             for item in cart_items:
                 if isinstance(item, dict):
-                    total_cart += int(item.get("qty", 0))
+                    total_cart += int(item.get("qty", 0) or 0)
 
         raw_notifs = db_get(f"notifications/{user}") or []
-        notif_items = list(raw_notifs.values()) if isinstance(raw_notifs, dict) else raw_notifs
+        notif_items = list(raw_notifs.values()) if isinstance(raw_notifs, dict) else (raw_notifs if isinstance(raw_notifs, list) else [])
 
         if notif_items:
             for n in notif_items:
                 if isinstance(n, dict) and not n.get("is_read"):
                     unread_notif += 1
 
-    return dict(total_cart_items=total_cart, unread_notif_count=unread_notif)
+    return dict(total_cart_items=total_cart or 0, unread_notif_count=unread_notif or 0)
 
 
 @app.errorhandler(404)
@@ -154,6 +156,44 @@ def server_error(e):
     except Exception:
         return "500 - Lỗi hệ thống. Vui lòng thử lại sau.", 500
 
+
+# Initialize sample vouchers if not exist
+def init_sample_vouchers():
+    """Khởi tạo voucher mẫu nếu chưa có"""
+    vouchers = db_get("vouchers") or {}
+    if not vouchers or len(vouchers) == 0:
+        from datetime import datetime, timedelta
+        future = (datetime.now() + timedelta(days=30)).isoformat()
+        sample_vouchers = {
+            "WELCOME10": {
+                "code": "WELCOME10",
+                "discount": 10,
+                "min_order": 50000,
+                "valid_until": future,
+                "user": "all",
+                "type": "percent"
+            },
+            "SAVE20": {
+                "code": "SAVE20",
+                "discount": 20,
+                "min_order": 100000,
+                "valid_until": future,
+                "user": "all",
+                "type": "percent"
+            },
+            "FREESHIP": {
+                "code": "FREESHIP",
+                "discount": 100,
+                "min_order": 0,
+                "valid_until": future,
+                "user": "all",
+                "type": "shipping"
+            }
+        }
+        db_put("vouchers", sample_vouchers)
+        logger.info("=== Initialized sample vouchers ===")
+
+init_sample_vouchers()
 
 if __name__ == "__main__":
     # Get local IP

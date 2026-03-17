@@ -164,24 +164,33 @@
     <a href="?filter=voucher" class="filter-tab" data-filter="voucher">
         <i class="fas fa-ticket-alt me-1"></i> Voucher
     </a>
-    <a href="?filter=promotion" class="filter-tab" data-filter="promotion">
-        <i class="fas fa-gift me-1"></i> Khuyến mãi
-    </a>
 </div>
 
 <div class="container py-3 pb-5">
     {% set filter_type = request.args.get('filter', 'all') %}
     
-    {% set filtered_notifications = [] %}
+    {% set order_notifs = [] %}
+    {% set voucher_notifs = [] %}
     {% for notif in notifications %}
-        {% set notif_type = notif.get('type', 'system') %}
-        {% if filter_type == 'all' or filter_type == notif_type %}
-            {% set filtered_notifications = filtered_notifications + [notif] %}
+        {% if notif.get('type') == 'order' %}
+            {% set order_notifs = order_notifs.append(notif) %}
+        {% elif notif.get('type') == 'voucher' %}
+            {% set voucher_notifs = voucher_notifs.append(notif) %}
         {% endif %}
     {% endfor %}
+    
+    {% if filter_type == 'all' %}
+        {% set display_notifications = notifications %}
+    {% elif filter_type == 'order' %}
+        {% set display_notifications = order_notifs %}
+    {% elif filter_type == 'voucher' %}
+        {% set display_notifications = voucher_notifs %}
+    {% else %}
+        {% set display_notifications = notifications %}
+    {% endif %}
 
-    {% if filtered_notifications %}
-        {% for notif in filtered_notifications %}
+    {% if display_notifications %}
+        {% for notif in display_notifications %}
         {% set notif_type = notif.get('type', 'system') %}
         <a href="{{ notif.link }}" class="notif-item {{ 'unread' if not notif.is_read else '' }}">
             <div class="d-flex align-items-start">

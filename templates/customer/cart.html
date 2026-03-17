@@ -770,7 +770,6 @@
           </div>
 
           <!-- Voucher chọn - Dropdown -->
-          {% if available_vouchers %}
           <div class="mt-3">
             <label class="form-label fw-bold">Chọn voucher</label>
             
@@ -780,13 +779,18 @@
                  style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
               <span id="voucherToggleText" style="color: var(--text-light); font-weight: 500;">
                 <i class="fas fa-ticket-alt me-2" style="color: #FFD700;"></i>
+                {% if available_vouchers %}
                 Chọn voucher giảm giá
+                {% else %}
+                Chưa có voucher khả dụng
+                {% endif %}
               </span>
               <i class="fas fa-chevron-down" id="voucherChevron" style="color: var(--text-muted); transition: transform 0.3s;"></i>
             </div>
 
             <!-- Danh sách voucher ẩn hiện -->
             <div id="voucherDropdown" class="voucher-list" style="display: none; margin-top: 10px; max-height: 250px; overflow-y: auto;">
+              {% if available_vouchers %}
               {% for v in available_vouchers[:10] %}
               <div class="voucher-card-select" 
                    style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 12px; padding: 15px; color: white; position: relative; overflow: hidden; margin-bottom: 10px; cursor: pointer;"
@@ -812,9 +816,15 @@
                 </div>
               </div>
               {% endfor %}
+              {% else %}
+              <div class="text-center py-4" style="color: var(--text-muted);">
+                <i class="fas fa-ticket-alt fa-2x mb-2" style="opacity: 0.5;"></i>
+                <p class="mb-0">Hiện chưa có voucher khả dụng</p>
+                <small>Vui lòng quay lại sau!</small>
+              </div>
+              {% endif %}
             </div>
           </div>
-          {% endif %}
 
           <!-- Voucher Input -->
           <div class="mt-3">
@@ -868,14 +878,21 @@
 </div>
 
 <script>
+{% if cart and cart|length > 0 %}
 let cartTotal = {{ ns.total }};
+{% else %}
+let cartTotal = 0;
+{% endif %}
 let selectedVoucherCode = null;
 let map, marker;
 
 function toggleVoucherList() {
   const dropdown = document.getElementById('voucherDropdown');
   const chevron = document.getElementById('voucherChevron');
-  if (dropdown.style.display === 'none') {
+  if (!dropdown || !chevron) return;
+  
+  const currentDisplay = dropdown.style.display;
+  if (currentDisplay === '' || currentDisplay === 'none') {
     dropdown.style.display = 'block';
     chevron.style.transform = 'rotate(180deg)';
   } else {

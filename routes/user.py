@@ -380,10 +380,46 @@ def account():
 @customer_bp.route("/notifications")
 @login_required(role="customer")
 def notifications():
-    raw_notifs = db_get(f'notifications/{session["user"]}') or []
+    user = session["user"]
+    # KHÔNG dùng cache để hiển thị thông báo mới nhất
+    raw_notifs = db_get(f'notifications/{user}', use_cache=False) or []
     notifications = list(raw_notifs.values()) if isinstance(raw_notifs, dict) else raw_notifs
 
     return render_template("customer/notifications.html", notifications=notifications)
+
+# --- MY VOUCHERS PAGE ---
+@customer_bp.route("/my_vouchers")
+@login_required(role="customer")
+def my_vouchers():
+    user = session["user"]
+    raw_vouchers = db_get("vouchers") or {}
+    vouchers_obj = normalize_data(raw_vouchers, "code") if isinstance(raw_vouchers, (list, dict)) else {}
+    
+    my_vouchers = []
+    now = datetime.now()
+    for code, v in vouchers_obj.items():
+        if not isinstance(v, dict):
+            continue
+        v_code = (v.get("code") or code or "").strip().upper()
+        if not v_code:
+            continue
+        target_user = (v.get("user") or "all").strip()
+        if target_user not in ("all", user):
+            continue
+        valid_until = v.get("valid_until")
+        is_expired = False
+        if valid_until:
+            try:
+                if datetime.fromisoformat(valid_until) < now:
+                    is_expired = True
+            except Exception:
+                pass
+        vv = dict(v)
+        vv["code"] = v_code
+        vv["is_expired"] = is_expired
+        my_vouchers.append(vv)
+    
+    return render_template("customer/my_vouchers.html", vouchers=my_vouchers)
 
 # --- ROUTE: XEM LỊCH SỬ ĐƠN HÀNG ---
 @customer_bp.route("/history")
@@ -392,12 +428,25 @@ def history():
     user = session["user"]
     raw_orders = db_get("orders") or {}
     all_orders = normalize_data(raw_orders, "id")
+    
+    # Get products for image lookup
+    raw_products = db_get("products") or {}
+    all_products = normalize_data(raw_products, "id")
 
     my_orders = []
     for oid, order in all_orders.items():
         if order.get("user") == user:
             order = dict(order)
             order["id"] = oid
+            
+            # Add images to order items
+            items = order.get("items", [])
+            if items:
+                for item in items:
+                    pid = item.get("id")
+                    if pid and pid in all_products:
+                        item["image"] = all_products[pid].get("image", "")
+            
             my_orders.append(order)
     my_orders.sort(key=lambda x: x.get("date", ""), reverse=True)
     return render_template("customer/history.html", orders=my_orders)
@@ -775,6 +824,7 @@ def checkout():
             "time": datetime.now().strftime("%H:%M %d/%m"),
             "link": f"/order/{order_id}",
             "type": "order",
+            "is_read": False,
             "is_new": True,
         },
     )
@@ -1263,15 +1313,19 @@ def inject_global_vars():
                 if isinstance(item, dict):
                     total_cart += int(item.get('qty', 0))
         
-        # 2. Đếm thông báo (Fix lỗi List/Dict)
-        raw_notifs = db_get("notifications") or {}
-        notif_items = raw_notifs if isinstance(raw_notifs, list) else raw_notifs.values()
+        # 2. Đếm thông báo
+        raw_notifs = db_get(f"notifications/{user}") or []
+        if isinstance(raw_notifs, dict):
+            notif_items = raw_notifs.values()
+        elif isinstance(raw_notifs, list):
+            notif_items = raw_notifs
+        else:
+            notif_items = []
         
         if notif_items:
             for n in notif_items:
-                if isinstance(n, dict):
-                    if n.get("user") == user and not n.get("is_read"):
-                        unread_notif += 1
+                if isinstance(n, dict) and not n.get("is_read"):
+                    unread_notif += 1
                 
     return dict(total_cart_items=total_cart, unread_notif_count=unread_notif)
 

@@ -19,9 +19,7 @@ auth_bp = Blueprint("auth", __name__)
 otp_storage = {}
 logger = logging.getLogger(__name__)
 
-@auth_bp.route("/kiemtra")
-def kiemtra():
-    return "<h1>CHÚC MỪNG! MÁY CHỦ FLASK CỦA BẠN ĐANG CHẠY RẤT HOÀN HẢO!</h1>"
+
 
 # --- 0. MÀN HÌNH MỞ ĐẦU (SPLASH SCREEN) ---
 @auth_bp.route("/fongfood")  # <-- Đổi cái này thành /fongfood

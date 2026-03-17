@@ -588,7 +588,7 @@
         position: absolute;
         top: 10px;
         right: 10px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #FF9800 0%, #FF5722 100%);
         color: white;
         padding: 4px 10px;
         border-radius: 12px;
@@ -1019,15 +1019,15 @@
         <div id="bannerCarousel" class="carousel slide shadow-sm rounded-4 overflow-hidden" data-bs-ride="carousel" data-bs-interval="4000">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img loading="lazy" src="https://img.freepik.com/free-vector/flat-design-food-sale-banner_23-2149114485.jpg" class="d-block w-100" alt="Khuyến mãi đặc biệt">
+                    <img loading="lazy" src="static/images/banner1.png" class="d-block w-100" alt="Khuyến mãi đặc biệt">
                     <span class="hero-badge"><i class="fas fa-gift me-1"></i>GIẢM 50%</span>
                 </div>
                 <div class="carousel-item">
-                    <img loading="lazy" src="https://img.freepik.com/free-photo/delicious-vietnamese-food-top-view_23-2148913776.jpg" class="d-block w-100" alt="Món ngon mỗi ngày">
+                    <img loading="lazy" src="static/images/banner2.png" class="d-block w-100" alt="Món ngon mỗi ngày">
                     <span class="hero-badge"><i class="fas fa-bolt me-1"></i>FREE SHIP</span>
                 </div>
                 <div class="carousel-item">
-                    <img loading="lazy" src="https://img.freepik.com/free-photo/flat-lay-delicious-food-box_23-2148913794.jpg" class="d-block w-100" alt="Giao hàng nhanh">
+                    <img loading="lazy" src="static/images/banner3.png" class="d-block w-100" alt="Giao hàng nhanh">
                     <span class="hero-badge"><i class="fas fa-fire me-1"></i>HOT DEAL</span>
                 </div>
             </div>
@@ -1146,31 +1146,31 @@
         </div>
         <div class="category-grid">
             <a href="/menu?q=fastfood" class="category-card">
-                <img src="/static/doannhanh.jpg" class="category-img" alt="Đồ ăn nhanh">
+                <img src="static/images/doannhanh.jpg" class="category-img" alt="Đồ ăn nhanh">
                 <div class="category-overlay">
                     <span class="category-title">Đồ ăn nhanh</span>
                 </div>
             </a>
             <a href="/menu?q=noodle" class="category-card">
-                <img src="/static/bun.jpg" class="category-img" alt="Bún Phở">
+                <img src="static/images/bun.jpg" class="category-img" alt="Bún Phở">
                 <div class="category-overlay">
                     <span class="category-title">Bún / Phở</span>
                 </div>
             </a>
             <a href="/menu?q=drink" class="category-card">
-                <img src="/static/douong.png" class="category-img" alt="Đồ uống">
+                <img src="static/images/douong.png" class="category-img" alt="Đồ uống">
                 <div class="category-overlay">
                     <span class="category-title">Đồ uống</span>
                 </div>
             </a>
             <a href="/menu?q=bread" class="category-card">
-                <img src="/static/b%C3%A1nh%20m%C3%AC.png" class="category-img" alt="Bánh mì">
+                <img src="static/images/bánh mì.png" class="category-img" alt="Bánh mì">
                 <div class="category-overlay">
                     <span class="category-title">Bánh mì</span>
                 </div>
             </a>
             <a href="/menu?q=pizza" class="category-card">
-                <img src="/static/pizza.png" class="category-img" alt="Pizza">
+                <img src="static/images/pizza.png" class="category-img" alt="Pizza">
                 <div class="category-overlay">
                     <span class="category-title">Pizza</span>
                 </div>
@@ -1206,8 +1206,8 @@
                 <div class="p-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; color: white;">
                     <div class="d-flex align-items-center justify-content-between mb-2">
                         <div class="d-flex align-items-center">
-                            <i class="fas fa-robot me-2 fa-lg"></i>
-                            <h5 class="mb-0 fw-bold">AI Gợi Ý Cho Bạn</h5>
+                            <i class="fas fa-heart me-2 fa-lg" style="color: #ff6b6b;"></i>
+                            <h5 class="mb-0 fw-bold">Món Ngon Hot Hôm Nay</h5>
                         </div>
                         {% if weather %}
                         <div class="d-flex align-items-center">
@@ -1235,7 +1235,7 @@
                     {% else %}
                     <div class="skeleton w-100 h-100"></div>
                     {% endif %}
-                    <span class="ai-recommend-badge"><i class="fas fa-robot me-1"></i>AI</span>
+                    <span class="ai-recommend-badge"><i class="fas fa-fire me-1"></i>HOT</span>
                     <div class="product-actions">
                         <a href="/product/{{ pid }}" class="action-btn quick-view" title="Xem chi tiết">
                             <i class="fas fa-eye"></i>
@@ -1327,7 +1327,7 @@
                         </div>
                     </div>
                 </div>
-                <p class="testimonial-text">"Giao hàng cực nhanh, món ăn còn nóng hổi. FongFood là app giao đồ ăn yêu thích của mình!"</p>
+                <p class="testimonial-text">"Giao hàng cực nhanh, món ăn còn nóng hổi. Ứng dụng giao đồ ăn yêu thích của mình!"</p>
             </div>
             <div class="testimonial-card">
                 <div class="testimonial-header">
@@ -1368,10 +1368,10 @@
     <section class="ai-marketing ai-slide-up delay-5">
         <div class="marketing-card">
             <h4 class="marketing-title">
-                <i class="fas fa-robot me-2" style="color: #667eea;"></i>
-                FongFood - AI Delivery
+                <i class="fas fa-heart me-2" style="color: #ef3942;"></i>
+                Trải Nhiệm Người dùng
             </h4>
-            <p class="marketing-desc">Trải nghiệm đặt đồ ăn thông minh với công nghệ AI</p>
+            <p class="marketing-desc">Trải nghiệm đặt đồ ăn nhanh chóng và tiện lợi</p>
             <div class="feature-grid">
                 <div class="feature-item">
                     <div class="feature-image-wrapper">
@@ -1752,8 +1752,27 @@
                 showToast(data.message || 'Đã thêm vào giỏ hàng!', 'success');
                 // Cập nhật số lượng giỏ hàng trong navbar
                 if (data.cart_count !== undefined) {
+                    // Desktop badge
                     const cartBadge = document.getElementById('cart-count');
-                    if (cartBadge) cartBadge.textContent = data.cart_count;
+                    if (cartBadge) {
+                        cartBadge.textContent = data.cart_count;
+                        cartBadge.style.display = 'inline';
+                    }
+                    // Mobile badge
+                    const mobileCartBadge = document.getElementById('mobile-cart-count');
+                    if (mobileCartBadge) {
+                        mobileCartBadge.textContent = data.cart_count;
+                    } else if (data.cart_count > 0) {
+                        // Create mobile badge if doesn't exist
+                        const mobileCartLink = document.getElementById('cartLinkMobile');
+                        if (mobileCartLink) {
+                            const newBadge = document.createElement('span');
+                            newBadge.id = 'mobile-cart-count';
+                            newBadge.className = 'mobile-cart-badge';
+                            newBadge.textContent = data.cart_count;
+                            mobileCartLink.appendChild(newBadge);
+                        }
+                    }
                 }
             } else {
                 showToast(data.message || 'Có lỗi xảy ra', 'error');

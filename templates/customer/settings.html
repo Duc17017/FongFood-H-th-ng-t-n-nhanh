@@ -256,6 +256,32 @@
   }
 
   /* Responsive */
+  @media (min-width: 992px) {
+    .settings-container {
+      display: flex;
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+    .settings-menu-sidebar {
+      width: 280px;
+      flex-shrink: 0;
+    }
+    .settings-main-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .settings-group {
+      margin: 0;
+      max-width: 100%;
+    }
+    .settings-header {
+      border-radius: var(--border-radius-lg);
+      margin-bottom: 20px;
+    }
+  }
+  
   @media (min-width: 768px) {
     .settings-group {
       margin: 0 auto;
@@ -268,7 +294,38 @@
   }
 </style>
 
-<div class="container-fluid px-0 pb-4">
+<div class="settings-container">
+  <!-- PC Sidebar -->
+  <div class="settings-menu-sidebar d-none d-lg-block">
+    <div class="menu-card text-center" style="background: var(--bg-white);">
+      <a href="/account" class="d-block p-3 text-decoration-none text-dark">
+        <i class="fas fa-user mb-2" style="font-size: 24px; color: #D32F2F;"></i>
+        <span class="d-block">Tài khoản</span>
+      </a>
+    </div>
+    <div class="menu-card text-center mt-2" style="background: var(--bg-white);">
+      <a href="/history" class="d-block p-3 text-decoration-none text-dark">
+        <i class="fas fa-shopping-bag mb-2" style="font-size: 24px; color: #4CAF50;"></i>
+        <span class="d-block">Đơn hàng</span>
+      </a>
+    </div>
+    <div class="menu-card text-center mt-2" style="background: var(--bg-white);">
+      <a href="/address" class="d-block p-3 text-decoration-none text-dark">
+        <i class="fas fa-map-marker-alt mb-2" style="font-size: 24px; color: #2196F3;"></i>
+        <span class="d-block">Địa chỉ</span>
+      </a>
+    </div>
+    <div class="menu-card text-center mt-2" style="background: var(--bg-white); border-left: 3px solid #D32F2F;">
+      <a href="/settings" class="d-block p-3 text-decoration-none text-dark">
+        <i class="fas fa-cog mb-2" style="font-size: 24px; color: #9E9E9E;"></i>
+        <span class="d-block">Cài đặt</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="settings-main-content">
+  <div class="container-fluid px-0 pb-4">
   <div class="settings-header ai-slide-up">
     <a href="/account" class="back-btn">
       <i class="fas fa-arrow-left"></i>
@@ -377,6 +434,8 @@
       Made with
       <i class="fas fa-heart" style="color: var(--primary-color)"></i> by AI
     </p>
+  </div>
+  </div>
   </div>
 </div>
 
